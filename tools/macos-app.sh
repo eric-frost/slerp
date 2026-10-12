@@ -75,6 +75,8 @@ rm -rf "$APP" local/dist/slerp-macos-arm64.zip
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp local/target/release/slerp "$APP/Contents/MacOS/Slerp"
 sed "s/@VERSION@/$version/g" data/macos/Info.plist > "$APP/Contents/Info.plist"
+# The licences and the bundled crates' notices, which their licences require.
+cp LICENSE-MIT LICENSE-APACHE THIRD-PARTY.md "$APP/Contents/Resources/"
 if [ -f local/dist/icon-1024.png ]; then
   set=local/dist/Slerp.iconset
   rm -rf "$set"

@@ -1,7 +1,8 @@
 #!/bin/bash
 # Cross-compiles Slerp for 64-bit Windows on Linux and packs it as a zip:
 # slerp.exe, Explorer's thumbnail handler slerp_shell.dll, the
-# console-less viewer launcher slerpw.exe and a short README.txt.
+# console-less viewer launcher slerpw.exe, a short README.txt, and the
+# licences with THIRD-PARTY.md, which the bundled crates' licences require.
 #
 #   tools/build-windows.sh                 # release build, then local/dist/*.zip
 #   tools/build-windows.sh cargo check     # any cargo command, cross-compiling
@@ -78,7 +79,7 @@ stage=$(mktemp -d)
 trap 'rm -rf "$stage"' EXIT
 mkdir -p "$dist" "$stage/Slerp"
 for file in $files; do cp "$out/$file" "$stage/Slerp/"; done
-cp README.md "$stage/Slerp/README.md"
+cp README.md LICENSE-MIT LICENSE-APACHE THIRD-PARTY.md "$stage/Slerp/"
 sed 's/$/\r/' data/windows/README.txt > "$stage/Slerp/README.txt"
 zip_path=$(realpath "$dist")/slerp-windows-x86_64.zip
 rm -f "$zip_path"
