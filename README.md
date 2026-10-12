@@ -4,6 +4,8 @@ Slerp makes file-manager thumbnails for 3D models, game files, GPU textures and 
 
 It is a young project with one developer and no releases yet.  It reads about 200 formats, but for many of them only part of what the format can hold; [docs/format-details.md](docs/format-details.md) says what each reader leaves out.  Most of the testing so far has been on one Linux laptop with KDE, a Windows 11 virtual machine and one Mac, so expect files it gets wrong.  Bug reports are welcome, most of all with a file that you're free to share.
 
+Slerp is vibe coded.  Its developer, Eric, described what he wanted, and AI coding agents wrote all of the code, the tests included; he never looked at the code himself.
+
 ![Thumbnails Slerp made of a folder of models, splats, textures, a material, levels, ANSI art, a sprite sheet, a lookup table and a GPS track](docs/images/thumbnails.webp)
 
 ## What it does
