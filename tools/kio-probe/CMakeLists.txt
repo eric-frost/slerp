@@ -1,0 +1,10 @@
+# Builds the KIO thumbnail probe.  Normally run through build.sh, which puts the binary at local/kio-probe.
+cmake_minimum_required(VERSION 3.20)
+project(kio-probe LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+find_package(Qt6 REQUIRED COMPONENTS Gui)
+find_package(KF6KIO REQUIRED)
+find_package(KF6Config REQUIRED)
+find_package(KF6CoreAddons REQUIRED)
+add_executable(kio-probe probe.cpp)
+target_link_libraries(kio-probe Qt6::Gui KF6::KIOGui KF6::KIOCore KF6::ConfigCore KF6::CoreAddons)

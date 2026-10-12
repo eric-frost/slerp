@@ -1,0 +1,133 @@
+//! SuperSplat's compressed PLY, as PlayCanvas reads it: a `chunk` element
+//! with each 256 splats' ranges (position, log scale and, optionally,
+//! colour minimum and maximum), a `vertex` element of four packed 32-bit
+//! words per splat, and optionally an `sh` element of byte-quantized
+//! spherical-harmonic coefficients.  Positions and scales are 11, 10 and
+//! 11 bits between their chunk's minimum and maximum, rotations the three
+//! smallest quaternion components in 10 bits each plus the index of the
+//! largest, colours 8 bits per channel.  The files are small (about 16
+//! bytes a splat), so they are read whole.
+
+use crate::ply::{Element, parse_header};
+use crate::{Builder, SplatFormat, degree_for};
+use glam::{Quat, Vec3, Vec4};
+use slerp_scene::{Info, Limits, LoadError, Scene};
+
+fn unorm(v: u32, bits: u32) -> f32 {
+    let max = (1u32 << bits) - 1;
+    (v & max) as f32 / max as f32
+}
+
+fn unpack_111011(v: u32) -> Vec3 {
+    Vec3::new(unorm(v >> 21, 11), unorm(v >> 11, 10), unorm(v, 11))
+}
+
+/// The two-bit index of the largest component and the other three in 10
+/// bits each, as PlayCanvas's `unpackRot` reads them.
+fn unpack_rotation(v: u32) -> Quat {
+    let norm = std::f32::consts::SQRT_2;
+    let a = (unorm(v >> 20, 10) - 0.5) * norm;
+    let b = (unorm(v >> 10, 10) - 0.5) * norm;
+    let c = (unorm(v, 10) - 0.5) * norm;
+    let m = (1.0 - (a * a + b * b + c * c)).max(0.0).sqrt();
+    match v >> 30 {
+        0 => Quat::from_xyzw(a, b, c, m),
+        1 => Quat::from_xyzw(m, b, c, a),
+        2 => Quat::from_xyzw(b, m, c, a),
+        _ => Quat::from_xyzw(b, c, m, a),
+    }
+}
+
+/// Indices of the named float properties of a chunk record, in order.
+fn columns(chunk: &Element, names: &[&str]) -> Option<Vec<usize>> {
+    names
+        .iter()
+        .map(|n| chunk.prop(n).filter(|p| p.ty == crate::ply::Ty::F32).map(|p| p.offset))
+        .collect::<Option<Vec<_>>>()
+}
+
+pub(crate) fn load(bytes: &[u8], limits: &Limits) -> Result<Scene, LoadError> {
+    let header = parse_header(bytes)?;
+    if header.big_endian {
+        return Err(LoadError::Unsupported("big-endian compressed PLY".into()));
+    }
+    let (Some(chunk), Some(vertex)) = (header.element("chunk"), header.element("vertex")) else {
+        return Err(LoadError::invalid("compressed PLY needs chunk and vertex elements"));
+    };
+    let ci = header.elements.iter().position(|e| e.name == "chunk").unwrap_or(0);
+    let vi = header.elements.iter().position(|e| e.name == "vertex").unwrap_or(0);
+    let le = |b: &[u8], at: usize| -> u32 { u32::from_le_bytes([b[at], b[at + 1], b[at + 2], b[at + 3]]) };
+    let f = |b: &[u8], at: usize| -> f32 { f32::from_le_bytes([b[at], b[at + 1], b[at + 2], b[at + 3]]) };
+
+    // 1. Layout, with every element checked against the bytes present.
+    let base = ["min_x", "min_y", "min_z", "max_x", "max_y", "max_z"];
+    let scales = ["min_scale_x", "min_scale_y", "min_scale_z", "max_scale_x", "max_scale_y", "max_scale_z"];
+    let colors = ["min_r", "min_g", "min_b", "max_r", "max_g", "max_b"];
+    let pos_cols = columns(chunk, &base).ok_or_else(|| LoadError::invalid("chunks lack position ranges"))?;
+    let scale_cols = columns(chunk, &scales).ok_or_else(|| LoadError::invalid("chunks lack scale ranges"))?;
+    let color_cols = columns(chunk, &colors);
+    let words: Vec<usize> = ["packed_position", "packed_rotation", "packed_scale", "packed_color"]
+        .iter()
+        .map(|n| vertex.prop(n).filter(|p| p.ty == crate::ply::Ty::U32).map(|p| p.offset))
+        .collect::<Option<Vec<_>>>()
+        .ok_or_else(|| LoadError::invalid("compressed PLY vertices need four packed uint words"))?;
+    let range = |index: usize| -> Option<std::ops::Range<usize>> {
+        let e = &header.elements[index];
+        let start = usize::try_from(header.offset_of(index)?).ok()?;
+        let len = usize::try_from(e.count.checked_mul(e.size as u64)?).ok()?;
+        let end = start.checked_add(len)?;
+        (end <= bytes.len()).then_some(start..end)
+    };
+    let chunk_bytes = range(ci).ok_or_else(|| LoadError::invalid("compressed PLY chunks run past the end"))?;
+    let count = vertex.count.min(chunk.count.saturating_mul(256));
+    let vertex_bytes = range(vi).ok_or_else(|| LoadError::invalid("compressed PLY vertices run past the end"))?;
+    let sh = header.elements.iter().position(|e| e.name == "sh").and_then(|si| {
+        let e = &header.elements[si];
+        let per_channel = e.props.len() / 3;
+        let ok = e.count >= count
+            && e.props.len() % 3 == 0
+            && degree_for(per_channel).is_some_and(|d| d > 0)
+            && e.props.iter().all(|p| p.ty == crate::ply::Ty::U8);
+        Some((range(si)?, e.size, per_channel)).filter(|_| ok)
+    });
+    let degree = sh.as_ref().and_then(|s| degree_for(s.2)).unwrap_or(0);
+    let mut info = Info { format: SplatFormat::CompressedPly.name().into(), ..Default::default() };
+    if let Some(c) = header.comments.iter().find(|c| c.to_ascii_lowercase().contains("generated by")) {
+        info.generator = Some(c.trim_start_matches("Generated by").trim().to_string());
+    }
+    if count == 0 {
+        return Err(LoadError::invalid("compressed PLY has no splats"));
+    }
+
+    // 2. Splats, each decoded against its chunk's ranges.
+    let chunks = &bytes[chunk_bytes];
+    let verts = &bytes[vertex_bytes];
+    let mut out = Builder::new(count, limits, degree, true);
+    for i in 0..count as usize {
+        if !out.keeps(i as u64) {
+            continue;
+        }
+        let c = &chunks[(i / 256) * chunk.size..][..chunk.size];
+        let v = &verts[i * vertex.size..][..vertex.size];
+        let lerp3 = |cols: &[usize], t: Vec3| {
+            let min = Vec3::new(f(c, cols[0]), f(c, cols[1]), f(c, cols[2]));
+            let max = Vec3::new(f(c, cols[3]), f(c, cols[4]), f(c, cols[5]));
+            min + (max - min) * t
+        };
+        let position = lerp3(&pos_cols, unpack_111011(le(v, words[0])));
+        let rotation = unpack_rotation(le(v, words[1]));
+        let scale = lerp3(&scale_cols, unpack_111011(le(v, words[2]))).exp();
+        let packed = le(v, words[3]);
+        let rgba = Vec4::new(unorm(packed >> 24, 8), unorm(packed >> 16, 8), unorm(packed >> 8, 8), unorm(packed, 8));
+        let rgb = match &color_cols {
+            Some(cols) => lerp3(cols, rgba.truncate()),
+            None => rgba.truncate(),
+        };
+        let coeff = |k: usize, ch: usize| -> f32 {
+            let Some((r, size, per_channel)) = &sh else { return 0.0 };
+            bytes[r.start + i * size + ch * per_channel + k] as f32 * (8.0 / 255.0) - 4.0
+        };
+        out.push(position, scale, rotation, rgb.extend(rgba.w), coeff);
+    }
+    out.finish(info)
+}

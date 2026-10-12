@@ -1,0 +1,124 @@
+[workspace]
+resolver = "3"
+members = ["crates/*", "."]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.93"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/eric-frost/slerp"
+
+[workspace.dependencies]
+slerp-textures = { path = "crates/textures" }
+slerp-scene = { path = "crates/scene" }
+slerp-render = { path = "crates/render" }
+slerp-gltf = { path = "crates/gltf" }
+slerp-models = { path = "crates/models" }
+slerp-quake = { path = "crates/quake" }
+slerp-materials = { path = "crates/materials" }
+# Without default features: the binary below picks the image decoders.
+slerp-core = { path = "crates/core", default-features = false }
+slerp-viewer = { path = "crates/viewer" }
+slerp-theme = { path = "crates/theme" }
+slerp-helper = { path = "crates/helper" }
+slerp-retarget = { path = "crates/retarget" }
+slerp-dna = { path = "crates/dna" }
+slerp-formats = { path = "crates/formats" }
+slerp-associate = { path = "crates/associate" }
+glam = { version = "0.34", features = ["bytemuck"] }
+bytemuck = { version = "1", features = ["derive"] }
+thiserror = "2"
+rayon = "1"
+# egui 0.35 is the newest that builds with Ubuntu 26.04's Rust 1.93, and it
+# pins wgpu 29, which the renderer shares so the viewer uses one device.
+wgpu = { version = "29", default-features = false, features = ["vulkan", "wgsl", "std"] }
+egui = "0.35"
+eframe = { version = "0.35", default-features = false }
+egui-wgpu = { version = "0.35", default-features = false }
+
+[package]
+name = "slerp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Thumbnailer and viewer for 3D models, textures, game assets and other graphics"
+readme = "README.md"
+
+[dependencies]
+slerp-core.workspace = true
+slerp-helper.workspace = true
+slerp-associate.workspace = true
+slerp-viewer = { workspace = true, optional = true }
+clap = { version = "4.5", features = ["derive"] }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[features]
+default = ["viewer", "heic", "avif", "jxl"]
+# The egui viewer.  Without it the binary is a thumbnailer only: smaller and
+# quicker to build.
+viewer = ["dep:slerp-viewer"]
+# The viewer's heavier picture decoders (see crates/images/Cargo.toml):
+# HEIC through the system's libheif, AVIF (rav1d), and JPEG XL (jxl-rs).
+# `avif-asm` adds rav1d's assembly, which needs nasm to build on x86.
+heic = ["slerp-core/heic"]
+avif = ["slerp-core/avif"]
+avif-asm = ["slerp-core/avif-asm"]
+jxl = ["slerp-core/jxl"]
+
+# The Debian package, built by tools/build-deb.sh (which also builds the Qt
+# image plugin's package, slerp-qt-plugin).  The desktop files go under
+# /usr/share, where the dpkg triggers of shared-mime-info, desktop-file-utils
+# and hicolor-icon-theme rebuild the MIME, menu and icon caches, so the
+# package needs no maintainer scripts.  The Vulkan loader, Wayland,
+# xkbcommon and X11 libraries are loaded at run time, so dpkg-shlibdeps
+# ($auto) can't see them and they are listed by hand.
+[package.metadata.deb]
+maintainer = "Eric <9555559+eric-frost@users.noreply.github.com>"
+copyright = "2026, the Slerp authors"
+section = "graphics"
+priority = "optional"
+extended-description = """\
+Slerp makes file-manager thumbnails of the files desktops show as generic \
+icons, and opens them in a viewer: GPU textures (KTX2, DDS, ASTC), 3D models \
+(glTF, FBX, OBJ, USD, Blender, SketchUp, Maya and many more), Gaussian \
+splats, materials, Quake and Doom levels, 2D game formats, CAD drawings, \
+Illustrator and EPS drawings, and scientific, medical and retro images.  Thumbnails work in \
+Dolphin, GNOME Files, Nemo, Caja, Thunar and PCManFM-Qt; Dolphin needs \
+`slerp associate --apply` run once by each user."""
+depends = "$auto, libvulkan1, libwayland-client0, libxkbcommon0, libxkbcommon-x11-0, libx11-6, libx11-xcb1, libxcursor1, libxi6, shared-mime-info"
+# lavapipe, Mesa's CPU Vulkan driver, draws 3D thumbnails where there is no
+# GPU driver and inside GNOME's thumbnail sandbox, which hides the GPU.
+recommends = "mesa-vulkan-drivers, desktop-file-utils, hicolor-icon-theme"
+suggests = "slerp-qt-plugin, libheif1, ghostscript"
+changelog = "packaging/debian/changelog"
+assets = [
+    ["target/release/slerp", "usr/bin/", "755"],
+    ["data/slerp.thumbnailer", "usr/share/thumbnailers/", "644"],
+    ["data/slerp.xml", "usr/share/mime/packages/", "644"],
+    ["data/slerp.desktop", "usr/share/applications/", "644"],
+    ["data/slerp.svg", "usr/share/icons/hicolor/scalable/apps/", "644"],
+    ["packaging/slerp.1", "usr/share/man/man1/", "644"],
+    ["packaging/debian/copyright", "usr/share/doc/slerp/copyright", "644"],
+    ["packaging/debian/slerp.lintian-overrides", "usr/share/lintian/overrides/slerp", "644"],
+    ["README.md", "usr/share/doc/slerp/", "644"],
+    ["THIRD-PARTY.md", "usr/share/doc/slerp/", "644"],
+]
+
+[profile.dev]
+opt-level = 1
+debug = "line-tables-only"
+
+# Decoders are unbearably slow unoptimised, and tests decode 8K images.
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.release]
+lto = "thin"
+codegen-units = 4
+strip = true
+panic = "unwind"

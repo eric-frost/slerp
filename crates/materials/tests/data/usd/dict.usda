@@ -1,0 +1,28 @@
+#usda 1.0
+(
+    defaultPrim = "M"
+    metersPerUnit = 0.5
+    upAxis = "Z"
+)
+
+def Xform "M" (
+    assetInfo = {
+        dictionary previews = {
+            dictionary thumbnails = {
+                dictionary default = {
+                    asset defaultImage = @prev.png@
+                }
+            }
+        }
+        string name = "hello"
+    }
+)
+{
+    double3 xformOp:translate = (1.5, 2.25, 3.125)
+    float3 xformOp:scale.timeSamples = {
+        0: (1, 2, 3),
+        10: (4, 5, 6),
+    }
+    quatf xformOp:orient = (0.5, 0.1, 0.2, 0.3)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Quick Look runs only sandboxed extensions.  It grants read access to the
+  file being thumbnailed for each request; the GPU (Metal) is open to
+  sandboxed processes.  The one exception reads Slerp's settings folder,
+  for the user's choice of formats (file-types.jsonc), so the extension can
+  decline the formats switched off there.
+-->
+<plist version="1.0">
+<dict>
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<key>com.apple.security.files.user-selected.read-only</key>
+	<true/>
+	<key>com.apple.security.temporary-exception.files.home-relative-path.read-only</key>
+	<array>
+		<string>/Library/Application Support/Slerp/</string>
+	</array>
+</dict>
+</plist>

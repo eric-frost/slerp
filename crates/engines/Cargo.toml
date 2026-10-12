@@ -1,0 +1,24 @@
+[package]
+name = "slerp-engines"
+description = "Godot and Unity scene loading for Slerp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+slerp-gltf.workspace = true
+slerp-models.workspace = true
+slerp-materials.workspace = true
+rayon.workspace = true
+# Triangulates CSG polygons (MIT OR Apache-2.0).
+earcut = "0.4"
+# Godot's compressed binary resources use zstd blocks by default; the
+# textures crate already builds libzstd.
+zstd = { version = "0.14", default-features = false }
+# Deflate and gzip blocks in older compressed Godot resources.
+miniz_oxide = "0.8"
+# Unity projects often keep textures as TIFF, which slerp-textures doesn't
+# read (MIT; already built for other image formats).
+tiff = "0.11"

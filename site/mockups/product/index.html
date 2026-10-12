@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slerp: thumbnails and a viewer for 3D, game and graphics files</title>
+<meta name="description" content="Slerp makes file-manager thumbnails for about 200 kinds of 3D models, textures, game levels and other graphics files, and opens them in a viewer.  Open source, for Linux, Windows and macOS.">
+<meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="light">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Slerp">
+<meta property="og:url" content="https://slerp3d.com/">
+<meta property="og:title" content="Slerp: thumbnails and a viewer for 3D, game and graphics files">
+<meta property="og:description" content="File-manager thumbnails for about 200 kinds of 3D models, textures, game levels and scans, and a viewer to open them.  Open source, for Linux, Windows and macOS.">
+<meta property="og:image" content="https://slerp3d.com/img/social/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The name Slerp and a one-line description beside a grid of Slerp thumbnails of a ship, a diorama, a splat, a painting, a robot, voxels, pixel art, a material, a brain scan, a toolpath, a lamp and a tile map.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Slerp: thumbnails and a viewer for 3D, game and graphics files">
+<meta name="twitter:description" content="File-manager thumbnails for about 200 kinds of 3D models, textures, game levels and scans, and a viewer to open them.  Open source.">
+<meta name="twitter:image" content="https://slerp3d.com/img/social/og.png">
+<meta name="twitter:image:alt" content="The name Slerp and a one-line description beside a grid of Slerp thumbnails of a ship, a diorama, a splat, a painting, a robot, voxels, pixel art, a material, a brain scan, a toolpath, a lamp and a tile map.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232e5bff'/%3E%3Ccircle cx='16' cy='16' r='9.5' fill='none' stroke='white' stroke-width='2'/%3E%3Cpath d='M8.6 20.8C9.6 13.6 14.6 9.6 22.6 10.6' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round'/%3E%3Ccircle cx='8.6' cy='20.8' r='2.4' fill='white'/%3E%3Ccircle cx='22.6' cy='10.6' r='2.4' fill='white'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/SpaceGrotesk-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../img/screens/model.webp" as="image" fetchpriority="high">
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js')</script>
+<script src="script.js" defer></script>
+</head>
+<body>
+<!--
+  PICTURES
+
+  Every picture comes from site/img/ (../../img/ from here), described with its alt text, samples and licence in
+  site/img/images.json.  Each <img> and <video> carries a data-slot attribute naming its place on the page.  Only the
+  hero screenshot loads at once; everything else is lazy, and the dance loop starts only when it scrolls near.  The
+  credits in the footer list every sample these pictures show, and the samples of social/og.png, the link preview.
+
+  hero         screens/model.webp                The sailing ship in the viewer.
+  float-*      thumbs/tokyo, peggy, stainedlamp  Thumbnails floating beside the hero window (wide screens only).
+  before/after filemanager/before.webp, after    Dolphin, the same 28 files without and with Slerp.
+  thumbs-*     thumbs/*.webp                     Feature row 1: a grid of 15 thumbnails.
+  shot-*       screens/*.webp                    Feature row 2: eight viewer screenshots behind tabs.
+  dance        loops/dance.webm, .mp4, poster    Feature row 3: the robot's Dance clip.  The poster is a lazy <img>
+                                                 under the video, since browsers fetch a poster attribute at once.
+  contents     screens/contents.webp             Feature row 4: the Contents panel and the inspector.
+  material     screens/material.webp             Feature row 6: a MaterialX material on a ball.
+-->
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="#top" aria-label="Slerp, back to the top">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#i-mark"/></svg>
+      <span>slerp</span>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#features">Features</a>
+      <a href="#formats">Formats</a>
+      <a href="#install">Install</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="header-actions">
+      <a class="icon-link" href="https://github.com/eric-frost/slerp" aria-label="Slerp's source code on GitHub">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><use href="#i-github"/></svg>
+      </a>
+      <a class="btn btn-primary btn-small" href="#install" data-download>Install</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ===== Hero ===== -->
+<section class="hero" id="top">
+  <div class="wrap hero-text">
+    <p class="eyebrow"><span>Open source</span><span class="sep" aria-hidden="true"></span><span>Linux, Windows, macOS</span></p>
+    <h1>Thumbnails and a viewer for 3D and game files.</h1>
+    <p class="lede">Slerp makes file-manager thumbnails for about 200 kinds of 3D, game and graphics files, and opens them in a viewer that orbits models, walks through levels and shows the pieces each file is made of.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#install" data-download>
+        <svg viewBox="0 0 20 20" aria-hidden="true"><use href="#i-download"/></svg>
+        <span data-download-label>Install Slerp</span>
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/eric-frost/slerp">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><use href="#i-github"/></svg>
+        <span>View the source</span>
+      </a>
+    </div>
+    <p class="cta-note" data-also>Also for <a href="#install" data-tab-link="windows">Windows 11</a> and <a href="#install" data-tab-link="macos">macOS</a>.</p>
+  </div>
+
+  <div class="wrap hero-visual">
+    <figure class="float float-a" aria-hidden="true"><img data-slot="float-tokyo" src="../../img/thumbs/tokyo.webp" alt="" width="512" height="512" loading="lazy"><figcaption>LittlestTokyo.glb</figcaption></figure>
+    <figure class="float float-b" aria-hidden="true"><img data-slot="float-peggy" src="../../img/thumbs/peggy.webp" alt="" width="489" height="512" loading="lazy"><figcaption>Peggy.kra</figcaption></figure>
+    <figure class="float float-c" aria-hidden="true"><img data-slot="float-stainedlamp" src="../../img/thumbs/stainedlamp.webp" alt="" width="512" height="512" loading="lazy"><figcaption>StainedGlassLamp.gltf</figcaption></figure>
+    <div class="window window-dark hero-window">
+      <div class="titlebar" aria-hidden="true">
+        <span class="title">ship_pinnace_2k.gltf - Slerp</span>
+        <span class="wbtns"><i class="wb-min"></i><i class="wb-max"></i><i class="wb-close"></i></span>
+      </div>
+      <img data-slot="hero" src="../../img/screens/model.webp" width="1920" height="1200" fetchpriority="high" alt="The Slerp viewer showing a detailed wooden sailing ship lit by a sunset sky, with the side panels hidden.">
+    </div>
+  </div>
+
+  <div class="wrap">
+    <dl class="stats">
+      <div><dt>~200</dt><dd>formats, from glTF and FBX to DICOM scans and Doom WADs</dd></div>
+      <div><dt>16</dt><dd>categories, from 3D models to retro computer art</dd></div>
+      <div><dt>3</dt><dd>operating systems: Linux, Windows 11 and macOS</dd></div>
+      <div><dt>38</dt><dd>fuzz targets that feed the readers broken files</dd></div>
+      <div><dt>0.1</dt><dd>the version so far.  There are no releases yet.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ===== Before and after ===== -->
+<section class="section compare-section" aria-labelledby="compare-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">Before and after</p>
+      <h2 id="compare-title">The same folder, with and without Slerp.</h2>
+      <p>Most file managers show a generic icon for a model, texture, level or scan.  With Slerp they show a picture of what the file holds.  Drag the divider, or select it and use the arrow keys.</p>
+    </div>
+
+    <div class="compare-legend" aria-hidden="true"><span class="tag tag-before">Without Slerp</span><span class="tag tag-after">With Slerp</span></div>
+    <div class="window window-light fm">
+      <div class="titlebar titlebar-light" aria-hidden="true">
+        <span class="title">Samples - Dolphin</span>
+        <span class="wbtns"><i class="wb-min"></i><i class="wb-max"></i><i class="wb-close"></i></span>
+      </div>
+      <div class="compare" data-compare style="--pos: 50%">
+        <img class="layer-before" data-slot="before" src="../../img/filemanager/before.webp" width="1600" height="1000" loading="lazy" alt="Dolphin showing a folder of 3D models, game files, textures, scans and sprites as generic file icons, before Slerp&#x27;s thumbnailer is switched on.">
+        <img class="layer-after" data-slot="after" src="../../img/filemanager/after.webp" width="1600" height="1000" loading="lazy" alt="The same Dolphin folder with Slerp&#x27;s thumbnails: ships, cameras, splats, game levels, sprites, scans and textures each shown as a picture of what is inside.">
+        <div class="divider" role="slider" tabindex="0" aria-label="Divider between the folder without and with Slerp"
+          aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="Half the folder shows Slerp's thumbnails">
+          <span class="handle"><svg viewBox="0 0 20 20" aria-hidden="true"><use href="#i-grip"/></svg></span>
+        </div>
+      </div>
+    </div>
+    <p class="caption">Dolphin, KDE's file manager, showing 28 sample files: glTF models, voxel art, Gaussian splats, a Quake model and level, Freedoom, a Roblox place, a KTX2 texture, an HDR sky, a sprite, ANSI art, a palette, a colour lookup table, a G-code toolpath, a GPS track, a SolidWorks part, a chest CT, a brain MRI and a slide scan.  Without Slerp, Dolphin previews only the slide scan.</p>
+  </div>
+</section>
+
+<!-- ===== Features ===== -->
+<section class="section features" id="features" aria-labelledby="features-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">What it does</p>
+      <h2 id="features-title">Thumbnails and a viewer.</h2>
+      <p>Slerp makes the thumbnails your file manager shows, and opens files in its own viewer.  Both use the same file readers and the same GPU renderer.</p>
+    </div>
+
+    <article class="row">
+      <div class="row-text">
+        <p class="kicker">Thumbnails</p>
+        <h3>Thumbnails in the file manager.</h3>
+        <p>On Linux, Slerp works with Dolphin, GNOME Files, Nemo, Caja, Thunar and PCManFM-Qt through the freedesktop thumbnailer standard.  On Windows it adds a thumbnail handler to Explorer, and on macOS a Quick Look extension for Finder.</p>
+        <p>Starting a GPU takes 100 to 800 ms, too long to pay for each file.  So the first thumbnail starts a helper process that keeps the GPU loaded.  On a laptop with an RTX 5070 Ti, each thumbnail after that took a few milliseconds.  The helper quits after two idle minutes.</p>
+        <ul class="chips">
+          <li>Dolphin</li><li>GNOME Files</li><li>Nemo</li><li>Caja</li><li>Thunar</li><li>PCManFM-Qt</li><li>Explorer</li><li>Finder</li>
+        </ul>
+      </div>
+      <div class="stage">
+        <ul class="thumb-grid">
+          <li><img data-slot="thumbs-island" src="../../img/thumbs/island.webp" width="512" height="512" loading="lazy" alt="A Slerp thumbnail of a floating Minecraft island with houses, trees and a waterfall, from a Litematica schematic."><span>island.litematic</span></li>
+          <li><img data-slot="thumbs-diorama" src="../../img/thumbs/diorama.webp" width="512" height="512" loading="lazy" alt="A Slerp thumbnail of a small room diorama with a window, from the picture saved in a Blender file."><span>cube_diorama.blend</span></li>
+          <li><img data-slot="thumbs-gene" src="../../img/thumbs/gene.webp" width="512" height="512" loading="lazy" alt="A Slerp thumbnail of an anime-style character in a white jacket, from a MikuMikuDance PMX model."><span>Gene_light.pmx</span></li>
+          <li><img data-slot="thumbs-biker" src="../../img/thumbs/biker.webp" width="512" height="512" loading="lazy" alt="A Slerp thumbnail of a Gaussian splat capture of a person in black motorcycle leathers."><span>biker.spz</span></li>
+          <li><img data-slot="thumbs-pirate" src="../../img/thumbs/pirate.webp" width="512" height="512" loading="lazy" alt="A Slerp thumbnail of three small islands in a blue sea, from a Roblox place file."><span>pirate_island.rbxl</span></li>
+          <li><img data-slot="thumbs-yeti" src="../../img/thumbs/yeti.webp" width="512" height="512" loading="lazy" alt="A Slerp thumbnail of a horned cartoon yeti, from a Maya scene."><span>Yeti_Apose.ma</span></li>
+          <li><img data-slot="thumbs-ddscube" src="../../img/thumbs/ddscube.webp" width="512" height="384" loading="lazy" alt="A Slerp thumbnail of a park panorama laid out as a cube map cross, from a DDS texture."><span>Pretoria Gardens DX10.dds</span></li>
+          <li><img data-slot="thumbs-leaf" src="../../img/thumbs/leaf.webp" width="512" height="512" loading="lazy" alt="A leaf material with cut-out edges on a ball, rendered by Slerp from a MaterialX file."><span>Leaf001_1K-JPG.mtlx</span></li>
+          <li><img data-slot="thumbs-dungeon" src="../../img/thumbs/dungeon.webp" width="512" height="320" loading="lazy" alt="A Slerp thumbnail of a pixel-art dungeon map with rooms, rails and characters, from a Tiled map."><span>sampleMap.tmx</span></li>
+          <li><img data-slot="thumbs-golem" src="../../img/thumbs/golem.webp" width="390" height="390" loading="lazy" alt="A Slerp thumbnail of a pixel-art golem of cracked black stone and glowing lava, from an Aseprite sprite."><span>neutral_moltengolem_idle.ase</span></li>
+          <li><img data-slot="thumbs-goldengate" src="../../img/thumbs/goldengate.webp" width="512" height="349" loading="lazy" alt="A Slerp thumbnail of the Golden Gate Bridge at dusk, from an OpenEXR image."><span>GoldenGate.exr</span></li>
+          <li><img data-slot="thumbs-heart" src="../../img/thumbs/heart.webp" width="512" height="512" loading="lazy" alt="A Slerp thumbnail of a white heart split by interlocking gear teeth, from a 3MF print file."><span>heartgears.3mf</span></li>
+          <li><img data-slot="thumbs-bust" src="../../img/thumbs/bust.webp" width="512" height="512" loading="lazy" alt="A Slerp thumbnail of a weathered marble bust of a Roman man, from a glTF model."><span>marble_bust_01_1k.gltf</span></li>
+          <li><img data-slot="thumbs-trex" src="../../img/thumbs/trex.webp" width="480" height="340" loading="lazy" alt="A Slerp thumbnail of a line drawing of a T. rex skeleton, from the picture saved in a DWFx file."><span>aspose-Tyrannosaurus.dwfx</span></li>
+          <li><img data-slot="thumbs-bbc" src="../../img/thumbs/bbc.webp" width="320" height="256" loading="lazy" alt="A Slerp thumbnail of a striped logo over a glowing sun, from a BBC Micro screen dump."><span>funky-fresh-logo-mode2.bbc</span></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="row flip">
+      <div class="row-text">
+        <p class="kicker">Viewer</p>
+        <h3>One viewer for models, levels, textures and skies.</h3>
+        <p>Slerp picks a view from the file.  Models get an orbit camera.  Levels from Quake, Half-Life and Doom open in first person at the player's start.  Textures show their mip levels, cube faces, array layers and colour channels.  Skies, splats, materials, sprite sheets, toolpaths and CT and MRI scans each get a view of their own.</p>
+        <p>The renderer is Slerp's own, built on wgpu: Vulkan on Linux, Direct3D 12 on Windows and Metal on macOS.  It draws the copies of one mesh together, in one call.  On a laptop with an RTX 5070 Ti, that took a USD scene of 100,000 trees from 73.6 ms a frame to 3.4 ms, in a 1600x1000 window.</p>
+        <ul class="keys">
+          <li><span><kbd>Drag</kbd></span> orbit around a model</li>
+          <li><span><kbd>Tab</kbd> <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span> fly through a level</li>
+          <li><span><kbd>Page Down</kbd></span> next file in the folder</li>
+        </ul>
+      </div>
+      <div class="stage stage-bleed">
+        <div class="shot-tabs" role="tablist" aria-label="Files open in the viewer">
+          <button type="button" role="tab" id="shot-tab-level" aria-controls="shot-level" aria-selected="true">Level</button>
+          <button type="button" role="tab" id="shot-tab-texture" aria-controls="shot-texture" aria-selected="false" tabindex="-1">Texture</button>
+          <button type="button" role="tab" id="shot-tab-sky" aria-controls="shot-sky" aria-selected="false" tabindex="-1">HDR sky</button>
+          <button type="button" role="tab" id="shot-tab-splat" aria-controls="shot-splat" aria-selected="false" tabindex="-1">Splat</button>
+          <button type="button" role="tab" id="shot-tab-minecraft" aria-controls="shot-minecraft" aria-selected="false" tabindex="-1">Minecraft</button>
+          <button type="button" role="tab" id="shot-tab-ct" aria-controls="shot-ct" aria-selected="false" tabindex="-1">CT scan</button>
+          <button type="button" role="tab" id="shot-tab-mri" aria-controls="shot-mri" aria-selected="false" tabindex="-1">MRI</button>
+          <button type="button" role="tab" id="shot-tab-gcode" aria-controls="shot-gcode" aria-selected="false" tabindex="-1">Toolpath</button>
+        </div>
+        <div class="window window-dark">
+          <div class="titlebar" aria-hidden="true"><span class="title" data-shot-title>lq_e1m1.bsp - Slerp</span><span class="wbtns"><i class="wb-min"></i><i class="wb-max"></i><i class="wb-close"></i></span></div>
+          <div class="shot" role="tabpanel" id="shot-level" aria-labelledby="shot-tab-level" data-title="lq_e1m1.bsp - Slerp"><img data-slot="shot-level" src="../../img/screens/level.webp" width="1920" height="1200" loading="lazy" alt="The Slerp viewer walking through a LibreQuake level in first person, with riveted metal walls, a curved stair and a cloudy sky."></div>
+          <div class="shot" role="tabpanel" id="shot-texture" aria-labelledby="shot-tab-texture" data-title="Desk_uastc_hdr4x4_zstd_15.ktx2 - Slerp" hidden><img data-slot="shot-texture" src="../../img/screens/texture.webp" width="1920" height="1200" loading="lazy" alt="The Slerp viewer showing a KTX2 texture compressed as UASTC HDR, a desk under a stained glass window, with its format details and exposure controls."></div>
+          <div class="shot" role="tabpanel" id="shot-sky" aria-labelledby="shot-tab-sky" data-title="venice_sunset_4k.hdr - Slerp" hidden><img data-slot="shot-sky" src="../../img/screens/sky.webp" width="1920" height="1200" loading="lazy" alt="The Slerp viewer showing a panorama of the Venice waterfront at sunset from a Radiance HDR file, with its details and tone mapping controls."></div>
+          <div class="shot" role="tabpanel" id="shot-splat" aria-labelledby="shot-tab-splat" data-title="hornedlizard.spz - Slerp" hidden><img data-slot="shot-splat" src="../../img/screens/splat.webp" width="1920" height="1200" loading="lazy" alt="The Slerp viewer showing a Gaussian splat capture of a horned lizard sculpture in a garden."></div>
+          <div class="shot" role="tabpanel" id="shot-minecraft" aria-labelledby="shot-tab-minecraft" data-title="island.litematic - Slerp" hidden><img data-slot="shot-minecraft" src="../../img/screens/minecraft.webp" width="1920" height="1200" loading="lazy" alt="The Slerp viewer showing a floating Minecraft island with houses, trees and a waterfall, from a Litematica schematic."></div>
+          <div class="shot" role="tabpanel" id="shot-ct" aria-labelledby="shot-tab-ct" data-title="00000060.dcm - Slerp" hidden><img data-slot="shot-ct" src="../../img/screens/ct.webp" width="1920" height="1200" loading="lazy" alt="The Slerp viewer showing a chest CT slice from a DICOM series, with window presets, the series slider and the DICOM tags."></div>
+          <div class="shot" role="tabpanel" id="shot-mri" aria-labelledby="shot-tab-mri" data-title="MNI152_T1_1mm_2009c.nii.gz - Slerp" hidden><img data-slot="shot-mri" src="../../img/screens/mri.webp" width="1920" height="1200" loading="lazy" alt="The Slerp viewer showing a slice of a brain MRI volume, with plane, window and colour controls and a histogram of its values."></div>
+          <div class="shot" role="tabpanel" id="shot-gcode" aria-labelledby="shot-tab-gcode" data-title="nefertiti.gcode - Slerp" hidden><img data-slot="shot-gcode" src="../../img/screens/gcode.webp" width="1920" height="1200" loading="lazy" alt="The Slerp viewer showing a 3D printer toolpath of the bust of Nefertiti, with a layer slider and the print features listed by colour."></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="row">
+      <div class="row-text">
+        <p class="kicker">Animation</p>
+        <h3>Play and retarget animations.</h3>
+        <p>Pick any clip a character carries, play it, scrub through it or step it a frame at a time.  Add Animations from File plays the clips of a separate animation library on the character you are looking at, matched by joint names or retargeted between humanoid skeletons.</p>
+        <p>Foot IK keeps planted feet on the ground when a character's legs are shaped differently from the ones the clip was made for.  Blend shapes, VRM expressions and MetaHuman face controls move live.</p>
+      </div>
+      <div class="stage">
+        <figure class="loop">
+          <img class="loop-poster" data-slot="dance-poster" src="../../img/loops/dance-poster.webp" width="1280" height="800" loading="lazy" alt="">
+          <video data-slot="dance" data-loop muted loop playsinline preload="none" width="1280" height="800">
+            <source src="../../img/loops/dance.webm" type="video/webm">
+            <source src="../../img/loops/dance.mp4" type="video/mp4">
+          </video>
+          <button type="button" class="loop-toggle" aria-label="Pause the animation" hidden>
+            <svg class="i-pause" viewBox="0 0 20 20" aria-hidden="true"><use href="#i-pause"/></svg>
+            <svg class="i-play" viewBox="0 0 20 20" aria-hidden="true"><use href="#i-play"/></svg>
+          </button>
+          <span class="loop-label" aria-hidden="true">RobotExpressive.glb, Dance clip</span>
+          <figcaption class="visually-hidden">A yellow cartoon robot playing its Dance animation in a bright studio, rendered by Slerp.</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <article class="row flip">
+      <div class="row-text">
+        <p class="kicker">Contents</p>
+        <h3>The pieces inside a file.</h3>
+        <p>The Contents panel lists what a file is made of: nodes, meshes, materials, textures, clips, skeletons, layers and archive entries.  Click one to see it on its own, or hover it to outline it in the 3D view.</p>
+        <p>Drag any piece out of the window and it lands as an ordinary file: textures as PNG or EXR, meshes and clips as GLB, sounds as WAV.  What Slerp opens in 3D can be saved as glTF, from the viewer or with <code>slerp convert</code>, and Slerp's tests check the output with the Khronos glTF Validator.</p>
+        <p class="note">Slerp reads and extracts, and never changes your files.</p>
+      </div>
+      <div class="stage stage-contents">
+        <div class="window window-dark contents-window">
+          <div class="titlebar" aria-hidden="true"><span class="title">chess_set_1k.gltf - Slerp</span><span class="wbtns"><i class="wb-min"></i><i class="wb-max"></i><i class="wb-close"></i></span></div>
+          <div class="crop">
+            <img data-slot="contents" src="../../img/screens/contents.webp" width="1920" height="1200" loading="lazy" alt="The Slerp viewer with the Contents panel listing the pieces of a chess set, the inspector showing its details, and the hovered queen outlined on the board.">
+          </div>
+        </div>
+        <div class="drag-chip" aria-hidden="true">
+          <span class="drag-file"><svg viewBox="0 0 16 16"><use href="#i-cube"/></svg>piece_queen_white.glb</span>
+          <svg class="cursor" viewBox="0 0 16 16"><use href="#i-cursor"/></svg>
+        </div>
+        <div class="saveas" aria-hidden="true">
+          <span class="saveas-k">File</span><svg viewBox="0 0 16 16"><use href="#i-chev-right"/></svg><span>Save as GLB</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="row">
+      <div class="row-text">
+        <p class="kicker">Safety</p>
+        <h3>Careful with what it reads.</h3>
+        <p>A thumbnailer opens the files you scroll past, downloads included, so Slerp trusts none of them.  Its readers check sizes and offsets before using them, cap how much memory a file can ask for, and are meant to turn a damaged file into a message rather than a crash.  That lowers the risk of a bad file without ruling it out.</p>
+        <ul class="ticks">
+          <li><b>Fuzzed.</b>  38 cargo-fuzz targets feed the parsers broken and random input.  The crashes and hangs found so far are fixed, each with a regression test.</li>
+          <li><b>Kept apart.</b>  The riskier C decoders and the PDF and SVG renderers run in separate processes with time and memory limits.</li>
+          <li><b>Offline.</b>  Slerp never goes online: no accounts, no telemetry, no update checks.</li>
+        </ul>
+      </div>
+      <div class="stage">
+        <div class="diagram" role="img" aria-label="A diagram: a downloaded file goes through Slerp's readers, which check sizes and offsets and cap allocations.  JPEG XR, MetaHuman DNA, AV1 and HEIC decoders and the PDF and SVG renderers run in a separate process with time and memory limits.  Nothing goes to the network.">
+          <div class="d-file"><svg viewBox="0 0 16 16"><use href="#i-file"/></svg><span>Downloads/<b>damaged_level.bsp</b></span></div>
+          <span class="d-arrow"></span>
+          <div class="d-box">
+            <p class="d-title">Slerp's readers</p>
+            <ul>
+              <li>Sizes and offsets checked</li>
+              <li>Allocations capped</li>
+              <li>A damaged file gives a message</li>
+            </ul>
+            <span class="d-badge">38 fuzz targets</span>
+          </div>
+          <span class="d-arrow"></span>
+          <div class="d-box d-sandbox">
+            <p class="d-title">Separate process<span>time and memory limits</span></p>
+            <ul class="d-chips"><li>JPEG XR</li><li>MetaHuman DNA</li><li>AV1</li><li>HEIC</li><li>PDF</li><li>SVG</li></ul>
+          </div>
+          <div class="d-offline"><svg viewBox="0 0 20 20"><use href="#i-offline"/></svg><span>No network access</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="row flip">
+      <div class="row-text">
+        <p class="kicker">Desktop</p>
+        <h3>The desktop's look.</h3>
+        <p>The viewer takes its colours, fonts and icons from KDE, GNOME, Windows or macOS.  Which files it opens when you double-click them depends on the system:</p>
+        <ul class="os">
+          <li><b>Linux.</b>  Slerp opens the formats nothing else on your computer opens.  For ordinary pictures it waits under Open With, below your usual image viewer.</li>
+          <li><b>Windows.</b>  Slerp appears under Open with.  Only you can make it the default app, in Settings, Default apps, Slerp.</li>
+          <li><b>macOS.</b>  Slerp opens the formats macOS doesn't know, and OBJ, STL, PLY, COLLADA and USDA.  GLB, USDZ, KTX, DDS, HDR and PNG stay with Preview.</li>
+        </ul>
+        <p>Change it for any format in the viewer's settings or with <code>slerp associate</code>.  <code>slerp associate --reset</code> puts back exactly what was there before.</p>
+      </div>
+      <div class="stage stage-bleed">
+        <div class="window window-dark">
+          <div class="titlebar" aria-hidden="true"><span class="title">Bricks097_1K-JPG.mtlx - Slerp</span><span class="wbtns"><i class="wb-min"></i><i class="wb-max"></i><i class="wb-close"></i></span></div>
+          <img data-slot="material" src="../../img/screens/material.webp" width="1920" height="1200" loading="lazy" alt="The Slerp viewer showing a brick MaterialX material on a ball, with shape, tiling and displacement controls and the file&#x27;s own preview.">
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ===== Formats ===== -->
+<section class="section formats" id="formats" aria-labelledby="formats-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">Formats</p>
+      <h2 id="formats-title">About 200 formats in 16 categories.</h2>
+      <p>From glTF, FBX and USD to Quake maps, KTX2 textures, Gaussian splats, DICOM scans and Commodore 64 pictures.  Search for yours, or pick a category.</p>
+    </div>
+
+    <div class="fmt-search">
+      <label class="search">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><use href="#i-search"/></svg>
+        <span class="visually-hidden">Search formats</span>
+        <input id="fmt-q" type="search" autocomplete="off" spellcheck="false" placeholder="Search formats, like ktx2, blender or dicom">
+      </label>
+      <p class="visually-hidden" id="fmt-status" aria-live="polite"></p>
+    </div>
+
+    <ul class="cats" id="fmt-cats">
+      <li><button type="button" class="cat" data-cat="3D models"><span class="n">40</span><span class="name">3D models</span><span class="eg">glTF, FBX, OBJ, USD, STL, VRM, MagicaVoxel</span></button></li>
+      <li><button type="button" class="cat" data-cat="Point clouds and splats"><span class="n">8</span><span class="name">Point clouds and splats</span><span class="eg">Gaussian splats, SPZ, SOG, LAS and LAZ, E57</span></button></li>
+      <li><button type="button" class="cat" data-cat="Scenes and projects"><span class="n">3</span><span class="name">Scenes and projects</span><span class="eg">Blender, Godot, Unity</span></button></li>
+      <li><button type="button" class="cat" data-cat="Levels and maps"><span class="n">7</span><span class="name">Levels and maps</span><span class="eg">Quake BSP, Doom WAD, Hammer VMF, Roblox</span></button></li>
+      <li><button type="button" class="cat" data-cat="Materials"><span class="n">3</span><span class="name">Materials</span><span class="eg">MaterialX, Godot, Substance</span></button></li>
+      <li><button type="button" class="cat" data-cat="Textures"><span class="n">10</span><span class="name">Textures</span><span class="eg">KTX2, DDS, ASTC, PVR, BLP</span></button></li>
+      <li><button type="button" class="cat" data-cat="Sprites and tile maps"><span class="n">9</span><span class="name">Sprites and tile maps</span><span class="eg">Aseprite, Tiled, LDtk, sprite sheets</span></button></li>
+      <li><button type="button" class="cat" data-cat="Images"><span class="n">33</span><span class="name">Images</span><span class="eg">OpenEXR, Radiance HDR, PSD, JPEG XL, heightmaps</span></button></li>
+      <li><button type="button" class="cat" data-cat="Retro computer art"><span class="n">16</span><span class="name">Retro computer art</span><span class="eg">Amiga IFF, Commodore 64, ANSI art, PICO-8</span></button></li>
+      <li><button type="button" class="cat" data-cat="Palettes and colour tables"><span class="n">11</span><span class="name">Palettes and colour tables</span><span class="eg">.cube LUTs, ASE, GIMP and Krita palettes</span></button></li>
+      <li><button type="button" class="cat" data-cat="Drawings and CAD"><span class="n">10</span><span class="name">Drawings and CAD</span><span class="eg">DXF, Rhino, Illustrator, EPS, SVG</span></button></li>
+      <li><button type="button" class="cat" data-cat="Documents with stored previews"><span class="n">25</span><span class="name">Documents with stored previews</span><span class="eg">Unreal, ZBrush, Procreate, SolidWorks, Figma</span></button></li>
+      <li><button type="button" class="cat" data-cat="Game archives"><span class="n">6</span><span class="name">Game archives</span><span class="eg">PAK, PK4, VPK, GRP, Unity packages</span></button></li>
+      <li><button type="button" class="cat" data-cat="Toolpaths and GPS tracks"><span class="n">7</span><span class="name">Toolpaths and GPS tracks</span><span class="eg">G-code, GPX, FIT, KML, GeoJSON</span></button></li>
+      <li><button type="button" class="cat" data-cat="Medical images"><span class="n">5</span><span class="name">Medical images</span><span class="eg">DICOM, NIfTI, NRRD, MetaImage</span></button></li>
+      <li><button type="button" class="cat" data-cat="Scientific data"><span class="n">11</span><span class="name">Scientific data</span><span class="eg">FITS, NumPy, HDF5, slide scans</span></button></li>
+    </ul>
+
+    <div class="fmt-results" id="fmt-results" hidden></div>
+
+    <p class="fmt-note">For many formats Slerp reads only part of what the format can hold; <a href="https://github.com/eric-frost/slerp/blob/main/docs/format-details.md">docs/format-details.md</a> says what each reader leaves out.  Ordinary pictures such as PNG and JPEG open in the viewer, but Slerp leaves their thumbnails to your desktop unless you switch its own on.  Animation files have no thumbnail of their own: there is nothing to draw until a character plays them.</p>
+  </div>
+</section>
+
+<!-- ===== Install ===== -->
+<section class="section install" id="install" aria-labelledby="install-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">Install</p>
+      <h2 id="install-title">Install Slerp.</h2>
+      <p>There are no releases yet.  Until the first one, a script in the source builds each package.</p>
+    </div>
+
+    <div class="install-card">
+      <div class="tabs" role="tablist" aria-label="Platform">
+        <button type="button" role="tab" id="tab-linux" aria-controls="panel-linux" aria-selected="true">Linux</button>
+        <button type="button" role="tab" id="tab-windows" aria-controls="panel-windows" aria-selected="false" tabindex="-1">Windows</button>
+        <button type="button" role="tab" id="tab-macos" aria-controls="panel-macos" aria-selected="false" tabindex="-1">macOS</button>
+        <button type="button" role="tab" id="tab-source" aria-controls="panel-source" aria-selected="false" tabindex="-1">Source</button>
+      </div>
+
+      <div class="panel" role="tabpanel" id="panel-linux" aria-labelledby="tab-linux" tabindex="0">
+        <h3 class="panel-title">Linux</h3>
+        <div class="soon"><svg viewBox="0 0 20 20" aria-hidden="true"><use href="#i-clock"/></svg><p><b>Packages for Debian, Ubuntu and Arch are coming.</b>  Build them today with <code>tools/build-deb.sh</code> or the PKGBUILD in <code>packaging/aur/</code>.</p></div>
+        <div class="steps">
+          <div class="step">
+            <h3>Debian and Ubuntu</h3>
+            <p>Two packages: <code>slerp</code>, and the optional <code>slerp-qt-plugin</code>, which lets Gwenview and Dolphin's Information panel show Slerp's formats.  apt fetches what they need.</p>
+            <div class="code"><pre><code>sudo apt install ./slerp_0.1.0-1_amd64.deb \
+  ./slerp-qt-plugin_0.1.0-1_amd64.deb</code></pre><button type="button" class="copy">Copy</button></div>
+          </div>
+          <div class="step">
+            <h3>Arch Linux</h3>
+            <p>Until the package is in the AUR, make the source tarball with <code>tools/source-tarball.sh</code>, put it beside <code>packaging/aur/PKGBUILD</code> and run:</p>
+            <div class="code"><pre><code>makepkg -si</code></pre><button type="button" class="copy">Copy</button></div>
+          </div>
+          <div class="step">
+            <h3>Then, in Dolphin</h3>
+            <p>Most file managers find Slerp by themselves.  Dolphin keeps its own list of preview plugins, so run this once for each user, then restart Dolphin:</p>
+            <div class="code"><pre><code>slerp associate --apply</code></pre><button type="button" class="copy">Copy</button></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="panel-windows" aria-labelledby="tab-windows" tabindex="0">
+        <h3 class="panel-title">Windows</h3>
+        <div class="soon"><svg viewBox="0 0 20 20" aria-hidden="true"><use href="#i-clock"/></svg><p><b>A zip for Windows 11 is coming.</b>  Build it today on Linux with <code>tools/build-windows.sh</code>.</p></div>
+        <div class="steps">
+          <div class="step">
+            <h3>1. Unpack</h3>
+            <p>The zip holds <code>slerp.exe</code>, <code>slerpw.exe</code> and Explorer's thumbnail handler, <code>slerp_shell.dll</code>, with no other DLLs.  Unpack them into a folder that stays put, such as <code>%LOCALAPPDATA%\Programs\Slerp</code>.</p>
+          </div>
+          <div class="step">
+            <h3>2. Register</h3>
+            <p>Run this once in a terminal in that folder.  It needs no administrator rights.</p>
+            <div class="code"><pre><code>slerp.exe register</code></pre><button type="button" class="copy">Copy</button></div>
+          </div>
+          <div class="step">
+            <h3>3. Done</h3>
+            <p>Explorer shows thumbnails of Slerp's formats, and Slerp appears under Open with.  <code>slerp.exe unregister</code> removes both, and puts back any thumbnail handler Slerp replaced.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="panel-macos" aria-labelledby="tab-macos" tabindex="0">
+        <h3 class="panel-title">macOS</h3>
+        <div class="soon"><svg viewBox="0 0 20 20" aria-hidden="true"><use href="#i-clock"/></svg><p><b>A download of Slerp.app is coming.</b>  On a Mac with Rust and Apple's Command Line Tools, <code>tools/macos-app.sh install</code> builds it and installs it today.</p></div>
+        <div class="steps">
+          <div class="step">
+            <h3>The app</h3>
+            <p><code>Slerp.app</code>, for Apple Silicon, holds the viewer and a Quick Look extension that gives Finder thumbnails of the formats macOS doesn't know.  Move it to Applications.</p>
+          </div>
+          <div class="step">
+            <h3>First start</h3>
+            <p>The app is signed ad hoc, not notarized, so a copy downloaded from the web needs its quarantine flag cleared once:</p>
+            <div class="code"><pre><code>xattr -dr com.apple.quarantine ~/Applications/Slerp.app</code></pre><button type="button" class="copy">Copy</button></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="panel-source" aria-labelledby="tab-source" tabindex="0">
+        <h3 class="panel-title">From source</h3>
+        <div class="steps">
+          <div class="step">
+            <h3>What you need</h3>
+            <p>Rust 1.93 or newer, a C and C++ compiler, libclang, and the Wayland and xkbcommon development files.  On Debian and Ubuntu:</p>
+            <div class="code"><pre><code>sudo apt install cargo libclang-dev libwayland-dev \
+  libxkbcommon-dev pkg-config g++</code></pre><button type="button" class="copy">Copy</button></div>
+          </div>
+          <div class="step">
+            <h3>Build</h3>
+            <p>The README says where each installed file goes, and which Cargo features to drop for a smaller, thumbnailer-only build.</p>
+            <div class="code"><pre><code>git clone https://github.com/eric-frost/slerp
+cd slerp
+cargo build --release</code></pre><button type="button" class="copy">Copy</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="section faq" id="faq" aria-labelledby="faq-title">
+  <div class="wrap faq-grid">
+    <div class="section-head">
+      <p class="kicker">Questions</p>
+      <h2 id="faq-title">Good to know.</h2>
+      <p>Anything else?  Ask on <a href="https://github.com/eric-frost/slerp">GitHub</a>.</p>
+    </div>
+    <div class="faq-list">
+      <details open>
+        <summary>Is it free?</summary>
+        <p>Yes.  Slerp is open source, under your choice of the MIT licence or the Apache License 2.0.  Use it at home or at work, read the code, change it and pass it on.</p>
+      </details>
+      <details>
+        <summary>Does it go online?</summary>
+        <p>No.  Slerp never connects to the internet.  There is no account, no telemetry and no update check.  It reads the file on your disk and draws it on your own computer.</p>
+      </details>
+      <details>
+        <summary>Why doesn't it make thumbnails of PDFs?</summary>
+        <p>Slerp is for graphics, not documents.  It leaves thumbnails of PDFs, PNGs and JPEGs to your desktop unless you switch its own on.  The viewer still opens ordinary pictures such as PNG and JPEG.</p>
+      </details>
+      <details>
+        <summary>Does it need a graphics card?</summary>
+        <p>No.  Without a GPU driver, Slerp draws 3D thumbnails on the CPU, with Mesa's lavapipe on Linux and Direct3D's WARP renderer on Windows.  It is slower, but it works.</p>
+      </details>
+      <details>
+        <summary>Who makes it, and how far along is it?</summary>
+        <p>One developer, Eric.  Slerp is a young project with no releases yet.  For many formats it reads only part of what the format can hold, and most of the testing so far has been on one Linux laptop with KDE, a Windows 11 virtual machine and one Mac, so expect files it gets wrong.  Bug reports are welcome on <a href="https://github.com/eric-frost/slerp/issues">GitHub</a>, most of all with a file you are free to share.</p>
+      </details>
+      <details>
+        <summary>Why the name?</summary>
+        <p>Slerp is short for spherical linear interpolation, the formula 3D programs use to turn smoothly from one rotation to another.  Turning things around smoothly is most of what a 3D viewer does.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Closing call to action ===== -->
+<section class="closing" aria-labelledby="closing-title">
+  <div class="wrap closing-inner">
+    <h2 id="closing-title">Thumbnails and a viewer for graphics files.</h2>
+    <p>Open source and offline, for Linux, Windows 11 and macOS.  No releases yet.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#install" data-download>
+        <svg viewBox="0 0 20 20" aria-hidden="true"><use href="#i-download"/></svg>
+        <span data-download-label>Install Slerp</span>
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/eric-frost/slerp">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><use href="#i-github"/></svg>
+        <span>View the source</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="#top" aria-label="Slerp, back to the top">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#i-mark"/></svg>
+        <span>slerp</span>
+      </a>
+      <p>A thumbnailer and viewer for 3D, game and graphics files.  Made by one developer, in the open.</p>
+    </div>
+    <nav class="footer-links" aria-label="Project">
+      <h2>Project</h2>
+      <a href="https://github.com/eric-frost/slerp">Source code</a>
+      <a href="https://github.com/eric-frost/slerp/blob/main/docs/formats.md">Formats and extensions</a>
+      <a href="https://github.com/eric-frost/slerp/blob/main/ARCHITECTURE.md">How it is built</a>
+      <a href="https://github.com/eric-frost/slerp/blob/main/THIRD-PARTY.md">Third-party notices</a>
+    </nav>
+    <div class="footer-legal">
+      <h2>Licence</h2>
+      <p>Slerp is licensed under the <a href="https://github.com/eric-frost/slerp/blob/main/LICENSE-MIT">MIT licence</a> or the <a href="https://github.com/eric-frost/slerp/blob/main/LICENSE-APACHE">Apache License 2.0</a>, at your option.</p>
+      <p class="fonts-note">Headings are set in Space Grotesk and code in DM Mono, both under the <a href="fonts/OFL.txt">SIL Open Font License</a>.</p>
+    </div>
+  </div>
+  <div class="wrap">
+    <section class="credits" aria-labelledby="credits-title">
+      <h2 id="credits-title">Picture credits</h2>
+      <p>Slerp made every picture on this page from sample files by other people.  Thank you to all of them.</p>
+      <div class="credit-cols">
+        <div>
+          <h3>Credit required by their licences</h3>
+          <ul>
+            <li><a href="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/LittlestTokyo.glb">LittlestTokyo.glb</a> by Glen Fox, from the three.js examples.  <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</li>
+            <li><a href="https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/StainedGlassLamp">StainedGlassLamp.gltf</a> by Eric Chadwick (Wayfair), from the Khronos glTF sample models.  <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</li>
+            <li><a href="https://doi.org/10.7937/K9/TCIA.2015.LO9QL9SX">00000060.dcm</a> by The Cancer Imaging Archive, LIDC-IDRI collection (Armato and others, 2011).  <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</li>
+            <li><a href="https://github.com/KhronosGroup/KTX-Software">Desk_uastc_hdr4x4_zstd_15.ktx2</a> by The KTX-Software project (test data; the Desk picture comes from the OpenEXR sample images).  <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a>.</li>
+            <li><a href="https://freedoom.github.io/">freedoom2.wad</a> by Freedoom contributors.  <a href="https://opensource.org/license/bsd-3-clause">BSD 3-Clause</a>.</li>
+            <li><a href="https://github.com/tkrajina/gpxpy">Mojstrovka.gpx</a> by Tomo Krajina (gpxpy test data).  <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a>.</li>
+            <li><a href="https://github.com/playcanvas/engine">guitar.compressed.ply</a> by PlayCanvas.  <a href="https://opensource.org/license/mit">MIT</a>.</li>
+            <li><a href="https://github.com/ephtracy/voxel-model">chr_knight.vox</a> by ephtracy (MagicaVoxel sample models).  <a href="https://opensource.org/license/mit">MIT</a>.</li>
+            <li><a href="https://github.com/nianticlabs/spz">hornedlizard.spz</a> by Niantic.  <a href="https://opensource.org/license/mit">MIT</a>.</li>
+            <li><a href="https://github.com/lavenderdotpet/LibreQuake">lqdm3.bsp</a> by LibreQuake contributors.  <a href="https://opensource.org/license/bsd-3-clause">BSD 3-Clause</a>.</li>
+            <li><a href="https://github.com/ephtracy/voxel-model">monu7.vox</a> by ephtracy (MagicaVoxel sample models).  <a href="https://opensource.org/license/mit">MIT</a>.</li>
+            <li><a href="https://raw.githubusercontent.com/mrdoob/three.js/43488e632d91441c095a71c9c3d2d46c75983745/examples/models/gltf/IridescentDishWithOlives.glb">IridescentDishWithOlives.glb</a> by Eric Chadwick (Wayfair), from the three.js examples.  <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</li>
+            <li><a href="https://github.com/dagronf/ColorPaletteCodable">cpc-pear36.hex</a> by PineappleOnPizza (via ColorPaletteCodable).  <a href="https://opensource.org/license/mit">MIT</a>.</li>
+            <li><a href="https://github.com/lavenderdotpet/LibreQuake">shambler.mdl</a> by LibreQuake contributors.  <a href="https://opensource.org/license/bsd-3-clause">BSD 3-Clause</a>.</li>
+            <li><a href="https://github.com/ansilove/ansilove">ansilove-n-silove.ans</a> by Bjorn Odendahl, from the ansilove examples.  <a href="https://opensource.org/license/bsd-2-clause">BSD 2-Clause</a>.</li>
+            <li><a href="https://github.com/derlunz/matplotlib-colormap-luts">Matplotlib_cyclic_twilight.cube</a> by derlunz (a lookup table of a Matplotlib colour map).  <a href="https://opensource.org/license/mit">MIT</a>.</li>
+            <li><a href="https://github.com/Roblox/open-game-eval">village.rbxl</a> by Roblox (open-game-eval Studio templates).  <a href="https://opensource.org/license/mit">MIT</a>.</li>
+            <li><a href="https://github.com/SandroHc/schematic4j">island.litematic</a> by SandroHc (schematic4j test data).  <a href="https://opensource.org/license/mit">MIT</a>.</li>
+            <li><a href="https://github.com/mmdagent-ex/gene">Gene_light.pmx</a>: CG-CA Gene (c) 2023 by Nagoya Institute of Technology.  <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</li>
+            <li><a href="https://github.com/playcanvas/engine">biker.spz</a> by PlayCanvas.  <a href="https://opensource.org/license/mit">MIT</a>.</li>
+            <li><a href="https://github.com/Roblox/open-game-eval">pirate_island.rbxl</a> by Roblox (open-game-eval Studio templates).  <a href="https://opensource.org/license/mit">MIT</a>.</li>
+            <li><a href="https://github.com/BabylonJS/Exporters">Yeti_Apose.ma</a> by The Babylon.js exporters project.  <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a>.</li>
+            <li><a href="https://github.com/image-rs/image-dds">Pretoria Gardens DX10.dds</a> by The image-rs project (image-dds test data).  <a href="https://opensource.org/license/mit">MIT or Apache 2.0</a>.</li>
+            <li><a href="https://github.com/AcademySoftwareFoundation/openexr-images">GoldenGate.exr</a> by Industrial Light and Magic (OpenEXR sample images).  <a href="https://opensource.org/license/bsd-3-clause">BSD 3-Clause</a>.</li>
+            <li><a href="https://github.com/3MFConsortium/3mf-samples">heartgears.3mf</a> by 3MF Consortium.  <a href="https://opensource.org/license/bsd-2-clause">BSD 2-Clause</a>.</li>
+            <li><a href="https://github.com/aspose-cad/Aspose.CAD-for-Java">aspose-Tyrannosaurus.dwfx</a> by Aspose (Aspose.CAD examples).  <a href="https://opensource.org/license/mit">MIT</a>.</li>
+            <li><a href="https://github.com/kieranhj/funky-fresh">funky-fresh-logo-mode2.bbc</a> by Kieran Connell (the Bitshifters demo funky-fresh).  <a href="https://opensource.org/license/mit">MIT</a>.</li>
+            <li><a href="https://github.com/lavenderdotpet/LibreQuake">lq_e1m1.bsp</a> by LibreQuake contributors.  <a href="https://opensource.org/license/bsd-3-clause">BSD 3-Clause</a>.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Public domain (CC0), credited with thanks</h3>
+          <ul>
+            <li><a href="https://polyhaven.com/a/ship_pinnace">ship_pinnace_2k.gltf</a> by James Ray Cock, Rico Cilliers, Nicolò Zubbini and Yann Kervran (Poly Haven).  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://polyhaven.com/a/venice_sunset">venice_sunset_4k.hdr</a> by Greg Zaal (Poly Haven).  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://opengameart.org/content/cute-painterly-characters-and-forest">Peggy.kra</a> by GDquest.  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://polyhaven.com/a/boombox">boombox_1k.gltf</a> by Thomas Paul Mouilleron (Poly Haven).  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://www.templateflow.org/">MNI152_T1_1mm_2009c.nii.gz</a> by TemplateFlow (the MNI152NLin2009cAsym brain template).  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://polyhaven.com/a/Camera_01">Camera_01_1k.gltf</a> by Rajil Jose Macatangay (Poly Haven).  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://polyhaven.com/a/treasure_chest">treasure_chest_1k.gltf</a> by Rico Cilliers (Poly Haven).  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://github.com/valiet/assets_duelyst_units">f4_demonofeternity_idle.ase</a> by Counterplay Games (Duelyst), converted to Aseprite by valiet.  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/Nefertiti">nefertiti.gcode</a> by Nora Al-Badri and Jan Nikolai Nelles (the Nefertiti Hack scan), sliced into G-code for this site.  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Nefertiti/Nefertiti.glb">Nefertiti.glb</a> by Nora Al-Badri and Jan Nikolai Nelles (the Nefertiti Hack scan), from the three.js examples.  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://github.com/tomic-pasko/PC_Fan_Solidworks">pcfan-PC_Fan.SLDASM</a> by tomic-pasko.  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/RobotExpressive">RobotExpressive.glb</a> by Tomás Laulhé (Quaternius), edited by Don McCurdy.  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://polyhaven.com/a/ship_pinnace">ship_pinnace_1k.gltf</a> by James Ray Cock, Rico Cilliers, Nicolò Zubbini and Yann Kervran (Poly Haven).  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://openslide.cs.cmu.edu/download/openslide-testdata/">CMU-1-Small-Region.svs</a> by Carnegie Mellon University (OpenSlide test data).  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://polyhaven.com/a/venice_sunset">venice_sunset_1k.hdr</a> by Greg Zaal (Poly Haven).  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://www.blender.org/download/demo-files/">cube_diorama.blend</a> by Blender Studio.  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://ambientcg.com/view?id=Leaf001">Leaf001_1K-JPG.mtlx</a> by ambientCG.  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://kenney.nl/assets/tiny-dungeon">sampleMap.tmx</a> by Kenney.  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://github.com/valiet/assets_duelyst_units">neutral_moltengolem_idle.ase</a> by Counterplay Games (Duelyst), converted to Aseprite by valiet.  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://polyhaven.com/a/marble_bust_01">marble_bust_01_1k.gltf</a> by Rico Cilliers (Poly Haven).  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://polyhaven.com/a/studio_small_09">studio_small_09_1k.hdr</a> by Sergej Majboroda (Poly Haven).  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://polyhaven.com/a/chess_set">chess_set_1k.gltf</a> by Riley Queen (Poly Haven).  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+            <li><a href="https://ambientcg.com/view?id=Bricks097">Bricks097_1K-JPG.mtlx</a> by ambientCG.  <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="wrap"><div class="footer-base"><span>slerp3d.com</span><span>No cookies, no trackers, no requests to other sites.</span></div></div>
+</footer>
+
+<!-- Icons, drawn once and reused with <use>. -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-mark" viewBox="0 0 32 32">
+    <rect width="32" height="32" rx="8" fill="var(--accent)"/>
+    <circle cx="16" cy="16" r="9.5" fill="none" stroke="#fff" stroke-width="1.8"/>
+    <ellipse cx="16" cy="16" rx="9.5" ry="3.4" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="1.3"/>
+    <path d="M8.6 20.8C9.6 13.6 14.6 9.6 22.6 10.6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="8.6" cy="20.8" r="2.3" fill="#fff"/><circle cx="22.6" cy="10.6" r="2.3" fill="#fff"/>
+  </symbol>
+  <symbol id="i-github" viewBox="0 0 16 16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></symbol>
+  <symbol id="i-download" viewBox="0 0 20 20"><path d="M10 3v10m0 0l-4-4m4 4l4-4M4 16h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chev-left" viewBox="0 0 16 16"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chev-right" viewBox="0 0 16 16"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-search" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 16 16"><path d="M1.5 4.5a1 1 0 011-1h3.6l1.4 1.5h6a1 1 0 011 1v6.5a1 1 0 01-1 1h-11a1 1 0 01-1-1z" fill="currentColor"/></symbol>
+  <symbol id="i-drive" viewBox="0 0 16 16"><rect x="1.5" y="4" width="13" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="11.5" cy="8" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-grip" viewBox="0 0 20 20"><path d="M7 5L2.5 10 7 15M13 5l4.5 5-4.5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 20 20"><path d="M6 4h3v12H6zM11 4h3v12h-3z" fill="currentColor"/></symbol>
+  <symbol id="i-play" viewBox="0 0 20 20"><path d="M6 4l10 6-10 6z" fill="currentColor"/></symbol>
+  <symbol id="i-cube" viewBox="0 0 16 16"><path d="M8 1.5l5.5 3v7L8 14.5l-5.5-3v-7z M2.5 4.5L8 7.5l5.5-3M8 7.5v7" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></symbol>
+  <symbol id="i-cursor" viewBox="0 0 16 16"><path d="M3 1.5v11.5l3-3 2.2 4.8 2-.9L8 9.2h4.2z" fill="#0b0d12" stroke="#fff" stroke-width="1.1" stroke-linejoin="round"/></symbol>
+  <symbol id="i-file" viewBox="0 0 16 16"><path d="M4 1.5h5l3.5 3.5v9.5h-8.5z M9 1.5V5h3.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></symbol>
+  <symbol id="i-offline" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 10h14M10 3c2.2 2.4 2.2 11.6 0 14M10 3c-2.2 2.4-2.2 11.6 0 14" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M3.5 16.5l13-13" stroke="#fff" stroke-width="3.6"/><path d="M3.5 16.5l13-13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 6v4.5l3 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+</body>
+</html>

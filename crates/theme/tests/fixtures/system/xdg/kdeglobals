@@ -1,0 +1,6 @@
+[General]
+ColorScheme=TestDark
+font=System Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+
+[KDE]
+frameContrast=0.3

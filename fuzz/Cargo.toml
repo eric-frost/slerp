@@ -1,0 +1,579 @@
+# Slerp's fuzz targets, built by cargo-fuzz with a nightly compiler (see
+# README.md and tools/fuzz.sh).  A workspace of its own, so the main one and
+# its Rust 1.93 builds never see it.
+[workspace]
+members = ["."]
+
+[package]
+name = "slerp-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2024"
+license = "MIT OR Apache-2.0"
+
+[package.metadata]
+cargo-fuzz = true
+
+[lib]
+name = "slerp_fuzz"
+path = "src/lib.rs"
+
+[dependencies]
+libfuzzer-sys = "0.4"
+libc = "0.2"
+slerp-scene = { path = "../crates/scene" }
+slerp-textures = { path = "../crates/textures" }
+slerp-archive = { path = "../crates/archive", optional = true }
+slerp-blend = { path = "../crates/blend", optional = true }
+slerp-cad = { path = "../crates/cad", optional = true }
+slerp-core = { path = "../crates/core", optional = true }
+slerp-dicom = { path = "../crates/dicom", optional = true }
+slerp-dna = { path = "../crates/dna", optional = true }
+slerp-documents = { path = "../crates/documents", optional = true }
+slerp-engines = { path = "../crates/engines", optional = true }
+slerp-formats = { path = "../crates/formats" }
+slerp-gameimages = { path = "../crates/gameimages", optional = true }
+slerp-gltf = { path = "../crates/gltf", optional = true }
+slerp-images = { path = "../crates/images", optional = true }
+slerp-lut = { path = "../crates/lut" }
+slerp-materials = { path = "../crates/materials", optional = true }
+slerp-max = { path = "../crates/max", optional = true }
+slerp-maya = { path = "../crates/maya", optional = true }
+slerp-metafile = { path = "../crates/metafile", optional = true }
+slerp-minecraft = { path = "../crates/minecraft", optional = true }
+slerp-models = { path = "../crates/models", optional = true }
+slerp-openexr = { path = "../crates/openexr", optional = true }
+slerp-paint = { path = "../crates/paint", optional = true }
+slerp-paths = { path = "../crates/paths", optional = true }
+slerp-previews = { path = "../crates/previews", optional = true }
+slerp-quake = { path = "../crates/quake", optional = true }
+slerp-retro = { path = "../crates/retro", optional = true }
+slerp-rigged = { path = "../crates/rigged", optional = true }
+slerp-roblox = { path = "../crates/roblox", optional = true }
+slerp-sketchup = { path = "../crates/sketchup", optional = true }
+slerp-splats = { path = "../crates/splats", optional = true }
+slerp-sprites = { path = "../crates/sprites" }
+slerp-svg = { path = "../crates/svg", optional = true }
+slerp-tiff = { path = "../crates/tiff", optional = true }
+slerp-jxr = { path = "../crates/jxr", optional = true }
+slerp-volumes = { path = "../crates/volumes", optional = true }
+
+# One feature per target, naming the crates it needs, so that a crate
+# being edited elsewhere stops only the targets that use it.
+[features]
+archive = ["dep:slerp-archive"]
+blend = ["dep:slerp-blend"]
+cad = ["dep:slerp-cad"]
+contents = ["dep:slerp-core"]
+core_sniff = ["dep:slerp-core"]
+core_thumbnail = ["dep:slerp-core"]
+dicom = ["dep:slerp-dicom"]
+dna = ["dep:slerp-dna"]
+documents = ["dep:slerp-documents", "dep:slerp-metafile"]
+engines = ["dep:slerp-engines"]
+gameimages = ["dep:slerp-gameimages"]
+gltf = ["dep:slerp-gltf"]
+images = ["dep:slerp-images"]
+jxr = ["dep:slerp-jxr"]
+lut = []
+materials = ["dep:slerp-materials"]
+max = ["dep:slerp-max", "dep:slerp-previews"]
+maya = ["dep:slerp-maya"]
+metafile = ["dep:slerp-metafile"]
+minecraft = ["dep:slerp-minecraft"]
+models = ["dep:slerp-models"]
+models_text = ["dep:slerp-models"]
+openexr = ["dep:slerp-openexr"]
+paint = ["dep:slerp-paint"]
+palette = ["dep:slerp-previews"]
+paths = ["dep:slerp-paths"]
+previews = ["dep:slerp-previews", "dep:slerp-metafile"]
+quake = ["dep:slerp-quake"]
+retro = ["dep:slerp-retro"]
+rigged = ["dep:slerp-rigged"]
+roblox = ["dep:slerp-roblox"]
+sketchup = ["dep:slerp-sketchup", "dep:slerp-previews"]
+splats = ["dep:slerp-splats"]
+sprites = []
+svg = ["dep:slerp-svg"]
+textures = []
+tiff = ["dep:slerp-tiff"]
+volumes = ["dep:slerp-volumes"]
+
+# Fuzz builds are release builds (`cargo fuzz build -O`, which leaves
+# debug assertions off everywhere).  Slerp's own crates turn overflow checks
+# and debug assertions back on below, so an overflow in them is a crash;
+# other people's crates build as they ship, where arithmetic wraps, so an
+# overflow check inside them (the laz crate has several) isn't mistaken for
+# a crash that release builds would have.
+[profile.release]
+debug = "line-tables-only"
+
+[profile.release.package.slerp-fuzz]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-archive]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-blend]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-cad]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-core]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-dicom]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-dna]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-documents]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-engines]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-formats]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-gameimages]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-gltf]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-images]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-isolate]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-jxr]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-lut]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-materials]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-max]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-maya]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-metafile]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-minecraft]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-models]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-openexr]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-paint]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-paths]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-polymesh]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-previews]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-quake]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-render]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-retarget]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-retro]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-rigged]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-roblox]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-scene]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-sketchup]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-splats]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-sprites]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-svg]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-textures]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-tiff]
+overflow-checks = true
+debug-assertions = true
+
+[profile.release.package.slerp-volumes]
+overflow-checks = true
+debug-assertions = true
+
+# One binary per target; tools/fuzz.sh lists them from here.
+[[bin]]
+name = "archive"
+path = "fuzz_targets/archive.rs"
+required-features = ["archive"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "blend"
+path = "fuzz_targets/blend.rs"
+required-features = ["blend"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "cad"
+path = "fuzz_targets/cad.rs"
+required-features = ["cad"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "contents"
+path = "fuzz_targets/contents.rs"
+required-features = ["contents"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "core_sniff"
+path = "fuzz_targets/core_sniff.rs"
+required-features = ["core_sniff"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "core_thumbnail"
+path = "fuzz_targets/core_thumbnail.rs"
+required-features = ["core_thumbnail"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "dicom"
+path = "fuzz_targets/dicom.rs"
+required-features = ["dicom"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "dna"
+path = "fuzz_targets/dna.rs"
+required-features = ["dna"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "documents"
+path = "fuzz_targets/documents.rs"
+required-features = ["documents"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "engines"
+path = "fuzz_targets/engines.rs"
+required-features = ["engines"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "gameimages"
+path = "fuzz_targets/gameimages.rs"
+required-features = ["gameimages"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "gltf"
+path = "fuzz_targets/gltf.rs"
+required-features = ["gltf"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "images"
+path = "fuzz_targets/images.rs"
+required-features = ["images"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "jxr"
+path = "fuzz_targets/jxr.rs"
+required-features = ["jxr"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "lut"
+path = "fuzz_targets/lut.rs"
+required-features = ["lut"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "materials"
+path = "fuzz_targets/materials.rs"
+required-features = ["materials"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "max"
+path = "fuzz_targets/max.rs"
+required-features = ["max"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "maya"
+path = "fuzz_targets/maya.rs"
+required-features = ["maya"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "metafile"
+path = "fuzz_targets/metafile.rs"
+required-features = ["metafile"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "minecraft"
+path = "fuzz_targets/minecraft.rs"
+required-features = ["minecraft"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "models"
+path = "fuzz_targets/models.rs"
+required-features = ["models"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "models_text"
+path = "fuzz_targets/models_text.rs"
+required-features = ["models_text"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "openexr"
+path = "fuzz_targets/openexr.rs"
+required-features = ["openexr"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "paint"
+path = "fuzz_targets/paint.rs"
+required-features = ["paint"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "palette"
+path = "fuzz_targets/palette.rs"
+required-features = ["palette"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "paths"
+path = "fuzz_targets/paths.rs"
+required-features = ["paths"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "previews"
+path = "fuzz_targets/previews.rs"
+required-features = ["previews"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "quake"
+path = "fuzz_targets/quake.rs"
+required-features = ["quake"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "retro"
+path = "fuzz_targets/retro.rs"
+required-features = ["retro"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "rigged"
+path = "fuzz_targets/rigged.rs"
+required-features = ["rigged"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "roblox"
+path = "fuzz_targets/roblox.rs"
+required-features = ["roblox"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "sketchup"
+path = "fuzz_targets/sketchup.rs"
+required-features = ["sketchup"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "splats"
+path = "fuzz_targets/splats.rs"
+required-features = ["splats"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "sprites"
+path = "fuzz_targets/sprites.rs"
+required-features = ["sprites"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "svg"
+path = "fuzz_targets/svg.rs"
+required-features = ["svg"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "textures"
+path = "fuzz_targets/textures.rs"
+required-features = ["textures"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "tiff"
+path = "fuzz_targets/tiff.rs"
+required-features = ["tiff"]
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "volumes"
+path = "fuzz_targets/volumes.rs"
+required-features = ["volumes"]
+test = false
+doc = false
+bench = false

@@ -1,0 +1,21 @@
+[package]
+name = "slerp-roblox"
+description = "Roblox places and models (.rbxl, .rbxm, .rbxlx, .rbxmx) as scenes for Slerp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+glam.workspace = true
+# Chunks of binary files are LZ4 blocks (MIT); the checked decoder never
+# writes past the declared size.
+lz4_flex = { version = "0.14", default-features = false, features = ["std", "safe-decode", "checked-decode"] }
+# Newer Studio versions compress chunks with Zstandard (MIT, BSD-3 libzstd).
+zstd = { version = "0.14", default-features = false }
+# XML places and models, read as a stream so a large place never sits in
+# memory as a tree (MIT).
+quick-xml = "0.41"
+# Binary strings and shared strings in XML files (MIT OR Apache-2.0).
+base64 = "0.22"

@@ -1,0 +1,24 @@
+[package]
+name = "slerp-paint"
+description = "Layered paint documents for Slerp: Photoshop PSD and PSB, GIMP XCF, OpenRaster ORA and Krita KRA, with one layer compositor"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+# Krita and OpenRaster files are zips; read through the shared archive reader.
+slerp-archive = { path = "../archive" }
+rayon.workspace = true
+# zip-compressed Photoshop channels, zlib XCF tiles and gzipped XCF files.
+miniz_oxide = "0.8"
+# Layer PNGs inside OpenRaster and Krita files; the textures crate builds it.
+png = "0.18"
+# stack.xml and maindoc.xml.
+roxmltree = "0.21"
+# .xcf.bz2 files: the pure-Rust decoder the volumes crate already uses.
+bzip2-rs = "0.1"
+
+[dev-dependencies]
+png = "0.18"

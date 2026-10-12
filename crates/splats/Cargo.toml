@@ -1,0 +1,18 @@
+[package]
+name = "slerp-splats"
+description = "Gaussian splat loaders for Slerp: 3DGS PLY, compressed PLY, .splat and SPZ"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+glam.workspace = true
+# SPZ versions 1 to 3 are one gzip stream; version 4 is zstd streams.
+flate2 = { version = "1.1", features = ["zlib-rs"] }
+zstd = { version = "0.14", default-features = false }
+# Spherical-harmonic coefficients are kept as half floats.
+half = "2"
+# SOG's meta.json.
+serde_json = "1"

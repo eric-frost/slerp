@@ -1,0 +1,25 @@
+[package]
+name = "slerp-minecraft"
+description = "Minecraft schematics (Sponge, Litematica, structure and MCEdit files) as greedy-meshed block scenes for Slerp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+glam.workspace = true
+rayon.workspace = true
+# Inflates gzip and zlib NBT, with a cap on the output (MIT OR Zlib OR
+# Apache-2.0).
+miniz_oxide = "0.8"
+# Reads block textures from a Minecraft client jar or resource pack (zip)
+# the user has, at run time.
+slerp-archive = { path = "../archive" }
+# Block state and model files in those jars and packs.
+serde_json = "1"
+
+[dev-dependencies]
+# Writes resource pack zips and their PNGs for the tests.
+slerp-archive = { path = "../archive", features = ["testutil"] }
+png = "0.18"

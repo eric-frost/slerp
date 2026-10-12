@@ -1,0 +1,26 @@
+[package]
+name = "slerp-gltf"
+description = "glTF 2.0, GLB, VRM and VRMA loading for Slerp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+rayon.workspace = true
+bytemuck.workspace = true
+serde = { version = "1", features = ["derive"] }
+# `raw_value` lets large extension objects (VRM's) be parsed only when used.
+serde_json = { version = "1", features = ["raw_value"] }
+# meshoptimizer's own decoder (C++, built by `cc`), for EXT_ and
+# KHR_meshopt_compression.  Its SIMD paths are several times faster than a
+# scalar port, which matters for the thumbnail time budget.
+meshopt = "0.6"
+# Draco geometry (KHR_draco_mesh_compression and .drc files): a pure-Rust
+# decoder of every Draco bitstream, so no C++ is linked.
+draco-core = { version = "2.3", default-features = false, features = ["decoder", "point_cloud_decode", "edgebreaker_valence_decode", "legacy_bitstream_decode"] }
+base64 = "0.22"
+thiserror.workspace = true
+# Pictures without an original file glTF can hold are written as PNG.
+png = "0.18"

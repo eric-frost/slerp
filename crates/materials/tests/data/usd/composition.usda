@@ -1,0 +1,53 @@
+#usda 1.0
+(
+    defaultPrim = "Root"
+)
+
+def Xform "Root" (
+    kind = "component"
+    prepend references = [</Base>, @other.usda@</Elsewhere>]
+    prepend payload = @payload.usda@
+    prepend inherits = </_class>
+    variants = {
+        string shading = "blue"
+        string size = "big"
+    }
+    prepend variantSets = ["shading", "size"]
+)
+{
+    custom string note = "local"
+    rel material:binding = [</Root/M1>, </Root/M2>]
+    variantSet "shading" = {
+        "blue" {
+            color3f[] primvars:displayColor = [(0, 0, 1)]
+            def Scope "Inner" (
+                active = false
+            )
+            {
+            }
+
+        }
+        "red" (
+            prepend references = </Base>
+        ) {
+            color3f[] primvars:displayColor = [(1, 0, 0)]
+
+        }
+    }
+    variantSet "size" = {
+        "big" {
+            double size = 10
+
+        }
+    }
+}
+
+over "Base"
+{
+    float f.connect = </Root.note>
+}
+
+class "_class"
+{
+    token purpose = "render"
+}

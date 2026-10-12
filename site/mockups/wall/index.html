@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slerp: thumbnails and a viewer for 3D, game and graphics files</title>
+<meta name="description" content="Slerp makes file-manager thumbnails of 3D models, GPU textures, game levels, splats and other graphics files, about 200 formats in all, and opens them in a viewer.  Open source, for Linux, Windows and macOS.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d0f12">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Slerp">
+<meta property="og:url" content="https://slerp3d.com/">
+<meta property="og:title" content="Slerp: thumbnails and a viewer for 3D, game and graphics files">
+<meta property="og:description" content="File-manager thumbnails and a viewer for 3D models, GPU textures, game levels, splats, scans and other graphics files, about 200 formats in all.  Open source, for Linux, Windows and macOS.">
+<meta property="og:image" content="https://slerp3d.com/img/social/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The name Slerp and a one-line description beside a grid of Slerp thumbnails of a ship, a diorama, a splat, a painting, a robot, voxels, pixel art, a material, a brain scan, a toolpath, a lamp and a tile map.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Slerp: thumbnails and a viewer for 3D, game and graphics files">
+<meta name="twitter:description" content="File-manager thumbnails and a viewer for 3D models, GPU textures, game levels, splats, scans and other graphics files, about 200 formats in all.">
+<meta name="twitter:image" content="https://slerp3d.com/img/social/og.png">
+<link rel="preload" href="fonts/space-grotesk-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../img/images.json" as="fetch" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script type="module" src="script.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-in">
+    <a class="brand" href="#top" aria-label="Slerp, back to the top">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11"/><path d="M5.66 19.76A11 11 0 0 1 19.76 5.66"/><circle class="a" cx="5.66" cy="19.76" r="3"/><circle class="b" cx="19.76" cy="5.66" r="3"/></svg>
+      <span>Slerp</span>
+    </a>
+    <nav aria-label="Main">
+      <a href="#file-managers">Thumbnails</a>
+      <a href="#viewer">Viewer</a>
+      <a href="#formats">Formats</a>
+      <a href="#download">Install</a>
+      <a class="gh" href="https://github.com/eric-frost/slerp">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- The wall: every tile is a picture Slerp made.  The tiles come from WALL at the top of script.js. -->
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="wall" id="wall">
+    <div class="intro">
+      <h1 id="hero-title">Slerp</h1>
+      <p class="tagline">Thumbnails for the files your file manager doesn't preview.</p>
+      <p class="lede">Thumbnails and a viewer for about 200 formats: 3D models, GPU textures, HDR skies, game levels, Gaussian splats, voxels, retro art, CAD drawings and scans.  For Linux, Windows and macOS.  Open source, and not released yet.</p>
+      <div class="actions">
+        <a class="btn primary" href="#download">Install</a>
+        <a class="btn" href="https://github.com/eric-frost/slerp">Source on GitHub</a>
+      </div>
+      <p class="hint"><span class="hover">Slerp drew the tiles on this wall.  Point at one to see the file.</span><span class="touch">Slerp drew these tiles.  Tap one to see the file.</span><span class="visually-hidden">  With a keyboard, Tab to the wall and use the arrow keys to move between tiles.</span></p>
+    </div>
+  </div>
+</section>
+
+<div class="facts">
+  <ul class="wrap">
+    <li><b>About 200</b> formats in 16 categories</li>
+    <li><b>3</b> operating systems: Linux, Windows 11, macOS</li>
+    <li><b>38</b> fuzz targets for the file readers</li>
+    <li><b>0.1</b> version, not released yet</li>
+  </ul>
+</div>
+
+<section class="sect" id="file-managers" aria-labelledby="fm-title">
+  <div class="wrap">
+    <p class="eyebrow">File managers</p>
+    <h2 id="fm-title">Thumbnails in the file manager</h2>
+    <p class="sect-lede">Most file managers show a generic icon for a <code>.glb</code>, a <code>.ktx2</code> or a <code>.bsp</code>.  With Slerp installed they show the model, the texture or the level.  Slerp uses the thumbnail system each desktop already has.</p>
+
+    <!-- Dolphin without and with Slerp: FILE_MANAGER in script.js. -->
+    <figure class="compare-fig">
+      <div class="compare-bar">
+        <button type="button" class="compare-label" data-compare="100">Without Slerp</button>
+        <span class="compare-hint">Drag to compare</span>
+        <button type="button" class="compare-label" data-compare="0">With Slerp</button>
+      </div>
+      <div class="compare" id="compare">
+        <div class="compare-line" aria-hidden="true"><span></span></div>
+        <input id="compare-range" type="range" min="0" max="100" value="50" aria-label="Divider between Dolphin without Slerp, on the left, and with Slerp, on the right">
+      </div>
+      <figcaption>Dolphin on KDE Plasma, the same folder of 28 files before and after Slerp.</figcaption>
+    </figure>
+
+    <div class="platforms">
+      <div class="platform">
+        <h3>Linux</h3>
+        <p>Dolphin, GNOME Files, Nemo, Caja, Thunar and PCManFM-Qt, through the freedesktop thumbnailer standard.  An optional Qt plugin lets Gwenview open textures and turns models slowly in Dolphin's Information panel.</p>
+      </div>
+      <div class="platform">
+        <h3>Windows 11</h3>
+        <p>Explorer, through a thumbnail handler registered for your account only.  No administrator rights, and <code>slerp unregister</code> puts back whatever was there before.</p>
+      </div>
+      <div class="platform">
+        <h3>macOS</h3>
+        <p>Finder, through a Quick Look extension that covers the formats macOS doesn't know itself.</p>
+      </div>
+    </div>
+
+    <div class="pair">
+      <div class="note">
+        <h3>The GPU stays loaded</h3>
+        <p>Starting a GPU takes 100 to 800 ms, so the first thumbnail starts a helper process that keeps the GPU loaded.  On a laptop with an RTX 5070 Ti, each thumbnail after that took a few milliseconds.  The helper quits after two idle minutes.</p>
+      </div>
+      <div class="note">
+        <h3>You choose the file types</h3>
+        <p>Thumbnails are on for formats your desktop can't preview, and off for ordinary pictures it already draws.  Switch any of them under Settings, File Types, or with <code>slerp associate</code>.  <code>slerp associate --reset</code> puts back exactly what was there.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sect" id="viewer" aria-labelledby="viewer-title">
+  <div class="wrap">
+    <p class="eyebrow">The viewer</p>
+    <h2 id="viewer-title">The viewer</h2>
+    <p class="sect-lede">Double-click one of those files and Slerp picks a way to show it from the file: an orbit camera for models, first person for levels, mip levels and channels for textures, a slice view for volumes.  The arrow keys step through the rest of the folder, as in a picture viewer.</p>
+
+    <!-- The modes and their screenshots: MODES in script.js. -->
+    <div class="stage-wrap">
+      <div class="modes" id="modes" role="tablist" aria-label="Viewer modes"></div>
+      <figure class="shot stage" id="stage" role="tabpanel">
+        <div class="frame" id="stage-frame"></div>
+        <figcaption id="stage-caption"></figcaption>
+      </figure>
+    </div>
+
+    <div class="split render">
+      <figure class="shot"><div class="frame" data-slot="turntable"></div><figcaption>A glTF ship turning in front of an HDR sunset sky, rendered by Slerp.</figcaption></figure>
+      <div class="split-text">
+        <h3>Its own renderer</h3>
+        <p>Physically based glTF materials, glass that refracts what is behind it, ambient occlusion in the creases, and splats sorted on the GPU.  Vulkan on Linux, Direct3D 12 on Windows, Metal on macOS.</p>
+        <h3>Large scenes</h3>
+        <p>The copies of one mesh are drawn in one call.  On a laptop with an RTX 5070 Ti, that took a USD forest of 100,000 trees from 73.6 ms a frame to 3.4 ms.  Models appear before all their textures have loaded.</p>
+      </div>
+    </div>
+
+    <ul class="features">
+      <li><h3>Animation</h3><p>Play a character's clips, or add the clips of an animation library, retargeted between humanoid skeletons with foot IK.  Move a MetaHuman's face with its own rig controls.</p></li>
+      <li><h3>Reloads when you save</h3><p>When an editor or exporter saves the file, Slerp offers to reload it and keeps the camera, the clip and its time.</p></li>
+      <li><h3>Scans and science</h3><p>Window and level CT scans, slice through NIfTI, NRRD and HDF5 volumes, and read FITS, DICOM and whole-slide images.</p></li>
+      <li><h3>The desktop's look</h3><p>Colours, fonts and icons come from KDE, GNOME, Windows or macOS.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="sect band" id="contents" aria-labelledby="contents-title">
+  <div class="wrap">
+    <div class="split">
+      <div class="split-text">
+        <p class="eyebrow">Inside a file</p>
+        <h2 id="contents-title">The pieces inside a file</h2>
+        <p class="sect-lede">The Contents panel lists what a file holds: nodes, meshes, materials, textures, clips, layers and archive entries.  Click one to see it on its own.  Point at one and the 3D view outlines it.</p>
+      </div>
+      <figure class="shot"><div class="frame" data-slot="contents"></div><figcaption>A glTF chess set with the Contents panel and the inspector.  Pointing at the queen outlines it on the board.</figcaption></figure>
+    </div>
+
+    <ul class="cards three">
+      <li>
+        <h3>Drag it out</h3>
+        <p>Drag a piece out of the window, or copy it with Ctrl+C, and it lands as an ordinary file.  Pictures come out exactly as stored, meshes and clips as GLB, sounds as WAV and music as MIDI.</p>
+      </li>
+      <li>
+        <h3>Saving as GLB</h3>
+        <p>File, Save as GLB writes the scene you see, with skins, morph targets and clips.  Slerp's tests check the output with the Khronos glTF Validator.</p>
+        <pre><code>slerp convert lqdm1.bsp lqdm1.glb</code></pre>
+      </li>
+      <li>
+        <h3>Archives open like folders</h3>
+        <p>WADs, PAKs, PK3s, VPKs and Unity packages list their entries, and the selected one shows in the view.  Slerp reads and extracts, and never changes your files.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section class="sect" id="formats" aria-labelledby="formats-title">
+  <div class="wrap">
+    <p class="eyebrow">Formats</p>
+    <h2 id="formats-title">Does Slerp open my file?</h2>
+    <p class="sect-lede">About 200 formats in 16 categories, from glTF to Amiga pictures.  For many of them Slerp reads only part of what the format can hold.  Type an extension or a name.</p>
+
+    <div class="finder">
+      <label class="search">
+        <span class="visually-hidden">Extension or format name</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
+        <input id="q" type="search" placeholder="ktx2, .blend, splat, Amiga" autocomplete="off" spellcheck="false">
+      </label>
+      <p class="tries">Try <button type="button" data-q="blend">.blend</button> <button type="button" data-q="bsp">.bsp</button> <button type="button" data-q="dds">.dds</button> <button type="button" data-q="splat">splat</button> <button type="button" data-q="amiga">Amiga</button> <button type="button" data-q="dcm">.dcm</button></p>
+      <p class="status" id="status" aria-live="polite">About 200 formats in 16 categories.</p>
+      <div class="cats" id="cats"><noscript><p>The format list needs JavaScript.  <a href="https://github.com/eric-frost/slerp/blob/main/docs/formats.md">Read it on GitHub</a> instead.</p></noscript></div>
+      <ul class="legend">
+        <li><span class="tag on">Thumbnails</span> Slerp draws the file manager's thumbnail and opens the file.</li>
+        <li><span class="tag off">Off by default</span> Your desktop already draws one.  Slerp opens the file, and you can switch its thumbnails on.</li>
+        <li><span class="tag none">Viewer only</span> A motion or animation file, with no picture of its own.</li>
+        <li><code class="by-content">.map</code> A shared extension: Slerp checks the file's contents before claiming it.</li>
+      </ul>
+      <p class="more"><a href="https://github.com/eric-frost/slerp/blob/main/docs/format-details.md">What each reader covers and what it leaves out</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="sect band" id="safety" aria-labelledby="safety-title">
+  <div class="wrap">
+    <p class="eyebrow">Safety</p>
+    <h2 id="safety-title">Careful with what it reads</h2>
+    <p class="sect-lede">A thumbnailer reads the files you scroll past, downloads included, so Slerp treats each file as possibly hostile.  It is written in Rust, and the riskier C and C++ decoders run in separate processes.  That lowers the risk of a bad file without ruling it out.</p>
+    <ul class="cards four">
+      <li><p class="big">38</p><h3>Fuzz targets</h3><p>The parsers are fed broken and random input with cargo-fuzz, and truncated and corrupted files are part of the test suite.</p></li>
+      <li><p class="big">Checked</p><h3>Sizes and offsets</h3><p>Readers check sizes and offsets before using them and cap the memory they use, so a damaged file should get a message, not a crash or a hang.</p></li>
+      <li><p class="big">Isolated</p><h3>Risky decoders apart</h3><p>The C decoders for JPEG XR, HEIC and AV1, the MetaHuman reader and the PDF and SVG renderers run in child processes with time and memory limits.</p></li>
+      <li><p class="big">Offline</p><h3>No network</h3><p>Slerp never goes online.  No accounts, no telemetry, no update checks.  Your files stay on your computer.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="sect" id="download" aria-labelledby="install-title">
+  <div class="wrap">
+    <p class="eyebrow">Packages</p>
+    <h2 id="install-title">Install</h2>
+    <p class="notice"><b>No releases yet.</b>  Slerp is a young project with one developer, Eric.  Until the first release, each package builds from the source with one script.  Most of the testing so far has been on one Linux laptop with KDE, a Windows 11 virtual machine and one Mac, so expect files it gets wrong.  Bug reports are welcome on <a href="https://github.com/eric-frost/slerp/issues">GitHub</a>, most of all with a file you are free to share.</p>
+
+    <div class="installs">
+      <article class="inst">
+        <header><h3>Debian and Ubuntu</h3><span class="soon">Package coming</span></header>
+        <p>A <code>.deb</code> with the thumbnailer, viewer and menu entry, and an optional Qt plugin package for KDE.</p>
+        <pre><code>tools/build-deb.sh
+cd local/dist
+sudo apt install ./slerp_0.1.0-1_amd64.deb</code></pre>
+      </article>
+      <article class="inst">
+        <header><h3>Arch Linux</h3><span class="soon">AUR coming</span></header>
+        <p>A PKGBUILD for <code>slerp</code> and <code>slerp-qt-plugin</code>.  Put the source tarball beside it and build.</p>
+        <pre><code>tools/source-tarball.sh
+makepkg -si</code></pre>
+      </article>
+      <article class="inst">
+        <header><h3>Windows 11</h3><span class="soon">Zip coming</span></header>
+        <p>Unpack the zip into a folder that stays put, then register it once.  No installer, no administrator rights.</p>
+        <pre><code>slerp.exe register</code></pre>
+      </article>
+      <article class="inst">
+        <header><h3>macOS</h3><span class="soon">App coming</span></header>
+        <p><code>Slerp.app</code> for Apple Silicon, with a Quick Look extension for Finder.  Builds with Rust and the Command Line Tools.</p>
+        <pre><code>tools/macos-app.sh install</code></pre>
+      </article>
+      <article class="inst">
+        <header><h3>From source</h3><span class="soon ok">Works today</span></header>
+        <p>Rust 1.93 or newer, a C and C++ compiler and libclang.  The README lists where each file goes.</p>
+        <pre><code>cargo build --release</code></pre>
+      </article>
+    </div>
+    <p class="after">Using Dolphin?  Run <code>slerp associate --apply</code> once, then restart Dolphin, so it lists Slerp among its preview plugins.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <a class="brand" href="#top" aria-label="Slerp, back to the top">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11"/><path d="M5.66 19.76A11 11 0 0 1 19.76 5.66"/><circle class="a" cx="5.66" cy="19.76" r="3"/><circle class="b" cx="19.76" cy="5.66" r="3"/></svg>
+          <span>Slerp</span>
+        </a>
+        <p>Open source, under the MIT licence or the Apache License 2.0, at your option.</p>
+        <p class="name">The name comes from slerp, spherical linear interpolation: the way 3D programs turn smoothly from one rotation to another.  This Slerp does a lot of turning too.</p>
+      </div>
+      <ul class="foot-links">
+        <li><a href="https://github.com/eric-frost/slerp">Source code</a></li>
+        <li><a href="https://github.com/eric-frost/slerp/issues">Report a problem or ask for a format</a></li>
+        <li><a href="https://github.com/eric-frost/slerp/blob/main/docs/formats.md">Formats and extensions</a></li>
+        <li><a href="https://github.com/eric-frost/slerp/blob/main/THIRD-PARTY.md">Third-party notices</a></li>
+      </ul>
+    </div>
+    <div class="credits">
+      <h2>Sample art</h2>
+      <p>Slerp drew every picture on this page from freely licensed sample files.  These licences ask for credit:</p>
+      <ul id="credits-required"></ul>
+      <p>These are CC0, so credit isn't required, but their authors deserve it:</p>
+      <ul id="credits-courtesy"></ul>
+      <p>Fonts: Space Grotesk and DM Mono, under the <a href="fonts/OFL.txt">SIL Open Font License</a>.</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

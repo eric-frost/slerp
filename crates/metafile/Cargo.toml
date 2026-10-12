@@ -1,0 +1,23 @@
+[package]
+name = "slerp-metafile"
+description = "Windows Metafile (WMF, EMF) and Macintosh PICT replay onto a CPU canvas, for Slerp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+# Anti-aliased filled and stroked paths, clip masks and bitmap patterns.  The
+# viewer already carries it through the SVG icons; PNG output isn't needed.
+tiny-skia = { version = "0.11", default-features = false, features = ["std", "simd"] }
+# Inflates the gzip wrapper of .emz and .wmz files.
+miniz_oxide = "0.8"
+# Code pages of the 8-bit text in WMF and PICT (Shift-JIS, GBK, Big5, EUC-KR,
+# Windows 1250-1258).  Already in the binary through the DXF reader.
+encoding_rs = "0.8"
+# Glyph outlines from system fonts, for text.
+ttf-parser = { version = "0.25", default-features = false, features = ["std"] }
+
+[dev-dependencies]
+png = "0.18"

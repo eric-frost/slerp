@@ -1,0 +1,14 @@
+[package]
+name = "slerp-polymesh"
+description = "Polygon meshes for Slerp's loaders of modelling-tool files: n-gons, smoothing, subdivision and the turn into triangle primitives"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+glam.workspace = true
+# Triangulates n-gons and faces with holes (MIT OR Apache-2.0); already in the binary
+# through the quake, blend, cad and sketchup crates.
+earcut = "0.4"

@@ -1,0 +1,25 @@
+[package]
+name = "slerp-volumes"
+description = "Scientific arrays, medical volumes and microscopy images for Slerp: NumPy, NIfTI, MetaImage, NRRD, TIFF stacks, OME-TIFF and slides, NetCDF and HDF5"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+rayon.workspace = true
+# Deflate for gzip, zlib and zip members, streamed so a thumbnail inflates
+# only as far as its slice.
+miniz_oxide = "0.8"
+# OME-XML and Leica/Philips slide descriptions; already used by slerp-textures.
+roxmltree = "0.21"
+# TIFF files: the container, every compression, JPEG and JPEG 2000 tiles.
+slerp-tiff = { path = "../tiff" }
+
+# NRRD files compressed with bzip2: a pure-Rust decoder.
+bzip2-rs = "0.1"
+
+[dev-dependencies]
+png = "0.18"
+serde_json = "1"

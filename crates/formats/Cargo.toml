@@ -1,0 +1,15 @@
+[package]
+name = "slerp-formats"
+description = "The one list of every file format Slerp handles, and the files generated from it"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+# No dependencies: the Windows shell extension, the macOS Quick Look
+# extension, the viewer and the command line all read this table, and the
+# tests below check the checked-in files generated from it.
+[dependencies]
+
+[dev-dependencies]
+roxmltree = "0.21"

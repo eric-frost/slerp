@@ -1,0 +1,13 @@
+[package]
+name = "slerp-retro"
+description = "Retro computer pictures for Slerp: Atari ST, C64, ZX Spectrum, CPC, MSX, Apple II, Atari 8-bit, ANSI art, PICO-8, TIC-80 and Amiga IFF"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+
+[dev-dependencies]
+png = "0.18"

@@ -1,0 +1,70 @@
+# Maintainer: Eric <9555559+eric-frost@users.noreply.github.com>
+#
+# Builds Slerp and its Qt image plugin from a source tarball, fetched from
+# "$url/archive/v$pkgver.tar.gz" (GitHub's layout) once a release is tagged.
+# To build from a local tarball, put it beside this file as
+# slerp-$pkgver.tar.gz (tools/source-tarball.sh makes one): makepkg uses a
+# file that is already there instead of downloading it.
+#
+# The MIME database, menu and icon caches are updated by the pacman hooks of
+# shared-mime-info, desktop-file-utils and gtk-update-icon-cache.
+
+pkgbase=slerp
+pkgname=(slerp slerp-qt-plugin)
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='Thumbnailer and viewer for 3D models, textures, game assets and other graphics'
+arch=(x86_64 aarch64)
+url='https://github.com/eric-frost/slerp'
+license=('MIT OR Apache-2.0')
+makedepends=(cargo clang cmake qt6-base wayland libxkbcommon)
+# Rust links with its own thin LTO, and makepkg's -flto would also reach the
+# C and C++ code that some crates compile; release builds are stripped by
+# Cargo, so there is nothing for a debug package.
+options=(!lto !debug)
+source=("$pkgbase-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+prepare() {
+  cd "$pkgbase-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+  cd "$pkgbase-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  export CARGO_TARGET_DIR=target
+  cargo build --frozen --release -p slerp
+  cmake -S qt -B build-qt -DCMAKE_BUILD_TYPE=None -DSLERP_EXECUTABLE=/usr/bin/slerp
+  cmake --build build-qt --target slerp_qimage
+}
+
+package_slerp() {
+  # The Vulkan loader, Wayland, xkbcommon and X11 are loaded at run time,
+  # so namcap can't see that they are needed.
+  depends=(libgcc libstdc++ glibc vulkan-icd-loader wayland libxkbcommon libxkbcommon-x11 libx11 libxcursor libxi
+    hicolor-icon-theme)
+  optdepends=('vulkan-swrast: 3D thumbnails without a GPU driver and in sandboxes that hide the GPU'
+    'libheif: HEIC pictures in the viewer'
+    'ghostscript: PostScript and EPS files that store no preview'
+    'slerp-qt-plugin: textures and turning models in Gwenview and Dolphin')
+  cd "$pkgbase-$pkgver"
+  install -Dm755 target/release/slerp -t "$pkgdir/usr/bin"
+  install -Dm644 data/slerp.thumbnailer -t "$pkgdir/usr/share/thumbnailers"
+  install -Dm644 data/slerp.xml -t "$pkgdir/usr/share/mime/packages"
+  install -Dm644 data/slerp.desktop -t "$pkgdir/usr/share/applications"
+  install -Dm644 data/slerp.svg -t "$pkgdir/usr/share/icons/hicolor/scalable/apps"
+  install -Dm644 packaging/slerp.1 -t "$pkgdir/usr/share/man/man1"
+  install -Dm644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
+  install -Dm644 LICENSE-MIT LICENSE-APACHE THIRD-PARTY.md -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+package_slerp-qt-plugin() {
+  pkgdesc="Qt image plugin that shows Slerp's textures and models in Gwenview and Dolphin"
+  # It starts slerp's helper, which namcap can't see either.
+  depends=(slerp qt6-base libgcc libstdc++ glibc)
+  cd "$pkgbase-$pkgver"
+  install -Dm644 build-qt/plugins/imageformats/slerp_qimage.so -t "$pkgdir/usr/lib/qt6/plugins/imageformats"
+  install -Dm644 LICENSE-MIT LICENSE-APACHE -t "$pkgdir/usr/share/licenses/$pkgname"
+}

@@ -1,0 +1,4 @@
+# Build output goes in local/ (not in git), beside the test assets and the
+# packages, where the scripts in tools/ look for it.
+[build]
+target-dir = "local/target"

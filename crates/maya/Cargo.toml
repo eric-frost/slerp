@@ -1,0 +1,12 @@
+[package]
+name = "slerp-maya"
+description = "Maya scenes (.ma and .mb) for Slerp: the DAG, meshes stored in the file, simple primitives and materials, read without Maya"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+slerp-polymesh = { path = "../polymesh" }
+glam.workspace = true

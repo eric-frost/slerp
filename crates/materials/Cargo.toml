@@ -1,0 +1,16 @@
+[package]
+name = "slerp-materials"
+description = "MaterialX, USD, Godot material and Substance archive loading for Slerp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+rayon.workspace = true
+roxmltree = "0.21"
+# USD crate files compress their tables with LZ4 blocks.
+lz4_flex = { version = "0.14", default-features = false, features = ["std", "safe-decode", "checked-decode"] }
+# USDZ packages (zip) and Substance archives (7z).
+slerp-archive = { path = "../archive" }

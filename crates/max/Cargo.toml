@@ -1,0 +1,15 @@
+[package]
+name = "slerp-max"
+description = "3ds Max scenes (.max) for Slerp: editable meshes and polys, primitives, transforms and materials, read without 3ds Max"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+slerp-polymesh = { path = "../polymesh" }
+glam.workspace = true
+# Newer files gzip their scene stream (MIT OR Apache-2.0); already in the
+# binary through the blend crate.
+flate2 = "1.1"

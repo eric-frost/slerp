@@ -1,0 +1,12 @@
+[package]
+name = "slerp-scene"
+description = "The scene model Slerp's loaders fill in and its renderer draws"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-textures.workspace = true
+glam.workspace = true
+thiserror.workspace = true

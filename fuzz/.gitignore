@@ -1,0 +1,5 @@
+# Corpora, crashes and coverage live under local/fuzz (or SLERP_FUZZ_DIR);
+# `corpus` and `artifacts` here may link there.
+corpus
+artifacts
+coverage

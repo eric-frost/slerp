@@ -1,0 +1,25 @@
+[package]
+name = "slerp-previews"
+description = "Preview pictures stored inside 3D and creative application files, and colour palettes, for Slerp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+# Inflates members of zips: SketchUp 2021+, Procreate, Sketch, Figma, XD,
+# FreeCAD, Krita palettes and Procreate swatches.
+miniz_oxide = "0.8"
+# Krita's colorset.xml.  Both are already in Slerp through other crates.
+roxmltree = "0.21"
+# Procreate's Swatches.json.
+serde_json = "1"
+# Paint.NET's and InDesign's thumbnails are base64 text.
+base64 = "0.22"
+# Zstandard zip members (Fusion designs saved since 2026); the textures crate
+# already links it for KTX2.
+zstd = { version = "0.14", default-features = false }
+
+[dev-dependencies]
+png = "0.18"

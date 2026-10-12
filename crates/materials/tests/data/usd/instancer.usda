@@ -1,0 +1,68 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "World"
+{
+    def PointInstancer "Trees" (
+        inactiveIds = [14]
+    )
+    {
+        rel prototypes = [</World/Trees/Protos/Tree>, </Library/Rock>]
+        int[] protoIndices = [0, 1, 0, 1, 0, 0]
+        point3f[] positions = [(0, 0, 0), (5, 0, 0), (0, 0, 5), (5, 0, 5), (10, 0, 0), (10, 0, 10)]
+        quath[] orientations = [(1.0, 0.0, 0.0, 0.0), (0.7071067811865476, 0.0, 0.7071067811865475, 0.0), (0.9238795325112867, 0.0, 0.3826834323650898, 0.0), (0.9659258262890683, 0.25881904510252074, 0.0, 0.0), (0.9961946980917455, 0.0, 0.0, 0.08715574274765817), (6.123233995736766e-17, 0.0, 1.0, 0.0)]
+        float3[] scales = [(1, 1, 1), (2, 1, 2), (1, 2, 1), (1, 1, 1), (1, 1, 1), (0.5, 0.5, 0.5)]
+        int64[] ids = [10, 11, 12, 13, 14, 15]
+        int64[] invisibleIds = [13]
+
+        def "Protos"
+        {
+            def Xform "Tree"
+            {
+                float3 xformOp:translate = (0, 0.25, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+
+                def Mesh "Trunk"
+                {
+                    int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+                    int[] faceVertexIndices = [0, 1, 2, 3, 7, 6, 5, 4, 0, 4, 5, 1, 1, 5, 6, 2, 2, 6, 7, 3, 3, 7, 4, 0]
+                    point3f[] points = [(-0.1, 0.0, -0.1), (0.1, 0.0, -0.1), (0.1, 0.0, 0.1), (-0.1, 0.0, 0.1), (-0.1, 1.0, -0.1), (0.1, 1.0, -0.1), (0.1, 1.0, 0.1), (-0.1, 1.0, 0.1)]
+                    color3f[] primvars:displayColor = [(0.4, 0.25, 0.1)]
+                }
+
+                def Mesh "Crown"
+                {
+                    int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+                    int[] faceVertexIndices = [0, 1, 2, 3, 7, 6, 5, 4, 0, 4, 5, 1, 1, 5, 6, 2, 2, 6, 7, 3, 3, 7, 4, 0]
+                    point3f[] points = [(-0.5, 1.0, -0.5), (0.5, 1.0, -0.5), (0.5, 1.0, 0.5), (-0.5, 1.0, 0.5), (-0.5, 2.5, -0.5), (0.5, 2.5, -0.5), (0.5, 2.5, 0.5), (-0.5, 2.5, 0.5)]
+                    color3f[] primvars:displayColor = [(0.1, 0.6, 0.2)]
+                }
+            }
+        }
+    }
+
+    def PointInstancer "Rows"
+    {
+        rel prototypes = </World/Trees>
+        int[] protoIndices = [0, 0]
+        point3f[] positions = [(0, 0, 30), (0, 0, 60)]
+    }
+}
+
+over "Library"
+{
+    def Xform "Rock"
+    {
+        def Mesh "Stone"
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [0, 1, 2, 3, 7, 6, 5, 4, 0, 4, 5, 1, 1, 5, 6, 2, 2, 6, 7, 3, 3, 7, 4, 0]
+            point3f[] points = [(-0.4, 0.0, -0.3), (0.4, 0.0, -0.3), (0.4, 0.0, 0.3), (-0.4, 0.0, 0.3), (-0.4, 0.5, -0.3), (0.4, 0.5, -0.3), (0.4, 0.5, 0.3), (-0.4, 0.5, 0.3)]
+            color3f[] primvars:displayColor = [(0.5, 0.5, 0.5)]
+        }
+    }
+}

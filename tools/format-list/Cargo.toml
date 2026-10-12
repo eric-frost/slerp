@@ -1,0 +1,17 @@
+# Writes docs/formats.md and site/formats.json, the lists of every format
+# Slerp reads, from the format table in crates/formats.  A workspace of its
+# own, so Slerp's builds never compile it:
+#
+#   cargo run --manifest-path tools/format-list/Cargo.toml            # rewrite
+#   cargo run --manifest-path tools/format-list/Cargo.toml -- --check # stale?
+[package]
+name = "slerp-format-list"
+version = "0.0.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+publish = false
+
+[workspace]
+
+[dependencies]
+slerp-formats = { path = "../../crates/formats" }

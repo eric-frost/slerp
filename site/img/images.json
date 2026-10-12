@@ -1,0 +1,3004 @@
+{
+	"about": "Pictures for the Slerp website, made by tools/site-images.sh.  Each picture lists the samples it shows; credit them as CREDITS.md says.",
+	"pictures": [
+		{
+			"path": "thumbs/ship.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Sailing ship",
+			"alt": "A Slerp thumbnail of a three-masted wooden sailing ship with grey sails, from a glTF model.",
+			"sample": "ship_pinnace_1k.gltf",
+			"format": "glTF model",
+			"category": "3D models",
+			"source": "https://polyhaven.com/a/ship_pinnace",
+			"author": "James Ray Cock, Rico Cilliers, Nicolò Zubbini and Yann Kervran (Poly Haven)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "ship_pinnace_1k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/ship_pinnace",
+					"author": "James Ray Cock, Rico Cilliers, Nicolò Zubbini and Yann Kervran (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/camera.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Vintage camera",
+			"alt": "A Slerp thumbnail of a black rangefinder camera with a brown leather strap, from a glTF model.",
+			"sample": "Camera_01_1k.gltf",
+			"format": "glTF model",
+			"category": "3D models",
+			"source": "https://polyhaven.com/a/Camera_01",
+			"author": "Rajil Jose Macatangay (Poly Haven)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "Camera_01_1k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/Camera_01",
+					"author": "Rajil Jose Macatangay (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/boombox.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Boombox",
+			"alt": "A Slerp thumbnail of a black cassette boombox with its aerial raised, from a glTF model.",
+			"sample": "boombox_1k.gltf",
+			"format": "glTF model",
+			"category": "3D models",
+			"source": "https://polyhaven.com/a/boombox",
+			"author": "Thomas Paul Mouilleron (Poly Haven)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "boombox_1k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/boombox",
+					"author": "Thomas Paul Mouilleron (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/chest.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Treasure chest",
+			"alt": "A Slerp thumbnail of a wooden treasure chest bound with iron, from a glTF model.",
+			"sample": "treasure_chest_1k.gltf",
+			"format": "glTF model",
+			"category": "3D models",
+			"source": "https://polyhaven.com/a/treasure_chest",
+			"author": "Rico Cilliers (Poly Haven)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "treasure_chest_1k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/treasure_chest",
+					"author": "Rico Cilliers (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/bust.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Marble bust",
+			"alt": "A Slerp thumbnail of a weathered marble bust of a Roman man, from a glTF model.",
+			"sample": "marble_bust_01_1k.gltf",
+			"format": "glTF model",
+			"category": "3D models",
+			"source": "https://polyhaven.com/a/marble_bust_01",
+			"author": "Rico Cilliers (Poly Haven)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "marble_bust_01_1k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/marble_bust_01",
+					"author": "Rico Cilliers (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/plant.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Potted plant",
+			"alt": "A Slerp thumbnail of a leafy plant in a terracotta pot, from a glTF model.",
+			"sample": "potted_plant_02_1k.gltf",
+			"format": "glTF model",
+			"category": "3D models",
+			"source": "https://polyhaven.com/a/potted_plant_02",
+			"author": "Rico Cilliers (Poly Haven)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "potted_plant_02_1k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/potted_plant_02",
+					"author": "Rico Cilliers (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/chess.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Chess set",
+			"alt": "A Slerp thumbnail of a chess board with its pieces set up, from a glTF model.",
+			"sample": "chess_set_1k.gltf",
+			"format": "glTF model",
+			"category": "3D models",
+			"source": "https://polyhaven.com/a/chess_set",
+			"author": "Riley Queen (Poly Haven)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "chess_set_1k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/chess_set",
+					"author": "Riley Queen (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/lantern.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Oil lantern",
+			"alt": "A Slerp thumbnail of a brass oil lantern with a glass chimney, from a glTF model.",
+			"sample": "Lantern_01_1k.gltf",
+			"format": "glTF model",
+			"category": "3D models",
+			"source": "https://polyhaven.com/a/Lantern_01",
+			"author": "Rajil Jose Macatangay (Poly Haven)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "Lantern_01_1k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/Lantern_01",
+					"author": "Rajil Jose Macatangay (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/stainedlamp.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Stained glass lamp",
+			"alt": "A Slerp thumbnail of a table lamp with a colourful stained glass shade, from a glTF model with KTX2 textures.",
+			"sample": "StainedGlassLamp.gltf",
+			"format": "glTF model with KTX2 textures",
+			"category": "3D models",
+			"source": "https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/StainedGlassLamp",
+			"author": "Eric Chadwick (Wayfair), from the Khronos glTF sample models",
+			"licence": "CC BY 4.0",
+			"spdx": "CC-BY-4.0",
+			"licenceUrl": "https://creativecommons.org/licenses/by/4.0/",
+			"samples": [
+				{
+					"file": "StainedGlassLamp.gltf",
+					"format": "glTF model with KTX2 textures",
+					"category": "3D models",
+					"source": "https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/StainedGlassLamp",
+					"author": "Eric Chadwick (Wayfair), from the Khronos glTF sample models",
+					"licence": "CC BY 4.0",
+					"spdx": "CC-BY-4.0",
+					"licenceUrl": "https://creativecommons.org/licenses/by/4.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/olives.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Dish of olives",
+			"alt": "A Slerp thumbnail of an iridescent glass dish holding green and black olives, from a Draco-compressed GLB file.",
+			"sample": "IridescentDishWithOlives.glb",
+			"format": "glTF binary model (GLB) with Draco",
+			"category": "3D models",
+			"source": "https://raw.githubusercontent.com/mrdoob/three.js/43488e632d91441c095a71c9c3d2d46c75983745/examples/models/gltf/IridescentDishWithOlives.glb",
+			"author": "Eric Chadwick (Wayfair), from the three.js examples",
+			"licence": "CC BY 4.0",
+			"spdx": "CC-BY-4.0",
+			"licenceUrl": "https://creativecommons.org/licenses/by/4.0/",
+			"samples": [
+				{
+					"file": "IridescentDishWithOlives.glb",
+					"format": "glTF binary model (GLB) with Draco",
+					"category": "3D models",
+					"source": "https://raw.githubusercontent.com/mrdoob/three.js/43488e632d91441c095a71c9c3d2d46c75983745/examples/models/gltf/IridescentDishWithOlives.glb",
+					"author": "Eric Chadwick (Wayfair), from the three.js examples",
+					"licence": "CC BY 4.0",
+					"spdx": "CC-BY-4.0",
+					"licenceUrl": "https://creativecommons.org/licenses/by/4.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/tokyo.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Littlest Tokyo",
+			"alt": "A Slerp thumbnail of a tiny, detailed diorama of a Tokyo street corner, from a Draco-compressed GLB file.",
+			"sample": "LittlestTokyo.glb",
+			"format": "glTF binary model (GLB) with Draco",
+			"category": "3D models",
+			"source": "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/LittlestTokyo.glb",
+			"author": "Glen Fox, from the three.js examples",
+			"licence": "CC BY 4.0",
+			"spdx": "CC-BY-4.0",
+			"licenceUrl": "https://creativecommons.org/licenses/by/4.0/",
+			"samples": [
+				{
+					"file": "LittlestTokyo.glb",
+					"format": "glTF binary model (GLB) with Draco",
+					"category": "3D models",
+					"source": "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/LittlestTokyo.glb",
+					"author": "Glen Fox, from the three.js examples",
+					"licence": "CC BY 4.0",
+					"spdx": "CC-BY-4.0",
+					"licenceUrl": "https://creativecommons.org/licenses/by/4.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/nefertiti.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Bust of Nefertiti",
+			"alt": "A Slerp thumbnail of a 3D scan of the painted bust of Nefertiti, from a GLB file.",
+			"sample": "Nefertiti.glb",
+			"format": "glTF binary model (GLB)",
+			"category": "3D models",
+			"source": "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Nefertiti/Nefertiti.glb",
+			"author": "Nora Al-Badri and Jan Nikolai Nelles (the Nefertiti Hack scan), from the three.js examples",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "Nefertiti.glb",
+					"format": "glTF binary model (GLB)",
+					"category": "3D models",
+					"source": "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Nefertiti/Nefertiti.glb",
+					"author": "Nora Al-Badri and Jan Nikolai Nelles (the Nefertiti Hack scan), from the three.js examples",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/teapot.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Utah teapot",
+			"alt": "A Slerp thumbnail of the classic Utah teapot, from a USD scene.",
+			"sample": "Teapot.usd",
+			"format": "USD scene",
+			"category": "3D models",
+			"source": "https://github.com/usd-wg/assets/tree/main/full_assets/Teapot",
+			"author": "The USD Working Group",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "Teapot.usd",
+					"format": "USD scene",
+					"category": "3D models",
+					"source": "https://github.com/usd-wg/assets/tree/main/full_assets/Teapot",
+					"author": "The USD Working Group",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/knight.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Voxel knight",
+			"alt": "A Slerp thumbnail of a small voxel knight holding an axe, from a MagicaVoxel model.",
+			"sample": "chr_knight.vox",
+			"format": "MagicaVoxel model",
+			"category": "3D models",
+			"source": "https://github.com/ephtracy/voxel-model",
+			"author": "ephtracy (MagicaVoxel sample models)",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "chr_knight.vox",
+					"format": "MagicaVoxel model",
+					"category": "3D models",
+					"source": "https://github.com/ephtracy/voxel-model",
+					"author": "ephtracy (MagicaVoxel sample models)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/monu7.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Voxel town",
+			"alt": "A Slerp thumbnail of a colourful voxel town on a sandy base, from a MagicaVoxel model.",
+			"sample": "monu7.vox",
+			"format": "MagicaVoxel model",
+			"category": "3D models",
+			"source": "https://github.com/ephtracy/voxel-model",
+			"author": "ephtracy (MagicaVoxel sample models)",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "monu7.vox",
+					"format": "MagicaVoxel model",
+					"category": "3D models",
+					"source": "https://github.com/ephtracy/voxel-model",
+					"author": "ephtracy (MagicaVoxel sample models)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/island.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Floating island",
+			"alt": "A Slerp thumbnail of a floating Minecraft island with houses, trees and a waterfall, from a Litematica schematic.",
+			"sample": "island.litematic",
+			"format": "Minecraft schematic (Litematica)",
+			"category": "3D models",
+			"source": "https://github.com/SandroHc/schematic4j",
+			"author": "SandroHc (schematic4j test data)",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "island.litematic",
+					"format": "Minecraft schematic (Litematica)",
+					"category": "3D models",
+					"source": "https://github.com/SandroHc/schematic4j",
+					"author": "SandroHc (schematic4j test data)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/mansion.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Minecraft mansion",
+			"alt": "A Slerp thumbnail of a timber-framed Minecraft mansion with green roofs, from a Litematica schematic.",
+			"sample": "mansion.litematic",
+			"format": "Minecraft schematic (Litematica)",
+			"category": "3D models",
+			"source": "https://github.com/SandroHc/schematic4j",
+			"author": "SandroHc (schematic4j test data)",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "mansion.litematic",
+					"format": "Minecraft schematic (Litematica)",
+					"category": "3D models",
+					"source": "https://github.com/SandroHc/schematic4j",
+					"author": "SandroHc (schematic4j test data)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/robot.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Robot character",
+			"alt": "A Slerp thumbnail of a yellow cartoon robot in its rest pose, from a GLB file with 14 animations.",
+			"sample": "RobotExpressive.glb",
+			"format": "glTF binary model (GLB)",
+			"category": "3D models",
+			"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/RobotExpressive",
+			"author": "Tomás Laulhé (Quaternius), edited by Don McCurdy",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "RobotExpressive.glb",
+					"format": "glTF binary model (GLB)",
+					"category": "3D models",
+					"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/RobotExpressive",
+					"author": "Tomás Laulhé (Quaternius), edited by Don McCurdy",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/gene.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Anime character",
+			"alt": "A Slerp thumbnail of an anime-style character in a white jacket, from a MikuMikuDance PMX model.",
+			"sample": "Gene_light.pmx",
+			"format": "MikuMikuDance model (PMX)",
+			"category": "3D models",
+			"source": "https://github.com/mmdagent-ex/gene",
+			"author": "Nagoya Institute of Technology (credit line: CG-CA Gene (c) 2023 by Nagoya Institute of Technology)",
+			"licence": "CC BY 4.0",
+			"spdx": "CC-BY-4.0",
+			"licenceUrl": "https://creativecommons.org/licenses/by/4.0/",
+			"samples": [
+				{
+					"file": "Gene_light.pmx",
+					"format": "MikuMikuDance model (PMX)",
+					"category": "3D models",
+					"source": "https://github.com/mmdagent-ex/gene",
+					"author": "Nagoya Institute of Technology (credit line: CG-CA Gene (c) 2023 by Nagoya Institute of Technology)",
+					"licence": "CC BY 4.0",
+					"spdx": "CC-BY-4.0",
+					"licenceUrl": "https://creativecommons.org/licenses/by/4.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/yeti.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Yeti",
+			"alt": "A Slerp thumbnail of a horned cartoon yeti, from a Maya scene.",
+			"sample": "Yeti_Apose.ma",
+			"format": "Maya scene",
+			"category": "3D models",
+			"source": "https://github.com/BabylonJS/Exporters",
+			"author": "The Babylon.js exporters project",
+			"licence": "Apache 2.0",
+			"spdx": "Apache-2.0",
+			"licenceUrl": "https://www.apache.org/licenses/LICENSE-2.0",
+			"samples": [
+				{
+					"file": "Yeti_Apose.ma",
+					"format": "Maya scene",
+					"category": "3D models",
+					"source": "https://github.com/BabylonJS/Exporters",
+					"author": "The Babylon.js exporters project",
+					"licence": "Apache 2.0",
+					"spdx": "Apache-2.0",
+					"licenceUrl": "https://www.apache.org/licenses/LICENSE-2.0"
+				}
+			]
+		},
+		{
+			"path": "thumbs/shambler.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Quake monster",
+			"alt": "A Slerp thumbnail of a hunched horned monster from LibreQuake, from a Quake MDL model.",
+			"sample": "shambler.mdl",
+			"format": "Quake model (MDL)",
+			"category": "3D models",
+			"source": "https://github.com/lavenderdotpet/LibreQuake",
+			"author": "LibreQuake contributors",
+			"licence": "BSD 3-Clause",
+			"spdx": "BSD-3-Clause",
+			"licenceUrl": "https://opensource.org/license/bsd-3-clause",
+			"samples": [
+				{
+					"file": "shambler.mdl",
+					"format": "Quake model (MDL)",
+					"category": "3D models",
+					"source": "https://github.com/lavenderdotpet/LibreQuake",
+					"author": "LibreQuake contributors",
+					"licence": "BSD 3-Clause",
+					"spdx": "BSD-3-Clause",
+					"licenceUrl": "https://opensource.org/license/bsd-3-clause"
+				}
+			]
+		},
+		{
+			"path": "thumbs/heart.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Heart of gears",
+			"alt": "A Slerp thumbnail of a white heart split by interlocking gear teeth, from a 3MF print file.",
+			"sample": "heartgears.3mf",
+			"format": "3MF model",
+			"category": "3D models",
+			"source": "https://github.com/3MFConsortium/3mf-samples",
+			"author": "3MF Consortium",
+			"licence": "BSD 2-Clause",
+			"spdx": "BSD-2-Clause",
+			"licenceUrl": "https://opensource.org/license/bsd-2-clause",
+			"samples": [
+				{
+					"file": "heartgears.3mf",
+					"format": "3MF model",
+					"category": "3D models",
+					"source": "https://github.com/3MFConsortium/3mf-samples",
+					"author": "3MF Consortium",
+					"licence": "BSD 2-Clause",
+					"spdx": "BSD-2-Clause",
+					"licenceUrl": "https://opensource.org/license/bsd-2-clause"
+				}
+			]
+		},
+		{
+			"path": "thumbs/lizard.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Horned lizard",
+			"alt": "A Slerp thumbnail of a Gaussian splat capture of a horned lizard sculpture on a stone block.",
+			"sample": "hornedlizard.spz",
+			"format": "Compressed Gaussian splats (SPZ)",
+			"category": "Point clouds and splats",
+			"source": "https://github.com/nianticlabs/spz",
+			"author": "Niantic",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "hornedlizard.spz",
+					"format": "Compressed Gaussian splats (SPZ)",
+					"category": "Point clouds and splats",
+					"source": "https://github.com/nianticlabs/spz",
+					"author": "Niantic",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/biker.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Biker",
+			"alt": "A Slerp thumbnail of a Gaussian splat capture of a person in black motorcycle leathers.",
+			"sample": "biker.spz",
+			"format": "Compressed Gaussian splats (SPZ)",
+			"category": "Point clouds and splats",
+			"source": "https://github.com/playcanvas/engine",
+			"author": "PlayCanvas",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "biker.spz",
+					"format": "Compressed Gaussian splats (SPZ)",
+					"category": "Point clouds and splats",
+					"source": "https://github.com/playcanvas/engine",
+					"author": "PlayCanvas",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/guitar.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Guitar",
+			"alt": "A Slerp thumbnail of a Gaussian splat capture of an electric guitar on a stand.",
+			"sample": "guitar.compressed.ply",
+			"format": "Gaussian splats (compressed PLY)",
+			"category": "Point clouds and splats",
+			"source": "https://github.com/playcanvas/engine",
+			"author": "PlayCanvas",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "guitar.compressed.ply",
+					"format": "Gaussian splats (compressed PLY)",
+					"category": "Point clouds and splats",
+					"source": "https://github.com/playcanvas/engine",
+					"author": "PlayCanvas",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/diorama.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Room diorama",
+			"alt": "A Slerp thumbnail of a small room diorama with a window, from the picture saved in a Blender file.",
+			"sample": "cube_diorama.blend",
+			"format": "Blender file",
+			"category": "Scenes and projects",
+			"source": "https://www.blender.org/download/demo-files/",
+			"author": "Blender Studio",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "cube_diorama.blend",
+					"format": "Blender file",
+					"category": "Scenes and projects",
+					"source": "https://www.blender.org/download/demo-files/",
+					"author": "Blender Studio",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/godot.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Platformer level",
+			"alt": "A Slerp thumbnail of a blocky green platformer level, from a Godot scene.",
+			"sample": "game.tscn",
+			"format": "Godot scene",
+			"category": "Scenes and projects",
+			"source": "https://github.com/godotengine/godot-demo-projects",
+			"author": "Godot Engine contributors (godot-demo-projects)",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "game.tscn",
+					"format": "Godot scene",
+					"category": "Scenes and projects",
+					"source": "https://github.com/godotengine/godot-demo-projects",
+					"author": "Godot Engine contributors (godot-demo-projects)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/freedoom.webp",
+			"kind": "thumbnail",
+			"width": 320,
+			"height": 200,
+			"title": "Freedoom",
+			"alt": "A Slerp thumbnail of the Freedoom title screen, taken from a Doom WAD.",
+			"sample": "freedoom2.wad",
+			"format": "Doom WAD",
+			"category": "Levels and maps",
+			"source": "https://freedoom.github.io/",
+			"author": "Freedoom contributors",
+			"licence": "BSD 3-Clause",
+			"spdx": "BSD-3-Clause",
+			"licenceUrl": "https://opensource.org/license/bsd-3-clause",
+			"samples": [
+				{
+					"file": "freedoom2.wad",
+					"format": "Doom WAD",
+					"category": "Levels and maps",
+					"source": "https://freedoom.github.io/",
+					"author": "Freedoom contributors",
+					"licence": "BSD 3-Clause",
+					"spdx": "BSD-3-Clause",
+					"licenceUrl": "https://opensource.org/license/bsd-3-clause"
+				}
+			]
+		},
+		{
+			"path": "thumbs/lqdm3.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Quake level",
+			"alt": "A Slerp thumbnail of a LibreQuake deathmatch level seen from above, from a BSP map.",
+			"sample": "lqdm3.bsp",
+			"format": "Quake map (BSP)",
+			"category": "Levels and maps",
+			"source": "https://github.com/lavenderdotpet/LibreQuake",
+			"author": "LibreQuake contributors",
+			"licence": "BSD 3-Clause",
+			"spdx": "BSD-3-Clause",
+			"licenceUrl": "https://opensource.org/license/bsd-3-clause",
+			"samples": [
+				{
+					"file": "lqdm3.bsp",
+					"format": "Quake map (BSP)",
+					"category": "Levels and maps",
+					"source": "https://github.com/lavenderdotpet/LibreQuake",
+					"author": "LibreQuake contributors",
+					"licence": "BSD 3-Clause",
+					"spdx": "BSD-3-Clause",
+					"licenceUrl": "https://opensource.org/license/bsd-3-clause"
+				}
+			]
+		},
+		{
+			"path": "thumbs/village.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Roblox village",
+			"alt": "A Slerp thumbnail of a Roblox village on a grassy island, from a Roblox place file.",
+			"sample": "village.rbxl",
+			"format": "Roblox place",
+			"category": "Levels and maps",
+			"source": "https://github.com/Roblox/open-game-eval",
+			"author": "Roblox (open-game-eval Studio templates)",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "village.rbxl",
+					"format": "Roblox place",
+					"category": "Levels and maps",
+					"source": "https://github.com/Roblox/open-game-eval",
+					"author": "Roblox (open-game-eval Studio templates)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/pirate.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Pirate islands",
+			"alt": "A Slerp thumbnail of three small islands in a blue sea, from a Roblox place file.",
+			"sample": "pirate_island.rbxl",
+			"format": "Roblox place",
+			"category": "Levels and maps",
+			"source": "https://github.com/Roblox/open-game-eval",
+			"author": "Roblox (open-game-eval Studio templates)",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "pirate_island.rbxl",
+					"format": "Roblox place",
+					"category": "Levels and maps",
+					"source": "https://github.com/Roblox/open-game-eval",
+					"author": "Roblox (open-game-eval Studio templates)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/bricks.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Brick material",
+			"alt": "A brick wall material on a ball, rendered by Slerp from a MaterialX file.",
+			"sample": "Bricks097_1K-JPG.mtlx",
+			"format": "MaterialX material",
+			"category": "Materials",
+			"source": "https://ambientcg.com/view?id=Bricks097",
+			"author": "ambientCG",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "Bricks097_1K-JPG.mtlx",
+					"format": "MaterialX material",
+					"category": "Materials",
+					"source": "https://ambientcg.com/view?id=Bricks097",
+					"author": "ambientCG",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/leaf.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Leaf material",
+			"alt": "A leaf material with cut-out edges on a ball, rendered by Slerp from a MaterialX file.",
+			"sample": "Leaf001_1K-JPG.mtlx",
+			"format": "MaterialX material",
+			"category": "Materials",
+			"source": "https://ambientcg.com/view?id=Leaf001",
+			"author": "ambientCG",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "Leaf001_1K-JPG.mtlx",
+					"format": "MaterialX material",
+					"category": "Materials",
+					"source": "https://ambientcg.com/view?id=Leaf001",
+					"author": "ambientCG",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/wood.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Wood material",
+			"alt": "A dark wood material on a cube, rendered by Slerp from a Godot material file.",
+			"sample": "Wood066_1K-JPG.tres",
+			"format": "Godot material",
+			"category": "Materials",
+			"source": "https://ambientcg.com/view?id=Wood066",
+			"author": "ambientCG",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "Wood066_1K-JPG.tres",
+					"format": "Godot material",
+					"category": "Materials",
+					"source": "https://ambientcg.com/view?id=Wood066",
+					"author": "ambientCG",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/desk.webp",
+			"kind": "thumbnail",
+			"width": 377,
+			"height": 512,
+			"title": "HDR texture",
+			"alt": "A Slerp thumbnail of a desk lit by a stained glass window, from a KTX2 texture compressed as UASTC HDR.",
+			"sample": "Desk_uastc_hdr4x4_zstd_15.ktx2",
+			"format": "KTX 2 texture (UASTC HDR)",
+			"category": "Textures",
+			"source": "https://github.com/KhronosGroup/KTX-Software",
+			"author": "The KTX-Software project (test data; the Desk picture comes from the OpenEXR sample images)",
+			"licence": "Apache 2.0",
+			"spdx": "Apache-2.0",
+			"licenceUrl": "https://www.apache.org/licenses/LICENSE-2.0",
+			"samples": [
+				{
+					"file": "Desk_uastc_hdr4x4_zstd_15.ktx2",
+					"format": "KTX 2 texture (UASTC HDR)",
+					"category": "Textures",
+					"source": "https://github.com/KhronosGroup/KTX-Software",
+					"author": "The KTX-Software project (test data; the Desk picture comes from the OpenEXR sample images)",
+					"licence": "Apache 2.0",
+					"spdx": "Apache-2.0",
+					"licenceUrl": "https://www.apache.org/licenses/LICENSE-2.0"
+				}
+			]
+		},
+		{
+			"path": "thumbs/ddscube.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 384,
+			"title": "Cube map",
+			"alt": "A Slerp thumbnail of a park panorama laid out as a cube map cross, from a DDS texture.",
+			"sample": "Pretoria Gardens DX10.dds",
+			"format": "DirectDraw Surface cube map (DDS)",
+			"category": "Textures",
+			"source": "https://github.com/image-rs/image-dds",
+			"author": "The image-rs project (image-dds test data)",
+			"licence": "MIT or Apache 2.0",
+			"spdx": "MIT OR Apache-2.0",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "Pretoria Gardens DX10.dds",
+					"format": "DirectDraw Surface cube map (DDS)",
+					"category": "Textures",
+					"source": "https://github.com/image-rs/image-dds",
+					"author": "The image-rs project (image-dds test data)",
+					"licence": "MIT or Apache 2.0",
+					"spdx": "MIT OR Apache-2.0",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/venice.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 256,
+			"title": "Venice sunset sky",
+			"alt": "A Slerp thumbnail of a panorama of the Venice waterfront at sunset, from a Radiance HDR file.",
+			"sample": "venice_sunset_1k.hdr",
+			"format": "Radiance HDR image",
+			"category": "Images",
+			"source": "https://polyhaven.com/a/venice_sunset",
+			"author": "Greg Zaal (Poly Haven)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "venice_sunset_1k.hdr",
+					"format": "Radiance HDR image",
+					"category": "Images",
+					"source": "https://polyhaven.com/a/venice_sunset",
+					"author": "Greg Zaal (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/kloof.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 256,
+			"title": "Cloudy sky",
+			"alt": "A Slerp thumbnail of a panorama of a blue sky with white clouds, from a Radiance HDR file.",
+			"sample": "kloofendal_48d_partly_cloudy_puresky_1k.hdr",
+			"format": "Radiance HDR image",
+			"category": "Images",
+			"source": "https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky",
+			"author": "Greg Zaal and Jarod Guest (Poly Haven)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "kloofendal_48d_partly_cloudy_puresky_1k.hdr",
+					"format": "Radiance HDR image",
+					"category": "Images",
+					"source": "https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky",
+					"author": "Greg Zaal and Jarod Guest (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/dungeon.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 320,
+			"title": "Dungeon tile map",
+			"alt": "A Slerp thumbnail of a pixel-art dungeon map with rooms, rails and characters, from a Tiled map.",
+			"sample": "sampleMap.tmx",
+			"format": "Tiled map",
+			"category": "Sprites and tile maps",
+			"source": "https://kenney.nl/assets/tiny-dungeon",
+			"author": "Kenney",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "sampleMap.tmx",
+					"format": "Tiled map",
+					"category": "Sprites and tile maps",
+					"source": "https://kenney.nl/assets/tiny-dungeon",
+					"author": "Kenney",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/demon.webp",
+			"kind": "thumbnail",
+			"width": 500,
+			"height": 500,
+			"title": "Pixel art demon",
+			"alt": "A Slerp thumbnail of a pixel-art demon with glowing blue hands, from an Aseprite sprite.",
+			"sample": "f4_demonofeternity_idle.ase",
+			"format": "Aseprite sprite",
+			"category": "Sprites and tile maps",
+			"source": "https://github.com/valiet/assets_duelyst_units",
+			"author": "Counterplay Games (Duelyst), converted to Aseprite by valiet",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "f4_demonofeternity_idle.ase",
+					"format": "Aseprite sprite",
+					"category": "Sprites and tile maps",
+					"source": "https://github.com/valiet/assets_duelyst_units",
+					"author": "Counterplay Games (Duelyst), converted to Aseprite by valiet",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/golem.webp",
+			"kind": "thumbnail",
+			"width": 390,
+			"height": 390,
+			"title": "Pixel art golem",
+			"alt": "A Slerp thumbnail of a pixel-art golem of cracked black stone and glowing lava, from an Aseprite sprite.",
+			"sample": "neutral_moltengolem_idle.ase",
+			"format": "Aseprite sprite",
+			"category": "Sprites and tile maps",
+			"source": "https://github.com/valiet/assets_duelyst_units",
+			"author": "Counterplay Games (Duelyst), converted to Aseprite by valiet",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "neutral_moltengolem_idle.ase",
+					"format": "Aseprite sprite",
+					"category": "Sprites and tile maps",
+					"source": "https://github.com/valiet/assets_duelyst_units",
+					"author": "Counterplay Games (Duelyst), converted to Aseprite by valiet",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/tpsheet.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Sprite sheet",
+			"alt": "A Slerp thumbnail of a sheet of grassy road tiles with each sprite outlined, from TexturePacker sprite sheet data.",
+			"sample": "tileset-1.tpsheet",
+			"format": "TexturePacker sprite sheet data",
+			"category": "Sprites and tile maps",
+			"source": "https://github.com/schme16/LD39-Running-out-of-Power",
+			"author": "schme16 (the Ludum Dare 39 game Running out of Power)",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "tileset-1.tpsheet",
+					"format": "TexturePacker sprite sheet data",
+					"category": "Sprites and tile maps",
+					"source": "https://github.com/schme16/LD39-Running-out-of-Power",
+					"author": "schme16 (the Ludum Dare 39 game Running out of Power)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/peggy.webp",
+			"kind": "thumbnail",
+			"width": 489,
+			"height": 512,
+			"title": "Painted pig",
+			"alt": "A Slerp thumbnail of a painted cartoon pig in a blue dress, from a Krita document.",
+			"sample": "Peggy.kra",
+			"format": "Krita document",
+			"category": "Images",
+			"source": "https://opengameart.org/content/cute-painterly-characters-and-forest",
+			"author": "GDquest",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "Peggy.kra",
+					"format": "Krita document",
+					"category": "Images",
+					"source": "https://opengameart.org/content/cute-painterly-characters-and-forest",
+					"author": "GDquest",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/jaguar.webp",
+			"kind": "thumbnail",
+			"width": 445,
+			"height": 512,
+			"title": "Painted jaguar",
+			"alt": "A Slerp thumbnail of a painted cartoon jaguar, from a Krita document.",
+			"sample": "Jaguar.kra",
+			"format": "Krita document",
+			"category": "Images",
+			"source": "https://opengameart.org/content/cute-painterly-characters-and-forest",
+			"author": "GDquest",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "Jaguar.kra",
+					"format": "Krita document",
+					"category": "Images",
+					"source": "https://opengameart.org/content/cute-painterly-characters-and-forest",
+					"author": "GDquest",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/candle.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 415,
+			"title": "Candle and glass",
+			"alt": "A Slerp thumbnail of a lit candle beside a wine glass, from an OpenEXR image.",
+			"sample": "CandleGlass.exr",
+			"format": "OpenEXR image",
+			"category": "Images",
+			"source": "https://github.com/AcademySoftwareFoundation/openexr-images",
+			"author": "Industrial Light and Magic (OpenEXR sample images)",
+			"licence": "BSD 3-Clause",
+			"spdx": "BSD-3-Clause",
+			"licenceUrl": "https://opensource.org/license/bsd-3-clause",
+			"samples": [
+				{
+					"file": "CandleGlass.exr",
+					"format": "OpenEXR image",
+					"category": "Images",
+					"source": "https://github.com/AcademySoftwareFoundation/openexr-images",
+					"author": "Industrial Light and Magic (OpenEXR sample images)",
+					"licence": "BSD 3-Clause",
+					"spdx": "BSD-3-Clause",
+					"licenceUrl": "https://opensource.org/license/bsd-3-clause"
+				}
+			]
+		},
+		{
+			"path": "thumbs/goldengate.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 349,
+			"title": "Golden Gate at dusk",
+			"alt": "A Slerp thumbnail of the Golden Gate Bridge at dusk, from an OpenEXR image.",
+			"sample": "GoldenGate.exr",
+			"format": "OpenEXR image",
+			"category": "Images",
+			"source": "https://github.com/AcademySoftwareFoundation/openexr-images",
+			"author": "Industrial Light and Magic (OpenEXR sample images)",
+			"licence": "BSD 3-Clause",
+			"spdx": "BSD-3-Clause",
+			"licenceUrl": "https://opensource.org/license/bsd-3-clause",
+			"samples": [
+				{
+					"file": "GoldenGate.exr",
+					"format": "OpenEXR image",
+					"category": "Images",
+					"source": "https://github.com/AcademySoftwareFoundation/openexr-images",
+					"author": "Industrial Light and Magic (OpenEXR sample images)",
+					"licence": "BSD 3-Clause",
+					"spdx": "BSD-3-Clause",
+					"licenceUrl": "https://opensource.org/license/bsd-3-clause"
+				}
+			]
+		},
+		{
+			"path": "thumbs/silove.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 435,
+			"title": "ANSI art",
+			"alt": "A Slerp thumbnail of colourful ANSI art lettering, from an ANSI file.",
+			"sample": "ansilove-n-silove.ans",
+			"format": "ANSI art",
+			"category": "Retro computer art",
+			"source": "https://github.com/ansilove/ansilove",
+			"author": "Bjorn Odendahl, from the ansilove examples",
+			"licence": "BSD 2-Clause",
+			"spdx": "BSD-2-Clause",
+			"licenceUrl": "https://opensource.org/license/bsd-2-clause",
+			"samples": [
+				{
+					"file": "ansilove-n-silove.ans",
+					"format": "ANSI art",
+					"category": "Retro computer art",
+					"source": "https://github.com/ansilove/ansilove",
+					"author": "Bjorn Odendahl, from the ansilove examples",
+					"licence": "BSD 2-Clause",
+					"spdx": "BSD-2-Clause",
+					"licenceUrl": "https://opensource.org/license/bsd-2-clause"
+				}
+			]
+		},
+		{
+			"path": "thumbs/al02.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 371,
+			"title": "ANSI art logo",
+			"alt": "A Slerp thumbnail of red and pink ANSI art lettering on purple, from an ANSI file.",
+			"sample": "ansilove-cl!-al02.ans",
+			"format": "ANSI art",
+			"category": "Retro computer art",
+			"source": "https://github.com/ansilove/ansilove",
+			"author": "Frederic Cambus, from the ansilove examples",
+			"licence": "BSD 2-Clause",
+			"spdx": "BSD-2-Clause",
+			"licenceUrl": "https://opensource.org/license/bsd-2-clause",
+			"samples": [
+				{
+					"file": "ansilove-cl!-al02.ans",
+					"format": "ANSI art",
+					"category": "Retro computer art",
+					"source": "https://github.com/ansilove/ansilove",
+					"author": "Frederic Cambus, from the ansilove examples",
+					"licence": "BSD 2-Clause",
+					"spdx": "BSD-2-Clause",
+					"licenceUrl": "https://opensource.org/license/bsd-2-clause"
+				}
+			]
+		},
+		{
+			"path": "thumbs/bbc.webp",
+			"kind": "thumbnail",
+			"width": 320,
+			"height": 256,
+			"title": "BBC Micro logo",
+			"alt": "A Slerp thumbnail of a striped logo over a glowing sun, from a BBC Micro screen dump.",
+			"sample": "funky-fresh-logo-mode2.bbc",
+			"format": "BBC Micro screen dump",
+			"category": "Retro computer art",
+			"source": "https://github.com/kieranhj/funky-fresh",
+			"author": "Kieran Connell (the Bitshifters demo funky-fresh)",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "funky-fresh-logo-mode2.bbc",
+					"format": "BBC Micro screen dump",
+					"category": "Retro computer art",
+					"source": "https://github.com/kieranhj/funky-fresh",
+					"author": "Kieran Connell (the Bitshifters demo funky-fresh)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/pear36.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Colour palette",
+			"alt": "A Slerp thumbnail of a 36-colour palette shown as swatches, from a hex colour list.",
+			"sample": "cpc-pear36.hex",
+			"format": "Hex colour list",
+			"category": "Palettes and colour tables",
+			"source": "https://github.com/dagronf/ColorPaletteCodable",
+			"author": "PineappleOnPizza (via ColorPaletteCodable)",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "cpc-pear36.hex",
+					"format": "Hex colour list",
+					"category": "Palettes and colour tables",
+					"source": "https://github.com/dagronf/ColorPaletteCodable",
+					"author": "PineappleOnPizza (via ColorPaletteCodable)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/db16.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "16-colour palette",
+			"alt": "A Slerp thumbnail of a 16-colour pixel art palette shown as swatches, from a JASC palette.",
+			"sample": "cpc-DB16.pal",
+			"format": "JASC palette (.pal)",
+			"category": "Palettes and colour tables",
+			"source": "https://github.com/dagronf/ColorPaletteCodable",
+			"author": "DawnBringer (via ColorPaletteCodable)",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "cpc-DB16.pal",
+					"format": "JASC palette (.pal)",
+					"category": "Palettes and colour tables",
+					"source": "https://github.com/dagronf/ColorPaletteCodable",
+					"author": "DawnBringer (via ColorPaletteCodable)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/twilight.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 341,
+			"title": "Colour lookup table",
+			"alt": "A Slerp thumbnail of a photo split diagonally to show it before and after a colour lookup table.",
+			"sample": "Matplotlib_cyclic_twilight.cube",
+			"format": "Colour lookup table (Cube)",
+			"category": "Palettes and colour tables",
+			"source": "https://github.com/derlunz/matplotlib-colormap-luts",
+			"author": "derlunz (a lookup table of a Matplotlib colour map)",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "Matplotlib_cyclic_twilight.cube",
+					"format": "Colour lookup table (Cube)",
+					"category": "Palettes and colour tables",
+					"source": "https://github.com/derlunz/matplotlib-colormap-luts",
+					"author": "derlunz (a lookup table of a Matplotlib colour map)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/clover.webp",
+			"kind": "thumbnail",
+			"width": 369,
+			"height": 512,
+			"title": "Drone frame plate",
+			"alt": "A Slerp thumbnail of a laser-cut drone frame plate, from a DXF drawing.",
+			"sample": "deck.dxf",
+			"format": "AutoCAD drawing (DXF)",
+			"category": "Drawings and CAD",
+			"source": "https://github.com/CopterExpress/clover",
+			"author": "COEX (Clover drone kit)",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "deck.dxf",
+					"format": "AutoCAD drawing (DXF)",
+					"category": "Drawings and CAD",
+					"source": "https://github.com/CopterExpress/clover",
+					"author": "COEX (Clover drone kit)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/pcfan.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 384,
+			"title": "PC fan",
+			"alt": "A Slerp thumbnail of a computer fan, from the picture saved in a SolidWorks assembly.",
+			"sample": "pcfan-PC_Fan.SLDASM",
+			"format": "SolidWorks assembly",
+			"category": "Documents with stored previews",
+			"source": "https://github.com/tomic-pasko/PC_Fan_Solidworks",
+			"author": "tomic-pasko",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "pcfan-PC_Fan.SLDASM",
+					"format": "SolidWorks assembly",
+					"category": "Documents with stored previews",
+					"source": "https://github.com/tomic-pasko/PC_Fan_Solidworks",
+					"author": "tomic-pasko",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/trex.webp",
+			"kind": "thumbnail",
+			"width": 480,
+			"height": 340,
+			"title": "T. rex skeleton",
+			"alt": "A Slerp thumbnail of a line drawing of a T. rex skeleton, from the picture saved in a DWFx file.",
+			"sample": "aspose-Tyrannosaurus.dwfx",
+			"format": "Autodesk DWFx file",
+			"category": "Documents with stored previews",
+			"source": "https://github.com/aspose-cad/Aspose.CAD-for-Java",
+			"author": "Aspose (Aspose.CAD examples)",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "aspose-Tyrannosaurus.dwfx",
+					"format": "Autodesk DWFx file",
+					"category": "Documents with stored previews",
+					"source": "https://github.com/aspose-cad/Aspose.CAD-for-Java",
+					"author": "Aspose (Aspose.CAD examples)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/xstile.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Game tile set",
+			"alt": "A Slerp thumbnail of a pixel-art game tile set, from the picture saved in an Affinity document.",
+			"sample": "xs-tileset.af",
+			"format": "Affinity document",
+			"category": "Documents with stored previews",
+			"source": "https://github.com/BredaUniversityGames/xs",
+			"author": "Breda University of Applied Sciences (xs game engine)",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "xs-tileset.af",
+					"format": "Affinity document",
+					"category": "Documents with stored previews",
+					"source": "https://github.com/BredaUniversityGames/xs",
+					"author": "Breda University of Applied Sciences (xs game engine)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "thumbs/gcode.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "3D print toolpath",
+			"alt": "A Slerp thumbnail of a 3D printer toolpath of the bust of Nefertiti with green supports, from G-code.",
+			"sample": "nefertiti.gcode",
+			"format": "G-code toolpath",
+			"category": "Toolpaths and GPS tracks",
+			"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/Nefertiti",
+			"author": "Nora Al-Badri and Jan Nikolai Nelles (the Nefertiti Hack scan), sliced into G-code for this site",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "nefertiti.gcode",
+					"format": "G-code toolpath",
+					"category": "Toolpaths and GPS tracks",
+					"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/Nefertiti",
+					"author": "Nora Al-Badri and Jan Nikolai Nelles (the Nefertiti Hack scan), sliced into G-code for this site",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/gpx.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 414,
+			"title": "GPS track",
+			"alt": "A Slerp thumbnail of a mountain hiking track coloured by height, from a GPX file.",
+			"sample": "Mojstrovka.gpx",
+			"format": "GPS track (GPX)",
+			"category": "Toolpaths and GPS tracks",
+			"source": "https://github.com/tkrajina/gpxpy",
+			"author": "Tomo Krajina (gpxpy test data)",
+			"licence": "Apache 2.0",
+			"spdx": "Apache-2.0",
+			"licenceUrl": "https://www.apache.org/licenses/LICENSE-2.0",
+			"samples": [
+				{
+					"file": "Mojstrovka.gpx",
+					"format": "GPS track (GPX)",
+					"category": "Toolpaths and GPS tracks",
+					"source": "https://github.com/tkrajina/gpxpy",
+					"author": "Tomo Krajina (gpxpy test data)",
+					"licence": "Apache 2.0",
+					"spdx": "Apache-2.0",
+					"licenceUrl": "https://www.apache.org/licenses/LICENSE-2.0"
+				}
+			]
+		},
+		{
+			"path": "thumbs/brain.webp",
+			"kind": "thumbnail",
+			"width": 386,
+			"height": 458,
+			"title": "Brain MRI",
+			"alt": "A Slerp thumbnail of a slice through a brain MRI template, from a NIfTI volume.",
+			"sample": "MNI152_T1_1mm_2009c.nii.gz",
+			"format": "NIfTI medical volume",
+			"category": "Medical images",
+			"source": "https://www.templateflow.org/",
+			"author": "TemplateFlow (the MNI152NLin2009cAsym brain template)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "MNI152_T1_1mm_2009c.nii.gz",
+					"format": "NIfTI medical volume",
+					"category": "Medical images",
+					"source": "https://www.templateflow.org/",
+					"author": "TemplateFlow (the MNI152NLin2009cAsym brain template)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/ct.webp",
+			"kind": "thumbnail",
+			"width": 512,
+			"height": 512,
+			"title": "Chest CT",
+			"alt": "A Slerp thumbnail of a slice of a chest CT scan, from a DICOM file.",
+			"sample": "00000060.dcm",
+			"format": "DICOM medical image",
+			"category": "Medical images",
+			"source": "https://doi.org/10.7937/K9/TCIA.2015.LO9QL9SX",
+			"author": "The Cancer Imaging Archive, LIDC-IDRI collection (Armato and others, 2011)",
+			"licence": "CC BY 3.0",
+			"spdx": "CC-BY-3.0",
+			"licenceUrl": "https://creativecommons.org/licenses/by/3.0/",
+			"samples": [
+				{
+					"file": "00000060.dcm",
+					"format": "DICOM medical image",
+					"category": "Medical images",
+					"source": "https://doi.org/10.7937/K9/TCIA.2015.LO9QL9SX",
+					"author": "The Cancer Imaging Archive, LIDC-IDRI collection (Armato and others, 2011)",
+					"licence": "CC BY 3.0",
+					"spdx": "CC-BY-3.0",
+					"licenceUrl": "https://creativecommons.org/licenses/by/3.0/"
+				}
+			]
+		},
+		{
+			"path": "thumbs/slide.webp",
+			"kind": "thumbnail",
+			"width": 383,
+			"height": 512,
+			"title": "Tissue slide",
+			"alt": "A Slerp thumbnail of a stained tissue sample, from an Aperio whole-slide image.",
+			"sample": "CMU-1-Small-Region.svs",
+			"format": "Aperio whole-slide image (SVS)",
+			"category": "Scientific data",
+			"source": "https://openslide.cs.cmu.edu/download/openslide-testdata/",
+			"author": "Carnegie Mellon University (OpenSlide test data)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "CMU-1-Small-Region.svs",
+					"format": "Aperio whole-slide image (SVS)",
+					"category": "Scientific data",
+					"source": "https://openslide.cs.cmu.edu/download/openslide-testdata/",
+					"author": "Carnegie Mellon University (OpenSlide test data)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "screens/model.webp",
+			"kind": "viewer screenshot",
+			"width": 1920,
+			"height": 1200,
+			"title": "A 3D model",
+			"alt": "The Slerp viewer showing a detailed wooden sailing ship lit by a sunset sky, with the side panels hidden.",
+			"sample": "ship_pinnace_2k.gltf",
+			"format": "glTF model",
+			"category": "3D models",
+			"source": "https://polyhaven.com/a/ship_pinnace",
+			"author": "James Ray Cock, Rico Cilliers, Nicolò Zubbini and Yann Kervran (Poly Haven)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "ship_pinnace_2k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/ship_pinnace",
+					"author": "James Ray Cock, Rico Cilliers, Nicolò Zubbini and Yann Kervran (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "venice_sunset_4k.hdr",
+					"format": "Radiance HDR image",
+					"category": "Images",
+					"source": "https://polyhaven.com/a/venice_sunset",
+					"author": "Greg Zaal (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "screens/contents.webp",
+			"kind": "viewer screenshot",
+			"width": 1920,
+			"height": 1200,
+			"title": "The Contents panel and the inspector",
+			"alt": "The Slerp viewer with the Contents panel listing the pieces of a chess set, the inspector showing its details, and the hovered queen outlined on the board.",
+			"sample": "chess_set_1k.gltf",
+			"format": "glTF model",
+			"category": "3D models",
+			"source": "https://polyhaven.com/a/chess_set",
+			"author": "Riley Queen (Poly Haven)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "chess_set_1k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/chess_set",
+					"author": "Riley Queen (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "screens/animation.webp",
+			"kind": "viewer screenshot",
+			"width": 1920,
+			"height": 1200,
+			"title": "A character playing an animation",
+			"alt": "The Slerp viewer playing the Dance clip of a cartoon robot, with its list of clips and its morph target sliders.",
+			"sample": "RobotExpressive.glb",
+			"format": "glTF binary model (GLB)",
+			"category": "3D models",
+			"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/RobotExpressive",
+			"author": "Tomás Laulhé (Quaternius), edited by Don McCurdy",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "RobotExpressive.glb",
+					"format": "glTF binary model (GLB)",
+					"category": "3D models",
+					"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/RobotExpressive",
+					"author": "Tomás Laulhé (Quaternius), edited by Don McCurdy",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "screens/level.webp",
+			"kind": "viewer screenshot",
+			"width": 1920,
+			"height": 1200,
+			"title": "A Quake level in first person",
+			"alt": "The Slerp viewer walking through a LibreQuake level in first person, with riveted metal walls, a curved stair and a cloudy sky.",
+			"sample": "lq_e1m1.bsp",
+			"format": "Quake map (BSP)",
+			"category": "Levels and maps",
+			"source": "https://github.com/lavenderdotpet/LibreQuake",
+			"author": "LibreQuake contributors",
+			"licence": "BSD 3-Clause",
+			"spdx": "BSD-3-Clause",
+			"licenceUrl": "https://opensource.org/license/bsd-3-clause",
+			"samples": [
+				{
+					"file": "lq_e1m1.bsp",
+					"format": "Quake map (BSP)",
+					"category": "Levels and maps",
+					"source": "https://github.com/lavenderdotpet/LibreQuake",
+					"author": "LibreQuake contributors",
+					"licence": "BSD 3-Clause",
+					"spdx": "BSD-3-Clause",
+					"licenceUrl": "https://opensource.org/license/bsd-3-clause"
+				}
+			]
+		},
+		{
+			"path": "screens/texture.webp",
+			"kind": "viewer screenshot",
+			"width": 1920,
+			"height": 1200,
+			"title": "A GPU texture and its details",
+			"alt": "The Slerp viewer showing a KTX2 texture compressed as UASTC HDR, a desk under a stained glass window, with its format details and exposure controls.",
+			"sample": "Desk_uastc_hdr4x4_zstd_15.ktx2",
+			"format": "KTX 2 texture (UASTC HDR)",
+			"category": "Textures",
+			"source": "https://github.com/KhronosGroup/KTX-Software",
+			"author": "The KTX-Software project (test data; the Desk picture comes from the OpenEXR sample images)",
+			"licence": "Apache 2.0",
+			"spdx": "Apache-2.0",
+			"licenceUrl": "https://www.apache.org/licenses/LICENSE-2.0",
+			"samples": [
+				{
+					"file": "Desk_uastc_hdr4x4_zstd_15.ktx2",
+					"format": "KTX 2 texture (UASTC HDR)",
+					"category": "Textures",
+					"source": "https://github.com/KhronosGroup/KTX-Software",
+					"author": "The KTX-Software project (test data; the Desk picture comes from the OpenEXR sample images)",
+					"licence": "Apache 2.0",
+					"spdx": "Apache-2.0",
+					"licenceUrl": "https://www.apache.org/licenses/LICENSE-2.0"
+				}
+			]
+		},
+		{
+			"path": "screens/sky.webp",
+			"kind": "viewer screenshot",
+			"width": 1920,
+			"height": 1200,
+			"title": "An HDR sky",
+			"alt": "The Slerp viewer showing a panorama of the Venice waterfront at sunset from a Radiance HDR file, with its details and tone mapping controls.",
+			"sample": "venice_sunset_4k.hdr",
+			"format": "Radiance HDR image",
+			"category": "Images",
+			"source": "https://polyhaven.com/a/venice_sunset",
+			"author": "Greg Zaal (Poly Haven)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "venice_sunset_4k.hdr",
+					"format": "Radiance HDR image",
+					"category": "Images",
+					"source": "https://polyhaven.com/a/venice_sunset",
+					"author": "Greg Zaal (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "screens/splat.webp",
+			"kind": "viewer screenshot",
+			"width": 1920,
+			"height": 1200,
+			"title": "A Gaussian splat",
+			"alt": "The Slerp viewer showing a Gaussian splat capture of a horned lizard sculpture in a garden.",
+			"sample": "hornedlizard.spz",
+			"format": "Compressed Gaussian splats (SPZ)",
+			"category": "Point clouds and splats",
+			"source": "https://github.com/nianticlabs/spz",
+			"author": "Niantic",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "hornedlizard.spz",
+					"format": "Compressed Gaussian splats (SPZ)",
+					"category": "Point clouds and splats",
+					"source": "https://github.com/nianticlabs/spz",
+					"author": "Niantic",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "screens/minecraft.webp",
+			"kind": "viewer screenshot",
+			"width": 1920,
+			"height": 1200,
+			"title": "A Minecraft schematic",
+			"alt": "The Slerp viewer showing a floating Minecraft island with houses, trees and a waterfall, from a Litematica schematic.",
+			"sample": "island.litematic",
+			"format": "Minecraft schematic (Litematica)",
+			"category": "3D models",
+			"source": "https://github.com/SandroHc/schematic4j",
+			"author": "SandroHc (schematic4j test data)",
+			"licence": "MIT",
+			"spdx": "MIT",
+			"licenceUrl": "https://opensource.org/license/mit",
+			"samples": [
+				{
+					"file": "island.litematic",
+					"format": "Minecraft schematic (Litematica)",
+					"category": "3D models",
+					"source": "https://github.com/SandroHc/schematic4j",
+					"author": "SandroHc (schematic4j test data)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "screens/ct.webp",
+			"kind": "viewer screenshot",
+			"width": 1920,
+			"height": 1200,
+			"title": "A CT series",
+			"alt": "The Slerp viewer showing a chest CT slice from a DICOM series, with window presets, the series slider and the DICOM tags.",
+			"sample": "00000060.dcm",
+			"format": "DICOM medical image",
+			"category": "Medical images",
+			"source": "https://doi.org/10.7937/K9/TCIA.2015.LO9QL9SX",
+			"author": "The Cancer Imaging Archive, LIDC-IDRI collection (Armato and others, 2011)",
+			"licence": "CC BY 3.0",
+			"spdx": "CC-BY-3.0",
+			"licenceUrl": "https://creativecommons.org/licenses/by/3.0/",
+			"samples": [
+				{
+					"file": "00000060.dcm",
+					"format": "DICOM medical image",
+					"category": "Medical images",
+					"source": "https://doi.org/10.7937/K9/TCIA.2015.LO9QL9SX",
+					"author": "The Cancer Imaging Archive, LIDC-IDRI collection (Armato and others, 2011)",
+					"licence": "CC BY 3.0",
+					"spdx": "CC-BY-3.0",
+					"licenceUrl": "https://creativecommons.org/licenses/by/3.0/"
+				}
+			]
+		},
+		{
+			"path": "screens/mri.webp",
+			"kind": "viewer screenshot",
+			"width": 1920,
+			"height": 1200,
+			"title": "An MRI volume",
+			"alt": "The Slerp viewer showing a slice of a brain MRI volume, with plane, window and colour controls and a histogram of its values.",
+			"sample": "MNI152_T1_1mm_2009c.nii.gz",
+			"format": "NIfTI medical volume",
+			"category": "Medical images",
+			"source": "https://www.templateflow.org/",
+			"author": "TemplateFlow (the MNI152NLin2009cAsym brain template)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "MNI152_T1_1mm_2009c.nii.gz",
+					"format": "NIfTI medical volume",
+					"category": "Medical images",
+					"source": "https://www.templateflow.org/",
+					"author": "TemplateFlow (the MNI152NLin2009cAsym brain template)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "screens/gcode.webp",
+			"kind": "viewer screenshot",
+			"width": 1920,
+			"height": 1200,
+			"title": "A G-code toolpath",
+			"alt": "The Slerp viewer showing a 3D printer toolpath of the bust of Nefertiti, with a layer slider and the print features listed by colour.",
+			"sample": "nefertiti.gcode",
+			"format": "G-code toolpath",
+			"category": "Toolpaths and GPS tracks",
+			"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/Nefertiti",
+			"author": "Nora Al-Badri and Jan Nikolai Nelles (the Nefertiti Hack scan), sliced into G-code for this site",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "nefertiti.gcode",
+					"format": "G-code toolpath",
+					"category": "Toolpaths and GPS tracks",
+					"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/Nefertiti",
+					"author": "Nora Al-Badri and Jan Nikolai Nelles (the Nefertiti Hack scan), sliced into G-code for this site",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "screens/material.webp",
+			"kind": "viewer screenshot",
+			"width": 1920,
+			"height": 1200,
+			"title": "A material on a ball",
+			"alt": "The Slerp viewer showing a brick MaterialX material on a ball, with shape, tiling and displacement controls and the file's own preview.",
+			"sample": "Bricks097_1K-JPG.mtlx",
+			"format": "MaterialX material",
+			"category": "Materials",
+			"source": "https://ambientcg.com/view?id=Bricks097",
+			"author": "ambientCG",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "Bricks097_1K-JPG.mtlx",
+					"format": "MaterialX material",
+					"category": "Materials",
+					"source": "https://ambientcg.com/view?id=Bricks097",
+					"author": "ambientCG",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "filemanager/before.webp",
+			"kind": "file manager",
+			"width": 1600,
+			"height": 1000,
+			"title": "Dolphin before Slerp",
+			"alt": "Dolphin showing a folder of 3D models, game files, textures, scans and sprites as generic file icons, before Slerp's thumbnailer is switched on.",
+			"credit": "Shows 28 samples; credit each one listed under samples.",
+			"samples": [
+				{
+					"file": "boombox_1k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/boombox",
+					"author": "Thomas Paul Mouilleron (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "MNI152_T1_1mm_2009c.nii.gz",
+					"format": "NIfTI medical volume",
+					"category": "Medical images",
+					"source": "https://www.templateflow.org/",
+					"author": "TemplateFlow (the MNI152NLin2009cAsym brain template)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "Camera_01_1k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/Camera_01",
+					"author": "Rajil Jose Macatangay (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "treasure_chest_1k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/treasure_chest",
+					"author": "Rico Cilliers (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "00000060.dcm",
+					"format": "DICOM medical image",
+					"category": "Medical images",
+					"source": "https://doi.org/10.7937/K9/TCIA.2015.LO9QL9SX",
+					"author": "The Cancer Imaging Archive, LIDC-IDRI collection (Armato and others, 2011)",
+					"licence": "CC BY 3.0",
+					"spdx": "CC-BY-3.0",
+					"licenceUrl": "https://creativecommons.org/licenses/by/3.0/"
+				},
+				{
+					"file": "f4_demonofeternity_idle.ase",
+					"format": "Aseprite sprite",
+					"category": "Sprites and tile maps",
+					"source": "https://github.com/valiet/assets_duelyst_units",
+					"author": "Counterplay Games (Duelyst), converted to Aseprite by valiet",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "Desk_uastc_hdr4x4_zstd_15.ktx2",
+					"format": "KTX 2 texture (UASTC HDR)",
+					"category": "Textures",
+					"source": "https://github.com/KhronosGroup/KTX-Software",
+					"author": "The KTX-Software project (test data; the Desk picture comes from the OpenEXR sample images)",
+					"licence": "Apache 2.0",
+					"spdx": "Apache-2.0",
+					"licenceUrl": "https://www.apache.org/licenses/LICENSE-2.0"
+				},
+				{
+					"file": "freedoom2.wad",
+					"format": "Doom WAD",
+					"category": "Levels and maps",
+					"source": "https://freedoom.github.io/",
+					"author": "Freedoom contributors",
+					"licence": "BSD 3-Clause",
+					"spdx": "BSD-3-Clause",
+					"licenceUrl": "https://opensource.org/license/bsd-3-clause"
+				},
+				{
+					"file": "nefertiti.gcode",
+					"format": "G-code toolpath",
+					"category": "Toolpaths and GPS tracks",
+					"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/Nefertiti",
+					"author": "Nora Al-Badri and Jan Nikolai Nelles (the Nefertiti Hack scan), sliced into G-code for this site",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "Mojstrovka.gpx",
+					"format": "GPS track (GPX)",
+					"category": "Toolpaths and GPS tracks",
+					"source": "https://github.com/tkrajina/gpxpy",
+					"author": "Tomo Krajina (gpxpy test data)",
+					"licence": "Apache 2.0",
+					"spdx": "Apache-2.0",
+					"licenceUrl": "https://www.apache.org/licenses/LICENSE-2.0"
+				},
+				{
+					"file": "guitar.compressed.ply",
+					"format": "Gaussian splats (compressed PLY)",
+					"category": "Point clouds and splats",
+					"source": "https://github.com/playcanvas/engine",
+					"author": "PlayCanvas",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				},
+				{
+					"file": "chr_knight.vox",
+					"format": "MagicaVoxel model",
+					"category": "3D models",
+					"source": "https://github.com/ephtracy/voxel-model",
+					"author": "ephtracy (MagicaVoxel sample models)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				},
+				{
+					"file": "hornedlizard.spz",
+					"format": "Compressed Gaussian splats (SPZ)",
+					"category": "Point clouds and splats",
+					"source": "https://github.com/nianticlabs/spz",
+					"author": "Niantic",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				},
+				{
+					"file": "lqdm3.bsp",
+					"format": "Quake map (BSP)",
+					"category": "Levels and maps",
+					"source": "https://github.com/lavenderdotpet/LibreQuake",
+					"author": "LibreQuake contributors",
+					"licence": "BSD 3-Clause",
+					"spdx": "BSD-3-Clause",
+					"licenceUrl": "https://opensource.org/license/bsd-3-clause"
+				},
+				{
+					"file": "monu7.vox",
+					"format": "MagicaVoxel model",
+					"category": "3D models",
+					"source": "https://github.com/ephtracy/voxel-model",
+					"author": "ephtracy (MagicaVoxel sample models)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				},
+				{
+					"file": "Nefertiti.glb",
+					"format": "glTF binary model (GLB)",
+					"category": "3D models",
+					"source": "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Nefertiti/Nefertiti.glb",
+					"author": "Nora Al-Badri and Jan Nikolai Nelles (the Nefertiti Hack scan), from the three.js examples",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "IridescentDishWithOlives.glb",
+					"format": "glTF binary model (GLB) with Draco",
+					"category": "3D models",
+					"source": "https://raw.githubusercontent.com/mrdoob/three.js/43488e632d91441c095a71c9c3d2d46c75983745/examples/models/gltf/IridescentDishWithOlives.glb",
+					"author": "Eric Chadwick (Wayfair), from the three.js examples",
+					"licence": "CC BY 4.0",
+					"spdx": "CC-BY-4.0",
+					"licenceUrl": "https://creativecommons.org/licenses/by/4.0/"
+				},
+				{
+					"file": "pcfan-PC_Fan.SLDASM",
+					"format": "SolidWorks assembly",
+					"category": "Documents with stored previews",
+					"source": "https://github.com/tomic-pasko/PC_Fan_Solidworks",
+					"author": "tomic-pasko",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "cpc-pear36.hex",
+					"format": "Hex colour list",
+					"category": "Palettes and colour tables",
+					"source": "https://github.com/dagronf/ColorPaletteCodable",
+					"author": "PineappleOnPizza (via ColorPaletteCodable)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				},
+				{
+					"file": "RobotExpressive.glb",
+					"format": "glTF binary model (GLB)",
+					"category": "3D models",
+					"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/RobotExpressive",
+					"author": "Tomás Laulhé (Quaternius), edited by Don McCurdy",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "shambler.mdl",
+					"format": "Quake model (MDL)",
+					"category": "3D models",
+					"source": "https://github.com/lavenderdotpet/LibreQuake",
+					"author": "LibreQuake contributors",
+					"licence": "BSD 3-Clause",
+					"spdx": "BSD-3-Clause",
+					"licenceUrl": "https://opensource.org/license/bsd-3-clause"
+				},
+				{
+					"file": "ship_pinnace_1k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/ship_pinnace",
+					"author": "James Ray Cock, Rico Cilliers, Nicolò Zubbini and Yann Kervran (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "ansilove-n-silove.ans",
+					"format": "ANSI art",
+					"category": "Retro computer art",
+					"source": "https://github.com/ansilove/ansilove",
+					"author": "Bjorn Odendahl, from the ansilove examples",
+					"licence": "BSD 2-Clause",
+					"spdx": "BSD-2-Clause",
+					"licenceUrl": "https://opensource.org/license/bsd-2-clause"
+				},
+				{
+					"file": "CMU-1-Small-Region.svs",
+					"format": "Aperio whole-slide image (SVS)",
+					"category": "Scientific data",
+					"source": "https://openslide.cs.cmu.edu/download/openslide-testdata/",
+					"author": "Carnegie Mellon University (OpenSlide test data)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "LittlestTokyo.glb",
+					"format": "glTF binary model (GLB) with Draco",
+					"category": "3D models",
+					"source": "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/LittlestTokyo.glb",
+					"author": "Glen Fox, from the three.js examples",
+					"licence": "CC BY 4.0",
+					"spdx": "CC-BY-4.0",
+					"licenceUrl": "https://creativecommons.org/licenses/by/4.0/"
+				},
+				{
+					"file": "Matplotlib_cyclic_twilight.cube",
+					"format": "Colour lookup table (Cube)",
+					"category": "Palettes and colour tables",
+					"source": "https://github.com/derlunz/matplotlib-colormap-luts",
+					"author": "derlunz (a lookup table of a Matplotlib colour map)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				},
+				{
+					"file": "venice_sunset_1k.hdr",
+					"format": "Radiance HDR image",
+					"category": "Images",
+					"source": "https://polyhaven.com/a/venice_sunset",
+					"author": "Greg Zaal (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "village.rbxl",
+					"format": "Roblox place",
+					"category": "Levels and maps",
+					"source": "https://github.com/Roblox/open-game-eval",
+					"author": "Roblox (open-game-eval Studio templates)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "filemanager/after.webp",
+			"kind": "file manager",
+			"width": 1600,
+			"height": 1000,
+			"title": "Dolphin with Slerp",
+			"alt": "The same Dolphin folder with Slerp's thumbnails: ships, cameras, splats, game levels, sprites, scans and textures each shown as a picture of what is inside.",
+			"credit": "Shows 28 samples; credit each one listed under samples.",
+			"samples": [
+				{
+					"file": "boombox_1k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/boombox",
+					"author": "Thomas Paul Mouilleron (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "MNI152_T1_1mm_2009c.nii.gz",
+					"format": "NIfTI medical volume",
+					"category": "Medical images",
+					"source": "https://www.templateflow.org/",
+					"author": "TemplateFlow (the MNI152NLin2009cAsym brain template)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "Camera_01_1k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/Camera_01",
+					"author": "Rajil Jose Macatangay (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "treasure_chest_1k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/treasure_chest",
+					"author": "Rico Cilliers (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "00000060.dcm",
+					"format": "DICOM medical image",
+					"category": "Medical images",
+					"source": "https://doi.org/10.7937/K9/TCIA.2015.LO9QL9SX",
+					"author": "The Cancer Imaging Archive, LIDC-IDRI collection (Armato and others, 2011)",
+					"licence": "CC BY 3.0",
+					"spdx": "CC-BY-3.0",
+					"licenceUrl": "https://creativecommons.org/licenses/by/3.0/"
+				},
+				{
+					"file": "f4_demonofeternity_idle.ase",
+					"format": "Aseprite sprite",
+					"category": "Sprites and tile maps",
+					"source": "https://github.com/valiet/assets_duelyst_units",
+					"author": "Counterplay Games (Duelyst), converted to Aseprite by valiet",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "Desk_uastc_hdr4x4_zstd_15.ktx2",
+					"format": "KTX 2 texture (UASTC HDR)",
+					"category": "Textures",
+					"source": "https://github.com/KhronosGroup/KTX-Software",
+					"author": "The KTX-Software project (test data; the Desk picture comes from the OpenEXR sample images)",
+					"licence": "Apache 2.0",
+					"spdx": "Apache-2.0",
+					"licenceUrl": "https://www.apache.org/licenses/LICENSE-2.0"
+				},
+				{
+					"file": "freedoom2.wad",
+					"format": "Doom WAD",
+					"category": "Levels and maps",
+					"source": "https://freedoom.github.io/",
+					"author": "Freedoom contributors",
+					"licence": "BSD 3-Clause",
+					"spdx": "BSD-3-Clause",
+					"licenceUrl": "https://opensource.org/license/bsd-3-clause"
+				},
+				{
+					"file": "nefertiti.gcode",
+					"format": "G-code toolpath",
+					"category": "Toolpaths and GPS tracks",
+					"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/Nefertiti",
+					"author": "Nora Al-Badri and Jan Nikolai Nelles (the Nefertiti Hack scan), sliced into G-code for this site",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "Mojstrovka.gpx",
+					"format": "GPS track (GPX)",
+					"category": "Toolpaths and GPS tracks",
+					"source": "https://github.com/tkrajina/gpxpy",
+					"author": "Tomo Krajina (gpxpy test data)",
+					"licence": "Apache 2.0",
+					"spdx": "Apache-2.0",
+					"licenceUrl": "https://www.apache.org/licenses/LICENSE-2.0"
+				},
+				{
+					"file": "guitar.compressed.ply",
+					"format": "Gaussian splats (compressed PLY)",
+					"category": "Point clouds and splats",
+					"source": "https://github.com/playcanvas/engine",
+					"author": "PlayCanvas",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				},
+				{
+					"file": "chr_knight.vox",
+					"format": "MagicaVoxel model",
+					"category": "3D models",
+					"source": "https://github.com/ephtracy/voxel-model",
+					"author": "ephtracy (MagicaVoxel sample models)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				},
+				{
+					"file": "hornedlizard.spz",
+					"format": "Compressed Gaussian splats (SPZ)",
+					"category": "Point clouds and splats",
+					"source": "https://github.com/nianticlabs/spz",
+					"author": "Niantic",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				},
+				{
+					"file": "lqdm3.bsp",
+					"format": "Quake map (BSP)",
+					"category": "Levels and maps",
+					"source": "https://github.com/lavenderdotpet/LibreQuake",
+					"author": "LibreQuake contributors",
+					"licence": "BSD 3-Clause",
+					"spdx": "BSD-3-Clause",
+					"licenceUrl": "https://opensource.org/license/bsd-3-clause"
+				},
+				{
+					"file": "monu7.vox",
+					"format": "MagicaVoxel model",
+					"category": "3D models",
+					"source": "https://github.com/ephtracy/voxel-model",
+					"author": "ephtracy (MagicaVoxel sample models)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				},
+				{
+					"file": "Nefertiti.glb",
+					"format": "glTF binary model (GLB)",
+					"category": "3D models",
+					"source": "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Nefertiti/Nefertiti.glb",
+					"author": "Nora Al-Badri and Jan Nikolai Nelles (the Nefertiti Hack scan), from the three.js examples",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "IridescentDishWithOlives.glb",
+					"format": "glTF binary model (GLB) with Draco",
+					"category": "3D models",
+					"source": "https://raw.githubusercontent.com/mrdoob/three.js/43488e632d91441c095a71c9c3d2d46c75983745/examples/models/gltf/IridescentDishWithOlives.glb",
+					"author": "Eric Chadwick (Wayfair), from the three.js examples",
+					"licence": "CC BY 4.0",
+					"spdx": "CC-BY-4.0",
+					"licenceUrl": "https://creativecommons.org/licenses/by/4.0/"
+				},
+				{
+					"file": "pcfan-PC_Fan.SLDASM",
+					"format": "SolidWorks assembly",
+					"category": "Documents with stored previews",
+					"source": "https://github.com/tomic-pasko/PC_Fan_Solidworks",
+					"author": "tomic-pasko",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "cpc-pear36.hex",
+					"format": "Hex colour list",
+					"category": "Palettes and colour tables",
+					"source": "https://github.com/dagronf/ColorPaletteCodable",
+					"author": "PineappleOnPizza (via ColorPaletteCodable)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				},
+				{
+					"file": "RobotExpressive.glb",
+					"format": "glTF binary model (GLB)",
+					"category": "3D models",
+					"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/RobotExpressive",
+					"author": "Tomás Laulhé (Quaternius), edited by Don McCurdy",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "shambler.mdl",
+					"format": "Quake model (MDL)",
+					"category": "3D models",
+					"source": "https://github.com/lavenderdotpet/LibreQuake",
+					"author": "LibreQuake contributors",
+					"licence": "BSD 3-Clause",
+					"spdx": "BSD-3-Clause",
+					"licenceUrl": "https://opensource.org/license/bsd-3-clause"
+				},
+				{
+					"file": "ship_pinnace_1k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/ship_pinnace",
+					"author": "James Ray Cock, Rico Cilliers, Nicolò Zubbini and Yann Kervran (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "ansilove-n-silove.ans",
+					"format": "ANSI art",
+					"category": "Retro computer art",
+					"source": "https://github.com/ansilove/ansilove",
+					"author": "Bjorn Odendahl, from the ansilove examples",
+					"licence": "BSD 2-Clause",
+					"spdx": "BSD-2-Clause",
+					"licenceUrl": "https://opensource.org/license/bsd-2-clause"
+				},
+				{
+					"file": "CMU-1-Small-Region.svs",
+					"format": "Aperio whole-slide image (SVS)",
+					"category": "Scientific data",
+					"source": "https://openslide.cs.cmu.edu/download/openslide-testdata/",
+					"author": "Carnegie Mellon University (OpenSlide test data)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "LittlestTokyo.glb",
+					"format": "glTF binary model (GLB) with Draco",
+					"category": "3D models",
+					"source": "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/LittlestTokyo.glb",
+					"author": "Glen Fox, from the three.js examples",
+					"licence": "CC BY 4.0",
+					"spdx": "CC-BY-4.0",
+					"licenceUrl": "https://creativecommons.org/licenses/by/4.0/"
+				},
+				{
+					"file": "Matplotlib_cyclic_twilight.cube",
+					"format": "Colour lookup table (Cube)",
+					"category": "Palettes and colour tables",
+					"source": "https://github.com/derlunz/matplotlib-colormap-luts",
+					"author": "derlunz (a lookup table of a Matplotlib colour map)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				},
+				{
+					"file": "venice_sunset_1k.hdr",
+					"format": "Radiance HDR image",
+					"category": "Images",
+					"source": "https://polyhaven.com/a/venice_sunset",
+					"author": "Greg Zaal (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "village.rbxl",
+					"format": "Roblox place",
+					"category": "Levels and maps",
+					"source": "https://github.com/Roblox/open-game-eval",
+					"author": "Roblox (open-game-eval Studio templates)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				}
+			]
+		},
+		{
+			"path": "loops/turntable.webm",
+			"kind": "video",
+			"width": 1280,
+			"height": 800,
+			"seconds": 8,
+			"title": "Ship turntable",
+			"alt": "A wooden sailing ship turning slowly in front of a soft sunset sky, rendered by Slerp.",
+			"sample": "ship_pinnace_2k.gltf",
+			"format": "glTF model",
+			"category": "3D models",
+			"source": "https://polyhaven.com/a/ship_pinnace",
+			"author": "James Ray Cock, Rico Cilliers, Nicolò Zubbini and Yann Kervran (Poly Haven)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "ship_pinnace_2k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/ship_pinnace",
+					"author": "James Ray Cock, Rico Cilliers, Nicolò Zubbini and Yann Kervran (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "venice_sunset_4k.hdr",
+					"format": "Radiance HDR image",
+					"category": "Images",
+					"source": "https://polyhaven.com/a/venice_sunset",
+					"author": "Greg Zaal (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "loops/turntable.mp4",
+			"kind": "video",
+			"width": 1280,
+			"height": 800,
+			"seconds": 8,
+			"title": "Ship turntable",
+			"alt": "A wooden sailing ship turning slowly in front of a soft sunset sky, rendered by Slerp.",
+			"sample": "ship_pinnace_2k.gltf",
+			"format": "glTF model",
+			"category": "3D models",
+			"source": "https://polyhaven.com/a/ship_pinnace",
+			"author": "James Ray Cock, Rico Cilliers, Nicolò Zubbini and Yann Kervran (Poly Haven)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "ship_pinnace_2k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/ship_pinnace",
+					"author": "James Ray Cock, Rico Cilliers, Nicolò Zubbini and Yann Kervran (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "venice_sunset_4k.hdr",
+					"format": "Radiance HDR image",
+					"category": "Images",
+					"source": "https://polyhaven.com/a/venice_sunset",
+					"author": "Greg Zaal (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "loops/turntable-poster.webp",
+			"kind": "poster",
+			"width": 1280,
+			"height": 800,
+			"title": "Ship turntable",
+			"alt": "A wooden sailing ship in front of a soft sunset sky, rendered by Slerp.",
+			"sample": "ship_pinnace_2k.gltf",
+			"format": "glTF model",
+			"category": "3D models",
+			"source": "https://polyhaven.com/a/ship_pinnace",
+			"author": "James Ray Cock, Rico Cilliers, Nicolò Zubbini and Yann Kervran (Poly Haven)",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "ship_pinnace_2k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/ship_pinnace",
+					"author": "James Ray Cock, Rico Cilliers, Nicolò Zubbini and Yann Kervran (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "venice_sunset_4k.hdr",
+					"format": "Radiance HDR image",
+					"category": "Images",
+					"source": "https://polyhaven.com/a/venice_sunset",
+					"author": "Greg Zaal (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "loops/dance.webm",
+			"kind": "video",
+			"width": 1280,
+			"height": 800,
+			"seconds": 6.67,
+			"title": "Dancing robot",
+			"alt": "A yellow cartoon robot playing its Dance animation in a bright studio, rendered by Slerp.",
+			"sample": "RobotExpressive.glb",
+			"format": "glTF binary model (GLB)",
+			"category": "3D models",
+			"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/RobotExpressive",
+			"author": "Tomás Laulhé (Quaternius), edited by Don McCurdy",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "RobotExpressive.glb",
+					"format": "glTF binary model (GLB)",
+					"category": "3D models",
+					"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/RobotExpressive",
+					"author": "Tomás Laulhé (Quaternius), edited by Don McCurdy",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "studio_small_09_1k.hdr",
+					"format": "Radiance HDR image",
+					"category": "Images",
+					"source": "https://polyhaven.com/a/studio_small_09",
+					"author": "Sergej Majboroda (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "loops/dance.mp4",
+			"kind": "video",
+			"width": 1280,
+			"height": 800,
+			"seconds": 6.67,
+			"title": "Dancing robot",
+			"alt": "A yellow cartoon robot playing its Dance animation in a bright studio, rendered by Slerp.",
+			"sample": "RobotExpressive.glb",
+			"format": "glTF binary model (GLB)",
+			"category": "3D models",
+			"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/RobotExpressive",
+			"author": "Tomás Laulhé (Quaternius), edited by Don McCurdy",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "RobotExpressive.glb",
+					"format": "glTF binary model (GLB)",
+					"category": "3D models",
+					"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/RobotExpressive",
+					"author": "Tomás Laulhé (Quaternius), edited by Don McCurdy",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "studio_small_09_1k.hdr",
+					"format": "Radiance HDR image",
+					"category": "Images",
+					"source": "https://polyhaven.com/a/studio_small_09",
+					"author": "Sergej Majboroda (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "loops/dance-poster.webp",
+			"kind": "poster",
+			"width": 1280,
+			"height": 800,
+			"title": "Dancing robot",
+			"alt": "A yellow cartoon robot dancing in a bright studio, rendered by Slerp.",
+			"sample": "RobotExpressive.glb",
+			"format": "glTF binary model (GLB)",
+			"category": "3D models",
+			"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/RobotExpressive",
+			"author": "Tomás Laulhé (Quaternius), edited by Don McCurdy",
+			"licence": "CC0 1.0",
+			"spdx": "CC0-1.0",
+			"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+			"samples": [
+				{
+					"file": "RobotExpressive.glb",
+					"format": "glTF binary model (GLB)",
+					"category": "3D models",
+					"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/RobotExpressive",
+					"author": "Tomás Laulhé (Quaternius), edited by Don McCurdy",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "studio_small_09_1k.hdr",
+					"format": "Radiance HDR image",
+					"category": "Images",
+					"source": "https://polyhaven.com/a/studio_small_09",
+					"author": "Sergej Majboroda (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		},
+		{
+			"path": "social/og.png",
+			"kind": "link preview",
+			"width": 1200,
+			"height": 630,
+			"title": "Slerp link preview",
+			"alt": "The name Slerp and a one-line description beside a grid of Slerp thumbnails of a ship, a diorama, a splat, a painting, a robot, voxels, pixel art, a material, a brain scan, a toolpath, a lamp and a tile map.",
+			"credit": "Shows 12 samples; credit each one listed under samples.",
+			"samples": [
+				{
+					"file": "ship_pinnace_1k.gltf",
+					"format": "glTF model",
+					"category": "3D models",
+					"source": "https://polyhaven.com/a/ship_pinnace",
+					"author": "James Ray Cock, Rico Cilliers, Nicolò Zubbini and Yann Kervran (Poly Haven)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "LittlestTokyo.glb",
+					"format": "glTF binary model (GLB) with Draco",
+					"category": "3D models",
+					"source": "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/LittlestTokyo.glb",
+					"author": "Glen Fox, from the three.js examples",
+					"licence": "CC BY 4.0",
+					"spdx": "CC-BY-4.0",
+					"licenceUrl": "https://creativecommons.org/licenses/by/4.0/"
+				},
+				{
+					"file": "hornedlizard.spz",
+					"format": "Compressed Gaussian splats (SPZ)",
+					"category": "Point clouds and splats",
+					"source": "https://github.com/nianticlabs/spz",
+					"author": "Niantic",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				},
+				{
+					"file": "Peggy.kra",
+					"format": "Krita document",
+					"category": "Images",
+					"source": "https://opengameart.org/content/cute-painterly-characters-and-forest",
+					"author": "GDquest",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "RobotExpressive.glb",
+					"format": "glTF binary model (GLB)",
+					"category": "3D models",
+					"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/RobotExpressive",
+					"author": "Tomás Laulhé (Quaternius), edited by Don McCurdy",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "monu7.vox",
+					"format": "MagicaVoxel model",
+					"category": "3D models",
+					"source": "https://github.com/ephtracy/voxel-model",
+					"author": "ephtracy (MagicaVoxel sample models)",
+					"licence": "MIT",
+					"spdx": "MIT",
+					"licenceUrl": "https://opensource.org/license/mit"
+				},
+				{
+					"file": "f4_demonofeternity_idle.ase",
+					"format": "Aseprite sprite",
+					"category": "Sprites and tile maps",
+					"source": "https://github.com/valiet/assets_duelyst_units",
+					"author": "Counterplay Games (Duelyst), converted to Aseprite by valiet",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "Bricks097_1K-JPG.mtlx",
+					"format": "MaterialX material",
+					"category": "Materials",
+					"source": "https://ambientcg.com/view?id=Bricks097",
+					"author": "ambientCG",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "MNI152_T1_1mm_2009c.nii.gz",
+					"format": "NIfTI medical volume",
+					"category": "Medical images",
+					"source": "https://www.templateflow.org/",
+					"author": "TemplateFlow (the MNI152NLin2009cAsym brain template)",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "nefertiti.gcode",
+					"format": "G-code toolpath",
+					"category": "Toolpaths and GPS tracks",
+					"source": "https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/Nefertiti",
+					"author": "Nora Al-Badri and Jan Nikolai Nelles (the Nefertiti Hack scan), sliced into G-code for this site",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				},
+				{
+					"file": "StainedGlassLamp.gltf",
+					"format": "glTF model with KTX2 textures",
+					"category": "3D models",
+					"source": "https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/StainedGlassLamp",
+					"author": "Eric Chadwick (Wayfair), from the Khronos glTF sample models",
+					"licence": "CC BY 4.0",
+					"spdx": "CC-BY-4.0",
+					"licenceUrl": "https://creativecommons.org/licenses/by/4.0/"
+				},
+				{
+					"file": "sampleMap.tmx",
+					"format": "Tiled map",
+					"category": "Sprites and tile maps",
+					"source": "https://kenney.nl/assets/tiny-dungeon",
+					"author": "Kenney",
+					"licence": "CC0 1.0",
+					"spdx": "CC0-1.0",
+					"licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+				}
+			]
+		}
+	]
+}

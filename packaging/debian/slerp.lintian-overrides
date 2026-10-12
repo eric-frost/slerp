@@ -1,0 +1,5 @@
+# skrifa, the Rust font reader, carries the list of "tricky" font names that
+# FreeType keeps, which is what lintian looks for; no FreeType code is linked.
+slerp: embedded-library freetype [usr/bin/slerp]
+# Not uploaded to Debian, so there is no ITP bug to close.
+slerp: initial-upload-closes-no-bugs [usr/share/doc/slerp/changelog.Debian.gz:1]

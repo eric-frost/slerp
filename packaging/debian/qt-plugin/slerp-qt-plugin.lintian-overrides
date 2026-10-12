@@ -1,0 +1,2 @@
+# Not uploaded to Debian, so there is no ITP bug to close.
+slerp-qt-plugin: initial-upload-closes-no-bugs [usr/share/doc/slerp-qt-plugin/changelog.Debian.gz:1]

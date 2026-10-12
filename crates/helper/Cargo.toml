@@ -1,0 +1,29 @@
+[package]
+name = "slerp-helper"
+description = "The resident thumbnail helper: a per-user Unix-socket server and its client"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+thiserror.workspace = true
+
+# SO_PEERCRED (getpeereid on macOS), MSG_NOSIGNAL (SO_NOSIGPIPE), setsid,
+# fork and poll, none of which std exposes on Rust 1.93.  Windows has no
+# helper.
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+# Test programs for tests/helper.rs and examples/bench.rs: a stand-in helper
+# and a one-shot client.  They are binaries rather than examples so the tests
+# can find them through Cargo's CARGO_BIN_EXE_* variables.
+[[bin]]
+name = "fake_helper"
+test = false
+doc = false
+
+[[bin]]
+name = "probe"
+test = false
+doc = false

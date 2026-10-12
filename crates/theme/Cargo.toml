@@ -1,0 +1,32 @@
+[package]
+name = "slerp-theme"
+description = "egui styling that follows the desktop's colours, fonts and icons"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[features]
+default = ["portal"]
+# Reads the light or dark preference, the accent colour and GNOME's interface
+# settings from the XDG desktop portal over D-Bus.  Without it, non-KDE
+# desktops fall back to the GTK settings files.  Linux and the BSDs only.
+portal = ["dep:zbus"]
+
+[dependencies]
+egui.workspace = true
+# The SVG loader rasterises theme icons at whatever size they are drawn; the
+# image loader covers the PNG icons some themes ship.
+egui_extras = { version = "0.35", default-features = false, features = ["svg", "image"] }
+image = { version = "0.25", default-features = false, features = ["png"] }
+
+[target.'cfg(all(unix, not(target_vendor = "apple")))'.dependencies]
+zbus = { version = "5", optional = true, default-features = false, features = ["blocking-api", "async-io"] }
+
+# Windows: light or dark apps and the text size from the registry, the
+# accent colour from DWM.
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_Graphics_Dwm", "Win32_System_Registry"] }
+
+[dev-dependencies]
+eframe = { workspace = true, features = ["glow", "wayland", "x11", "default_fonts"] }

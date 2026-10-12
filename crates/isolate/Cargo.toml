@@ -1,0 +1,11 @@
+[package]
+name = "slerp-isolate"
+description = "Running untrusted-file decoders in a child process with time and memory limits, for Slerp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+# A leaf crate: any loader may use it without depending on another loader.
+[dependencies]
+libc = "0.2"

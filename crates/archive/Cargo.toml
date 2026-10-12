@@ -1,0 +1,23 @@
+[package]
+name = "slerp-archive"
+description = "Read-only access to game archives (Doom WAD, PK3, PK7, Quake PAK and WAD, Godot PCK, Valve VPK, Build GRP) for Slerp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[features]
+# Builders for small archives of every format, for other crates' tests.
+testutil = []
+
+[dependencies]
+thiserror.workspace = true
+# Inflates zip entries as a stream, so no entry is ever allocated by what its
+# directory claims (MIT OR Zlib OR Apache-2.0).
+miniz_oxide = "0.8"
+# PK7 archives (Apache-2.0); no default features, as for Substance files.
+sevenz-rust2 = { version = "0.23", default-features = false }
+
+[dev-dependencies]
+# Writes 7z archives for the tests.
+sevenz-rust2 = { version = "0.23", default-features = false, features = ["compress"] }

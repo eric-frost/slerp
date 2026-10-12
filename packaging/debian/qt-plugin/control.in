@@ -1,0 +1,17 @@
+Package: slerp-qt-plugin
+Source: slerp
+Version: @VERSION@
+Architecture: @ARCH@
+Maintainer: @MAINTAINER@
+Installed-Size: @SIZE@
+Depends: @DEPENDS@, slerp
+Enhances: gwenview, dolphin
+Section: graphics
+Priority: optional
+Description: Qt image plugin that shows Slerp's textures and models
+ Lets every Qt program that reads pictures open the files Slerp reads:
+ Gwenview opens KTX2, KTX and ASTC textures and the other formats no Qt
+ plugin reads, and Dolphin's Information panel and Gwenview show models,
+ levels and materials slowly turning.  The plugin decodes and renders
+ nothing itself: it asks Slerp's helper process, so no file parser or GPU
+ driver runs inside those programs.  Programs load it when they start.

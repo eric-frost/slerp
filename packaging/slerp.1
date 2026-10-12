@@ -1,0 +1,194 @@
+.TH SLERP 1 "October 2026" "slerp 0.1.0" "User Commands"
+.SH NAME
+slerp \- thumbnailer and viewer for 3D models, textures, game assets and other graphics
+.SH SYNOPSIS
+.B slerp
+.RI [ FILE ]
+.br
+.B slerp view
+.RI [ FILE ]
+.br
+.B slerp thumbnail
+.I SIZE INPUT OUTPUT
+.br
+.B slerp render
+.RB [ \-\-size
+.IR N ]
+.RB [ \-\-state
+.IR STATE ]
+.RB [ \-\-content ]
+.I INPUT OUTPUT
+.br
+.B slerp info
+.RB [ \-\-part
+.IR PART ]
+.I FILE
+.br
+.B slerp convert
+.RB [ \-\-part
+.IR PART ]
+.RB [ \-\-centre ]
+.RB [ \-\-png ]
+.I INPUT OUTPUT
+.br
+.B slerp contents list
+.I FILE
+.br
+.B slerp contents extract
+.I FILE
+.RI [ ITEM ...]
+.B \-\-out
+.I DIR
+.RB [ \-\-format
+.IR FORMAT ]
+.RB [ \-\-centre ]
+.RB [ \-\-skeleton\-only ]
+.RB [ \-\-force ]
+.br
+.B slerp associate
+.RI [ OPTIONS ]
+.br
+.B slerp formats
+.br
+.B slerp helper
+.SH DESCRIPTION
+Slerp makes file-manager thumbnails of the files desktops show as generic
+icons, and opens them in a viewer: GPU textures (KTX2, DDS, ASTC), 3D models
+(glTF, FBX, OBJ, USD, Blender, SketchUp, Maya and many more), Gaussian splats,
+point clouds, materials, Quake and Doom levels, 2D game formats, CAD drawings,
+documents, and scientific, medical and retro images.
+.B slerp formats
+lists every format it reads.
+.PP
+File managers run
+.B slerp thumbnail
+through the freedesktop thumbnailer file
+.IR /usr/share/thumbnailers/slerp.thumbnailer .
+The first thumbnail that needs a GPU starts
+.BR "slerp helper" ,
+which keeps the GPU loaded for later thumbnails and exits after two idle
+minutes.
+.SH COMMANDS
+.TP
+.BR view " [\fIFILE\fR]"
+Opens the viewer, on
+.I FILE
+when given.  With no command at all,
+.B slerp
+.I FILE
+does the same.  A viewer that stayed loaded after its window closed opens the
+file at once.  F1 in the viewer lists its keyboard shortcuts.
+.TP
+.B thumbnail \fISIZE INPUT OUTPUT\fR
+Writes a PNG thumbnail of
+.I INPUT
+no larger than
+.I SIZE
+pixels to
+.IR OUTPUT .
+.TP
+.B render \fIINPUT OUTPUT\fR
+Renders one frame offscreen to a PNG,
+.B \-\-size
+pixels across (512 by default).
+.B \-\-state
+replays a view state the viewer copied with Ctrl+Shift+C (camera, clip and
+time, morphs, overlays).  Without a state, a file that carries a picture of
+itself gives that picture, unless
+.B \-\-content
+is given.
+.TP
+.B info \fIFILE\fR
+Prints what a file holds.
+.B \-\-part
+picks one part of a file that holds several, such as a WAD's map.
+.TP
+.B convert \fIINPUT OUTPUT\fR
+Converts any 3D file Slerp opens to GLB.
+.B \-\-centre
+moves the centre of the scene's box to the origin, and
+.B \-\-png
+writes every picture as PNG instead of keeping the original files.
+.TP
+.B contents list \fIFILE\fR
+Prints the items inside a file as a tree: an archive's entries, a model's
+nodes, meshes, materials, textures and clips, a texture's mips, layers and
+faces, a sprite's layers and frames, a document's pages.
+.TP
+.B contents extract \fIFILE\fR [\fIITEM\fR...] \fB\-\-out\fR \fIDIR\fR
+Writes the items named (paths, names, folders or globs such as
+.BR *.png ;
+all of them when none is named) as ordinary files under
+.IR DIR ,
+never outside it, and never over an existing file unless
+.B \-\-force
+is given.
+.B \-\-format
+is one of auto, raw, png, exr, wav, mid, wad or glb.
+.TP
+.B associate
+Chooses which formats get Slerp's thumbnails and open in Slerp by default,
+and makes the desktop follow.
+.B \-\-list
+shows every format,
+.B \-\-thumbnails on|off
+and
+.B \-\-default on|off
+change the choices for formats, categories or
+.BR all ,
+.B \-\-apply
+applies the saved choices again (run it once per user to enable Slerp's
+thumbnails in Dolphin, and after updates), and
+.B \-\-reset
+undoes every change Slerp made outside its own settings.  Every option takes
+.BR \-\-dry\-run .
+.TP
+.B formats
+Prints the table of formats Slerp handles.
+.TP
+.B helper
+Runs the resident thumbnail helper.  It is started on demand; there is no
+need to run it by hand.
+.SH FILES
+.TP
+.I ~/.config/slerp/config.jsonc
+Settings, all optional: the GPU for thumbnails
+.RB ( gpu :
+auto, integrated, discrete, software, or part of an adapter's name) and for
+the viewer
+.RB ( viewerGpu ),
+how long the helper and the viewer stay loaded
+.RB ( helperIdleSeconds ", " viewerKeepAliveSeconds ),
+and memory budgets
+.RB ( volumeMemoryMb ", " imageMemoryMb ).
+.TP
+.I ~/.config/slerp/file-types.jsonc
+The choices made with
+.B slerp associate
+or the viewer's Settings, File Types.
+.TP
+.I ~/.local/state/slerp/
+What applying the choices changed outside Slerp, so it can be undone.
+.SH ENVIRONMENT
+.TP
+.B SLERP_GPU
+Overrides the
+.B gpu
+setting for one run.
+.TP
+.B SLERP_VIEWER_KEEP_ALIVE
+Overrides
+.BR viewerKeepAliveSeconds .
+.TP
+.BR SLERP_VOLUME_MEMORY_MB ", " SLERP_IMAGE_MEMORY_MB
+Override
+.B volumeMemoryMb
+and
+.BR imageMemoryMb .
+.SH SEE ALSO
+.BR dolphin (1),
+.BR nautilus (1)
+.PP
+The README in
+.I /usr/share/doc/slerp/
+describes the viewer, the formats and the settings in full.

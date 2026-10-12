@@ -1,0 +1,19 @@
+[gd_resource type="ORMMaterial3D" load_steps=3 format=3 uid="uid://b7test"]
+
+[ext_resource type="Texture2D" uid="uid://c1" path="res://textures/albedo.png" id="1_alb"]
+[ext_resource type="Texture2D" uid="uid://c2" path="res://textures/orm.png" id="2_orm"]
+
+[resource]
+resource_name = "Painted metal"
+transparency = 2
+alpha_scissor_threshold = 0.3
+cull_mode = 2
+albedo_color = Color(1, 0.5, 0.5, 1)
+albedo_texture = ExtResource("1_alb")
+orm_texture = ExtResource("2_orm")
+ao_enabled = true
+uv1_scale = Vector3(2, 2, 1)
+metadata/_custom = {
+"a": [1, 2.5, "x"],
+"b": PackedFloat32Array(1, 2)
+}

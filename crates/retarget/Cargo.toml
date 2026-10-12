@@ -1,0 +1,20 @@
+[package]
+name = "slerp-retarget"
+description = "Plays animation clips from one skeleton on another, by joint name or humanoid retargeting"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+glam.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+# Real characters and animation libraries for the integration tests.
+slerp-gltf.workspace = true
+slerp-models.workspace = true
+# Posed renders of retargeted clips, in the `render_retarget` example.
+slerp-render.workspace = true
+png = "0.18"

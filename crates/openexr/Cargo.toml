@@ -1,0 +1,21 @@
+[package]
+name = "slerp-openexr"
+description = "OpenEXR pictures for Slerp: parts, layers and channels listed, one layer decoded to RGBA floats"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+# A leaf crate: the images crate opens .exr files through it, and the Blender
+# crate decodes the EXR textures packed into .blend files.
+[dependencies]
+# The OpenEXR decoder (BSD-3-Clause): every compression including PIZ, PXR24,
+# B44 and DWA, scan lines and tiles, multi-part files.  No rayon: Slerp
+# decodes many files side by side already.
+exr = { version = "1.74", default-features = false }
+# Half floats, as exr stores them (MIT OR Apache-2.0); exr builds it already.
+half = "2"
+
+[dev-dependencies]
+# The reference checker reads gzipped PFM files.
+miniz_oxide = "0.8"

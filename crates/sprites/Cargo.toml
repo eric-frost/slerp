@@ -1,0 +1,23 @@
+[package]
+name = "slerp-sprites"
+description = "Aseprite sprites and Tiled maps for Slerp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+# zlib and gzip cel and layer data.
+miniz_oxide = "0.8"
+# Tiled's zstd-compressed layers; the textures crate already builds it.
+zstd = { version = "0.14", default-features = false }
+base64 = "0.22"
+roxmltree = "0.21"
+serde_json = "1"
+# Pyxel Edit documents are zips.
+slerp-archive = { path = "../archive" }
+
+[dev-dependencies]
+slerp-archive = { path = "../archive", features = ["testutil"] }
+png = "0.18"

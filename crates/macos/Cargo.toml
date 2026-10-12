@@ -1,0 +1,18 @@
+[package]
+name = "slerp-macos"
+description = "The C interface Slerp's macOS Quick Look extension calls to make thumbnails"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+# tools/build-macos.sh builds this as a static library for the Swift
+# extension (`cargo rustc --crate-type staticlib`).  It stays an ordinary
+# library here, so workspace builds don't archive the whole core into a
+# second copy on every system.  Nothing in it is macOS-specific, which lets
+# its tests run on Linux.
+[dependencies]
+slerp-core.workspace = true
+
+[dev-dependencies]
+png = "0.18"

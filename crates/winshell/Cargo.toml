@@ -1,0 +1,54 @@
+[package]
+name = "slerp-winshell"
+description = "Windows Explorer integration for Slerp: the thumbnail handler DLL, its registration and the windowless viewer launcher"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+# The DLL Explorer loads is slerp_shell.dll.  Its registration lives in
+# slerp-associate (the association manager), which DllRegisterServer calls.
+[lib]
+name = "slerp_shell"
+crate-type = ["cdylib", "rlib"]
+
+# Explorer runs slerpw.exe to open files in the viewer.  It is a
+# Windows-subsystem program, so no console window flashes up, and it starts
+# slerp.exe without one.
+[[bin]]
+name = "slerpw"
+path = "src/bin/slerpw.rs"
+
+# Everything else is Windows-only: on other platforms the crate is empty.
+[target.'cfg(windows)'.dependencies]
+slerp-core.workspace = true
+# The registration, shared with `slerp associate`.
+slerp-associate.workspace = true
+windows = { version = "0.62", features = [
+    "Win32_Foundation",
+    "Win32_Graphics_Gdi",
+    "Win32_Security",
+    "Win32_Security_Authorization",
+    "Win32_Storage_FileSystem",
+    "Win32_System_Com",
+    "Win32_System_Com_StructuredStorage",
+    "Win32_System_IO",
+    "Win32_System_LibraryLoader",
+    "Win32_System_Ole",
+    "Win32_System_Pipes",
+    "Win32_System_Registry",
+    "Win32_System_RemoteDesktop",
+    "Win32_UI_Shell",
+    "Win32_UI_Shell_Common",
+    "Win32_UI_Shell_PropertiesSystem",
+    "Win32_System_SystemInformation",
+    "Win32_System_Threading",
+    "Win32_UI_WindowsAndMessaging",
+] }
+# The implement macro, which the COM classes use, names windows-core.
+windows-core = "0.62"
+# Reading and writing the per-user registration.
+windows-registry = "0.6"
+
+[target.'cfg(windows)'.dev-dependencies]
+png = "0.18"

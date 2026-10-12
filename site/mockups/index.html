@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Slerp website mockups</title>
+<style>
+	:root { color-scheme: light dark; --bg: #f6f6f4; --fg: #1d1f22; --muted: #5d6168; --card: #fff; --line: #dcdde0 }
+	@media (prefers-color-scheme: dark) { :root { --bg: #16181b; --fg: #e8e9eb; --muted: #9a9ea6; --card: #1f2226; --line: #2e3238 } }
+	body { margin: 0; font: 16px/1.55 system-ui, sans-serif; background: var(--bg); color: var(--fg) }
+	main { max-width: 1180px; margin: 0 auto; padding: 48px 24px 64px }
+	h1 { font-size: 2rem; margin: 0 0 8px }
+	main > p { color: var(--muted); max-width: 70ch; margin: 0 0 32px }
+	ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) }
+	li { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden }
+	li a { color: inherit; text-decoration: none; display: block }
+	li a:hover h2, li a:focus-visible h2 { text-decoration: underline }
+	img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; border-bottom: 1px solid var(--line) }
+	li div { padding: 16px 20px 20px }
+	h2 { font-size: 1.2rem; margin: 0 0 6px }
+	li p { margin: 0; color: var(--muted) }
+</style>
+</head>
+<body>
+<main>
+	<h1>Slerp website mockups</h1>
+	<p>Three directions for slerp3d.com, each built with Slerp's own pictures in <code>site/img/</code>.  Pick one (or parts of several); the rest of this folder goes away before the site is published.</p>
+	<ul>
+		<li><a href="wall/">
+			<img src="previews/wall.webp" width="720" height="450" alt="The wall mockup: a dark page whose top is a grid of Slerp thumbnails around the name">
+			<div><h2>Wall</h2><p>Dark and image-first.  The top of the page is a wall of Slerp's thumbnails; pointing at one names its file and format.  Tabs of viewer screenshots, a Dolphin before-and-after slider, and a format search.</p></div>
+		</a></li>
+		<li><a href="product/">
+			<img src="previews/product.webp" width="720" height="450" alt="The product mockup: a light page with a headline, download buttons and a viewer screenshot in a window frame">
+			<div><h2>Product</h2><p>Light and polished, in the style of Zed or Obsidian.  Install buttons name your platform, a draggable divider compares a Dolphin folder with and without Slerp, and feature rows alternate picture and text.</p></div>
+		</a></li>
+		<li><a href="plain/">
+			<img src="previews/plain.webp" width="720" height="450" alt="The plain mockup: a single reading column with a sheet of thumbnails and a row of numbers">
+			<div><h2>Plain</h2><p>One plain, typographic column for readers like those on Hacker News, with light and dark themes.  A "Does it open .xyz?" box, a diagram of how thumbnails work, numbers, and install commands with copy buttons.</p></div>
+		</a></li>
+	</ul>
+</main>
+</body>
+</html>

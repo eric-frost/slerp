@@ -1,0 +1,67 @@
+[package]
+name = "slerp-core"
+description = "Format sniffing, loading and thumbnails for Slerp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[features]
+# The picture decoders of slerp-images that cost the most to build and ship;
+# the `slerp` binary turns them on by default.
+default = ["heic", "avif", "jxl"]
+heic = ["slerp-images/heic"]
+avif = ["slerp-images/avif"]
+avif-asm = ["slerp-images/avif-asm"]
+jxl = ["slerp-images/jxl"]
+
+[dependencies]
+slerp-scene.workspace = true
+slerp-textures.workspace = true
+slerp-gltf.workspace = true
+slerp-models.workspace = true
+slerp-quake.workspace = true
+slerp-materials.workspace = true
+slerp-render.workspace = true
+slerp-dna.workspace = true
+slerp-formats.workspace = true
+slerp-archive = { path = "../archive" }
+slerp-sprites = { path = "../sprites" }
+slerp-lut = { path = "../lut" }
+slerp-splats = { path = "../splats" }
+slerp-previews = { path = "../previews" }
+slerp-engines = { path = "../engines" }
+slerp-blend = { path = "../blend" }
+slerp-dicom = { path = "../dicom" }
+slerp-paths = { path = "../paths" }
+slerp-retro = { path = "../retro" }
+slerp-gameimages = { path = "../gameimages" }
+slerp-cad = { path = "../cad" }
+slerp-metafile = { path = "../metafile" }
+slerp-volumes = { path = "../volumes" }
+slerp-images = { path = "../images", default-features = false }
+slerp-documents = { path = "../documents" }
+slerp-minecraft = { path = "../minecraft" }
+slerp-rigged = { path = "../rigged" }
+slerp-sketchup = { path = "../sketchup" }
+slerp-paint = { path = "../paint" }
+slerp-svg = { path = "../svg" }
+slerp-roblox = { path = "../roblox" }
+slerp-maya = { path = "../maya" }
+slerp-max = { path = "../max" }
+glam.workspace = true
+thiserror.workspace = true
+rayon.workspace = true
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+png = "0.18"
+
+# The known-folder paths (Roaming and Local AppData) for settings.
+[target.'cfg(windows)'.dependencies]
+dirs = "6"
+
+[dev-dependencies]
+# Builds archives for the contents tests.
+slerp-archive = { path = "../archive", features = ["testutil"] }
+# Saves the stored-preview tests' thumbnails for a look.
+png = "0.18"

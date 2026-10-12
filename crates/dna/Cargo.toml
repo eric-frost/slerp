@@ -1,0 +1,33 @@
+[package]
+name = "slerp-dna"
+description = "MetaHuman DNA files for Slerp, read and evaluated with Epic's openriglogic"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+# Slerp's own code; the vendored openriglogic in `openriglogic/` is MIT
+# (Epic Games, its LICENSE kept beside it).
+license.workspace = true
+build = "build.rs"
+links = "slerp_openriglogic"
+
+[dependencies]
+slerp-scene.workspace = true
+glam.workspace = true
+thiserror.workspace = true
+rayon.workspace = true
+cxx = "1.0.194"
+
+# Reading a DNA file runs in a forked child process, so a fault in the C++
+# reader costs one thumbnail instead of the helper serving every file.
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[build-dependencies]
+cxx-build = "1.0.194"
+cc = { version = "1.2", features = ["parallel"] }
+
+[dev-dependencies]
+# Thumbnails as the file manager gets them, and posed renders, in the
+# `render` example and the tests against chalk's baked heads.
+slerp-core = { path = "../core" }
+slerp-gltf.workspace = true

@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<materialx version="1.39" colorspace="lin_rec709" fileprefix="usd/">
+  <nodegraph name="NG_wood">
+    <input name="tint" type="color3" value="0.9, 0.8, 0.7" />
+    <input name="tiling" type="vector2" value="3, 3" />
+    <texcoord name="uv" type="vector2" />
+    <place2d name="placement" type="vector2">
+      <input name="texcoord" type="vector2" nodename="uv" />
+      <input name="scale" type="vector2" value="0.5, 0.5" />
+    </place2d>
+    <image name="color_map" type="color3">
+      <input name="file" type="filename" value="tex.png" colorspace="srgb_texture" />
+      <input name="texcoord" type="vector2" nodename="placement" />
+      <input name="uaddressmode" type="string" value="mirror" />
+    </image>
+    <multiply name="tinted" type="color3">
+      <input name="in1" type="color3" nodename="color_map" />
+      <input name="in2" type="color3" interfacename="tint" />
+    </multiply>
+    <tiledimage name="packed" type="color3">
+      <input name="file" type="filename" value="preview.png" />
+      <input name="uvtiling" type="vector2" interfacename="tiling" />
+    </tiledimage>
+    <extract name="rough" type="float">
+      <input name="in" type="color3" nodename="packed" />
+      <input name="index" type="integer" value="1" />
+    </extract>
+    <tiledimage name="normal_map" type="vector3">
+      <input name="file" type="filename" value="tex.png" />
+    </tiledimage>
+    <normalmap name="bump" type="vector3">
+      <input name="in" type="vector3" nodename="normal_map" />
+      <input name="scale" type="float" value="0.5" />
+    </normalmap>
+    <noise2d name="noise" type="float" />
+    <output name="out_color" type="color3" nodename="tinted" />
+    <output name="out_rough" type="float" nodename="rough" />
+    <output name="out_normal" type="vector3" nodename="bump" />
+    <output name="out_noise" type="float" nodename="noise" />
+  </nodegraph>
+  <standard_surface name="SR_wood" type="surfaceshader">
+    <input name="base_color" type="color3" nodegraph="NG_wood" output="out_color" />
+    <input name="specular_roughness" type="float" nodegraph="NG_wood" output="out_rough" />
+    <input name="normal" type="vector3" nodegraph="NG_wood" output="out_normal" />
+    <input name="metalness" type="float" nodegraph="NG_wood" output="out_noise" />
+    <input name="coat" type="float" value="0.25" />
+  </standard_surface>
+  <image name="height_map" type="float">
+    <input name="file" type="filename" value="tex.png" />
+  </image>
+  <displacement name="disp" type="displacementshader">
+    <input name="displacement" type="float" nodename="height_map" />
+    <input name="scale" type="float" value="0.02" />
+  </displacement>
+  <surfacematerial name="M_wood" type="material">
+    <input name="surfaceshader" type="surfaceshader" nodename="SR_wood" />
+    <input name="displacementshader" type="displacementshader" nodename="disp" />
+  </surfacematerial>
+</materialx>

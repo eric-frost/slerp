@@ -1,0 +1,25 @@
+[package]
+name = "slerp-paths"
+description = "G-code toolpaths and GPS tracks for Slerp: embedded print thumbnails, toolpaths drawn as extrusions, routes over their own elevation"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+glam.workspace = true
+rayon.workspace = true
+# Line splitting in G-code that runs to hundreds of megabytes.  Already in
+# the binary through quick-xml and others.
+memchr = "2"
+# Deflate in binary G-code blocks and KMZ archives.
+miniz_oxide = "0.8"
+# GPX, TCX and KML, streamed.  The version the models crate uses.
+quick-xml = "0.41"
+# GeoJSON.
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
+png = "0.18"

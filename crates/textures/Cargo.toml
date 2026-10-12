@@ -1,0 +1,42 @@
+[package]
+name = "slerp-textures"
+description = "CPU decoders for KTX2, KTX1, DDS, ASTC, Radiance HDR, FITS, XISF, DPX, Cineon, JPEG XR and other textures and images"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+thiserror.workspace = true
+rayon.workspace = true
+# Ordinary images.  `jpeg-decoder` rather than zune-jpeg because it can
+# decode at 1/2, 1/4 or 1/8 scale, skipping most IDCT and colour work.
+# Huffman decoding still dominates large JPEGs, as it does in libjpeg-turbo.
+png = "0.18"
+jpeg-decoder = "0.3"
+# libwebp (BSD, built from the bundled source) for still WebP: about five
+# times faster than image-webp on lossy files and can decode straight to a
+# smaller size.  image-webp still reads animated files' first frame.
+libwebp-sys = { version = "0.14", default-features = false, features = ["std"] }
+image-webp = "0.2"
+# GPU texture blocks.  `basisu` is a pure-Rust port of the Basis Universal
+# transcoder (every codec, including UASTC HDR and XUASTC); its ASTC block
+# decoder (LDR and HDR) is used directly, so it is pinned.
+basisu = "=0.1.0"
+# The Basis Universal C++ transcoder, only for the codec `basisu` doesn't
+# read yet: XUBC7, new in Basis Universal 2.50.
+basisu_c_sys = { version = "0.9", default-features = false, features = ["std", "transcode_default"] }
+bcdec_rs = "0.2"
+texture2ddecoder = "0.1.2"
+# KTX2 supercompression.  libzstd rather than ruzstd (which basisu uses
+# internally), because it inflates about six times faster: 7 ms against
+# 40 ms for a 4 MB level.
+zstd = { version = "0.14", default-features = false }
+miniz_oxide = "0.8"
+# XISF (PixInsight): its header is XML, its pixel blocks may be lz4
+# compressed (the same block-format crate the materials loader uses).
+roxmltree = "0.21"
+base64 = "0.22"
+lz4_flex = { version = "0.14", default-features = false, features = ["std", "safe-decode", "checked-decode"] }
+# JPEG XR, decoded by Microsoft's jxrlib in a child process.
+slerp-jxr = { path = "../jxr" }

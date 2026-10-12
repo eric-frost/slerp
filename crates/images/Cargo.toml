@@ -1,0 +1,52 @@
+[package]
+name = "slerp-images"
+description = "Ordinary image formats for Slerp's viewer: GIF, APNG, animated WebP, ICO, PNM, TIFF, JPEG 2000, JPEG XL, AVIF, HEIC, QOI, ICNS, SGI, XPM, XBM and OpenEXR, with EXIF orientation and colour profiles"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[features]
+# What the Cargo features switch (sizes are what each adds to the stripped
+# `slerp` binary): `heic` is the run-time link to the system's libheif (a few
+# KB of code; HEIC is HEVC video, which Slerp does not bundle a decoder
+# for), `avif` bundles the rav1d AV1 decoder in plain Rust, and `jxl`
+# bundles jxl-rs's JPEG XL decoder.  `avif-asm` adds rav1d's hand-written
+# assembly, which decodes AV1 faster but needs the nasm assembler to build on
+# x86, so it is not on by default.  `--no-default-features` leaves
+# HEIC, AVIF and JPEG XL out.
+default = ["heic", "avif", "jxl"]
+heic = ["dep:libloading"]
+avif = ["dep:rav1d"]
+avif-asm = ["avif", "rav1d/asm"]
+jxl = ["dep:jxl"]
+
+[dependencies]
+slerp-scene.workspace = true
+# Reads classic and BigTIFF pages in every common compression and bit depth.
+slerp-tiff = { path = "../tiff" }
+thiserror.workspace = true
+rayon.workspace = true
+# APNG frames and PNG entries of icons; the textures crate builds it already.
+png = "0.18"
+# Animated WebP frames are decoded one at a time by libwebp, which the
+# textures crate links for still WebP.
+libwebp-sys = { version = "0.14", default-features = false, features = ["std"] }
+# JPEG 2000 (`.jp2`, `.j2k`, `.jpf`), pure Rust and already in the build
+# for DICOM and TIFF.
+hayro-jpeg2000 = { version = "0.4", default-features = false, features = ["std", "simd"] }
+# Inflates ICC profiles stored in PNG files.
+miniz_oxide = "0.8"
+# Loads the system's libheif at run time for HEIC (ISC).
+libloading = { version = "0.8", optional = true }
+# AV1 for AVIF: the Rust port of dav1d (BSD-2-Clause), pinned because its
+# only public interface is dav1d's C API, which it keeps stable.
+rav1d = { version = "=1.1.0", default-features = false, features = ["bitdepth_8", "bitdepth_16"], optional = true }
+# JPEG XL: the libjxl team's Rust decoder (BSD-3-Clause), pinned because its
+# typestate API changes between its 0.x releases.
+jxl = { version = "=0.7.4", default-features = false, features = ["all-simd"], optional = true }
+libc = "0.2"
+# OpenEXR files, through the leaf crate the Blender loader shares.
+slerp-openexr = { path = "../openexr" }
+
+[dev-dependencies]

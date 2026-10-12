@@ -1,0 +1,12 @@
+# Build output, test assets and packages (a folder, or a link to a bigger
+# disk).
+local
+/target
+# Notes for the coding agents that work on Slerp, and the link and .htaccess
+# through which a local web server shows this folder.
+AGENTS.md
+agents/
+hey.md
+html
+.htaccess
+.claude/

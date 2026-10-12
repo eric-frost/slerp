@@ -1,0 +1,20 @@
+[package]
+name = "slerp-tiff"
+description = "TIFF, BigTIFF and NDPI reading for Slerp: every common compression, bit depth and sample type, strips and tiles, reduced-size JPEG decoding"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+rayon.workspace = true
+# Deflate (also used by the PNG and gzip readers elsewhere in Slerp).
+miniz_oxide = "0.8"
+# JPEG tiles and strips, at a reduced size when a thumbnail is wanted.
+jpeg-decoder = "0.3"
+# JPEG 2000 tiles (Aperio slides).
+hayro-jpeg2000 = { version = "0.4", default-features = false, features = ["std", "simd"] }
+# CCITT Group 3 and 4 fax compression, which scanned documents use (MIT).
+fax = "0.2"
+# Zstandard-compressed TIFF files (already linked for KTX2).
+zstd = { version = "0.14", default-features = false }

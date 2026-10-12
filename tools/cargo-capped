@@ -1,0 +1,15 @@
+#!/bin/bash
+# Runs cargo inside the heavy-slerp.slice user cgroup: a child of
+# heavy.slice, which caps every agent's heavy commands together, with
+# Slerp's own tighter limits on top.  Each command gets its own cgroup,
+# so when memory runs short the build is killed alone rather than the agent
+# app.  Several agents building at once once exhausted the machine's
+# memory, so each build also runs at most three jobs unless CARGO_BUILD_JOBS
+# says otherwise.
+SLICE=heavy-slerp.slice
+if ! systemctl --user show "$SLICE" -p MemoryMax | grep -q 'MemoryMax=[0-9]'; then
+  systemctl --user set-property --runtime "$SLICE" \
+    MemoryHigh=6G MemoryMax=8G MemorySwapMax=1G CPUWeight=20 IOWeight=20
+fi
+export CARGO_BUILD_JOBS=${CARGO_BUILD_JOBS:-3}
+exec systemd-run --user --scope --quiet --slice="$SLICE" nice -n 19 cargo "$@"

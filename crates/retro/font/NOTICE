@@ -1,0 +1,8 @@
+cp437.bin holds the 256 characters of IBM PC code page 437 as 8x16 bitmaps,
+cut from Unscii 1.1's unscii-16.hex (http://viznut.fi/unscii/) by
+make-font.ts.  Unscii's author wrote "Everything made by me (viznut) is in
+the Public Domain" (unscii.txt in the source archive); only the "-full"
+variant, which merges in GPL-licensed Unifont glyphs, is not, and it is not
+used.  Four glyphs Unscii lacks (the sun, the house, the reversed not sign
+and the bullet operator) are derived from other Unscii glyphs or drawn in
+make-font.ts.

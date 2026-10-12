@@ -1,0 +1,29 @@
+[package]
+name = "slerp-blend"
+description = "Blender .blend files for Slerp: the stored preview, and scenes read through the file's own structure description"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+glam.workspace = true
+rayon.workspace = true
+# Blender 3.0 and later compress with Zstandard; the textures crate already
+# builds it.
+zstd = { version = "0.14", default-features = false }
+# Blender 2.x compressed with gzip (MIT OR Apache-2.0).
+flate2 = "1.1"
+# Triangulates n-gons (MIT OR Apache-2.0), as the Doom loader does.
+earcut = "0.4"
+# OpenEXR textures, which Poly Haven's .blend files use for their roughness,
+# metal and normal maps, through the leaf crate the images crate shares.
+slerp-openexr = { path = "../openexr" }
+
+[dev-dependencies]
+png = "0.18"
+# The reference comparison (examples/blend-compare.rs) reads Blender's own
+# glTF exports.
+slerp-gltf.workspace = true
+serde_json = "1"

@@ -1,0 +1,2041 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MIME types for game and 3D asset formats that shared-mime-info doesn't
+  define.  Where another project already named a format (F3D's
+  application/vnd.fbx, application/vnd.ply and the USD types), the same name
+  is used so the two agree.  Formats whose extension is shared with
+  unrelated files (.mdl, .wad) share the default glob weight with the other
+  claimants and carry magic of priority 80, because shared-mime-info only
+  lets magic overrule a glob match among equally weighted globs or at
+  priority 80 and above.
+-->
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+
+  <!-- Data images -->
+
+  <!-- 16-bit greyscale PNGs are nearly always heightmaps or masks, whose
+       values fill a sliver of the range and look flat black in ordinary
+       viewers.  Found by content (bit depth at byte 24, colour type at byte
+       25), since the name says only "png".  GIO-based file managers honour
+       this subclass; Qt-based ones decide by extension alone and keep
+       image/png. -->
+  <mime-type type="image/x-png-16bit-grey">
+    <comment>16-bit greyscale PNG (heightmap or data)</comment>
+    <sub-class-of type="image/png"/>
+    <generic-icon name="image-x-generic"/>
+    <magic priority="80">
+      <match type="string" value="\x89PNG" offset="0">
+        <match type="byte" value="16" offset="24">
+          <match type="byte" value="0" offset="25"/>
+          <match type="byte" value="4" offset="25"/>
+        </match>
+      </match>
+    </magic>
+  </mime-type>
+
+  <!-- Heightmaps and displacement maps by name, for Qt-based file
+       managers (Dolphin), which ignore the content-matched type above.  The
+       longer glob beats image/png's "*.png", so Dolphin hands these files to
+       Slerp, while every image viewer still opens them as PNG. -->
+  <mime-type type="image/x-heightmap">
+    <comment>Heightmap (PNG)</comment>
+    <sub-class-of type="image/png"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.height.png"/>
+    <glob pattern="*_height.png"/>
+    <glob pattern="*-height.png"/>
+    <glob pattern="*.heightmap.png"/>
+    <glob pattern="*_heightmap.png"/>
+    <glob pattern="*-heightmap.png"/>
+    <glob pattern="heightmap.png"/>
+    <glob pattern="*_displacement.png"/>
+    <glob pattern="*-displacement.png"/>
+    <glob pattern="*_disp.png"/>
+    <glob pattern="*_disp_*.png"/>
+    <glob pattern="*.r16.png"/>
+  </mime-type>
+
+  <!-- Models -->
+
+  <mime-type type="model/x-vrm">
+    <comment>VRM avatar</comment>
+    <sub-class-of type="model/gltf-binary"/>
+    <generic-icon name="model"/>
+    <!-- Outweighs model/vrml's *.vrm, which is a VRML 1.0 extension. -->
+    <glob pattern="*.vrm" weight="60"/>
+    <magic priority="60">
+      <match type="string" value="glTF" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/x-vrma">
+    <comment>VRM animation</comment>
+    <sub-class-of type="model/gltf-binary"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.vrma"/>
+  </mime-type>
+
+  <mime-type type="application/vnd.fbx">
+    <comment>Autodesk FBX model</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.fbx"/>
+    <magic priority="60">
+      <match type="string" value="Kaydara FBX Binary" offset="0"/>
+      <match type="string" value="; FBX " offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/vnd.collada+xml">
+    <comment>COLLADA model</comment>
+    <sub-class-of type="application/xml"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.dae"/>
+    <magic priority="60">
+      <match type="string" value="&lt;COLLADA" offset="0:512"/>
+    </magic>
+    <root-XML namespaceURI="http://www.collada.org/2005/11/COLLADASchema" localName="COLLADA"/>
+    <root-XML namespaceURI="http://www.collada.org/2008/03/COLLADASchema" localName="COLLADA"/>
+  </mime-type>
+
+  <mime-type type="application/vnd.ply">
+    <comment>PLY model</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.ply"/>
+    <magic priority="60">
+      <match type="string" value="ply\n" offset="0"/>
+      <match type="string" value="ply\r\n" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/vnd.usda">
+    <comment>USD scene (text)</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.usda"/>
+    <magic priority="60">
+      <match type="string" value="#usda" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/vnd.usdc">
+    <comment>USD scene (binary)</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.usdc"/>
+    <magic priority="60">
+      <match type="string" value="PXR-USDC" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/vnd.usd">
+    <comment>USD scene</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.usd"/>
+  </mime-type>
+
+  <mime-type type="model/vnd.usdz+zip">
+    <comment>USD scene (zip package)</comment>
+    <sub-class-of type="application/zip"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.usdz"/>
+  </mime-type>
+
+  <mime-type type="model/x-magicavoxel">
+    <comment>MagicaVoxel model</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.vox"/>
+    <magic priority="60">
+      <match type="string" value="VOX " offset="0"/>
+    </magic>
+  </mime-type>
+
+  <!-- MetaHuman Creator's head and body rigs (openriglogic's DNA format):
+       "DNA" and generation 2, big-endian.  SnapGene also writes .dna files,
+       which start with byte 9 instead, so the magic tells them apart. -->
+  <mime-type type="application/x-metahuman-dna">
+    <comment>MetaHuman DNA rig</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.dna"/>
+    <magic priority="80">
+      <match type="string" value="DNA\x00\x02" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <!-- Quake, Half-Life and Doom -->
+
+  <mime-type type="model/x-quake-bsp">
+    <comment>Quake or Half-Life map</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.bsp"/>
+    <magic priority="60">
+      <match type="little32" value="29" offset="0"/>
+      <match type="little32" value="30" offset="0"/>
+      <match type="string" value="BSP2" offset="0"/>
+      <match type="string" value="2PSB" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/x-quake-mdl">
+    <comment>Quake model</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.mdl"/>
+    <magic priority="80">
+      <match type="string" value="IDPO" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/x-halflife-mdl">
+    <comment>Half-Life model</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.mdl"/>
+    <magic priority="80">
+      <match type="string" value="IDST" offset="0">
+        <match type="little32" value="10" offset="4"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <!-- Source engine models (Half-Life 2 to CS:GO) share .mdl and the IDST
+       magic with Half-Life's; their versions are 44 to 49.  Later versions
+       (Titanfall's 52 and 53) aren't claimed, so they stay unknown. -->
+  <mime-type type="model/x-source-mdl">
+    <comment>Source engine model</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.mdl"/>
+    <magic priority="80">
+      <match type="string" value="IDST" offset="0">
+        <match type="little32" value="44" offset="4"/>
+        <match type="little32" value="45" offset="4"/>
+        <match type="little32" value="46" offset="4"/>
+        <match type="little32" value="47" offset="4"/>
+        <match type="little32" value="48" offset="4"/>
+        <match type="little32" value="49" offset="4"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/x-md2">
+    <comment>Quake II model</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.md2"/>
+    <magic priority="60">
+      <match type="string" value="IDP2" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/x-md3">
+    <comment>Quake III model</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.md3"/>
+    <magic priority="60">
+      <match type="string" value="IDP3" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-quake-wad">
+    <comment>Quake or Half-Life texture WAD</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.wad"/>
+    <magic priority="80">
+      <match type="string" value="WAD2" offset="0"/>
+      <match type="string" value="WAD3" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <!-- Materials and engine assets -->
+
+  <mime-type type="application/x-materialx">
+    <comment>MaterialX material</comment>
+    <sub-class-of type="application/xml"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.mtlx"/>
+    <root-XML namespaceURI="" localName="materialx"/>
+  </mime-type>
+
+  <mime-type type="application/x-substance-archive">
+    <comment>Substance material</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.sbsar"/>
+  </mime-type>
+
+  <mime-type type="application/x-unreal-asset">
+    <comment>Unreal Engine asset</comment>
+    <generic-icon name="application-x-executable"/>
+    <glob pattern="*.uasset"/>
+    <magic priority="60">
+      <match type="little32" value="0x9E2A83C1" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <!-- Gaussian splats.  .splat and .spz use F3D's names, so the two
+       agree.  Splat PLYs keep application/vnd.ply; Slerp tells them from
+       meshes by their header. -->
+
+  <mime-type type="application/vnd.splat">
+    <comment>Gaussian splats</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.splat"/>
+  </mime-type>
+
+  <mime-type type="application/x-sog">
+    <comment>Gaussian splats (PlayCanvas SOG)</comment>
+    <sub-class-of type="application/zip"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.sog"/>
+  </mime-type>
+
+  <mime-type type="application/vnd.spz">
+    <comment>Compressed Gaussian splats</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.spz"/>
+    <!-- Version 4; versions 1 to 3 are gzip streams, found by name. -->
+    <magic priority="60">
+      <match type="string" value="NGSP" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <!-- Aseprite sprites, Tiled maps and colour lookup tables.  Aseprite's
+       own name for its format, which libmagic uses too; Tiled's own name
+       for its JSON maps (application/x-tiled-tmx is in shared-mime-info
+       already).  .cube is shared with Gaussian cube files from chemistry,
+       which the magic tells apart in GIO-based file managers. -->
+
+  <mime-type type="image/x-aseprite">
+    <comment>Aseprite sprite</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.aseprite"/>
+    <glob pattern="*.ase"/>
+    <magic priority="60">
+      <match type="little16" value="0xA5E0" offset="4"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-tiled-tmj">
+    <comment>Tiled map</comment>
+    <sub-class-of type="application/json"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.tmj"/>
+  </mime-type>
+
+  <mime-type type="application/x-cube-lut">
+    <comment>Colour lookup table (Cube)</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.cube"/>
+    <magic priority="60">
+      <match type="string" value="LUT_3D_SIZE" offset="0:4096"/>
+      <match type="string" value="LUT_1D_SIZE" offset="0:4096"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-3dl-lut">
+    <comment>Colour lookup table (3DL)</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.3dl"/>
+  </mime-type>
+
+  <!-- More mesh formats and point clouds.  shared-mime-info already has
+       model/3mf, model/vrml and image/x-3ds (which, despite its name, is 3D
+       Studio's mesh format: magic 0x4D4D), so only the types it lacks are
+       defined here, with F3D's names where F3D has one; .wrz adds a glob to
+       model/vrml.  PCD shares *.pcd with Kodak Photo CD images, which have
+       no magic, so the PCD header's magic decides. -->
+
+  <mime-type type="application/vnd.off">
+    <comment>OFF polygon mesh</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.off"/>
+    <magic priority="60">
+      <match type="string" value="OFF\n" offset="0"/>
+      <match type="string" value="OFF " offset="0"/>
+      <match type="string" value="OFF\r\n" offset="0"/>
+      <match type="string" value="COFF\n" offset="0"/>
+      <match type="string" value="NOFF\n" offset="0"/>
+      <match type="string" value="CNOFF\n" offset="0"/>
+      <match type="string" value="STOFF\n" offset="0"/>
+      <match type="string" value="STCOFF\n" offset="0"/>
+      <match type="string" value="STNOFF\n" offset="0"/>
+      <match type="string" value="STCNOFF\n" offset="0"/>
+      <match type="string" value="4OFF\n" offset="0"/>
+      <match type="string" value="nOFF\n" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/vnd.x">
+    <comment>DirectX model</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.x"/>
+    <magic priority="60">
+      <match type="string" value="xof 03" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/vrml">
+    <glob pattern="*.wrz"/>
+  </mime-type>
+
+  <mime-type type="model/x3d+xml">
+    <comment>X3D scene</comment>
+    <sub-class-of type="application/xml"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.x3d"/>
+    <glob pattern="*.x3dz"/>
+    <root-XML namespaceURI="" localName="X3D"/>
+  </mime-type>
+
+  <mime-type type="model/x3d+vrml">
+    <comment>X3D scene (classic encoding)</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.x3dv"/>
+    <glob pattern="*.x3dvz"/>
+    <magic priority="60">
+      <match type="string" value="#X3D V" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/vnd.las">
+    <comment>LAS lidar point cloud</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.las"/>
+    <magic priority="60">
+      <match type="string" value="LASF" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/vnd.laszip">
+    <comment>LAZ compressed lidar point cloud</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.laz"/>
+  </mime-type>
+
+  <mime-type type="model/e57">
+    <comment>E57 laser scan</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.e57"/>
+    <magic priority="60">
+      <match type="string" value="ASTM-E57" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/vnd.pcd">
+    <comment>PCD point cloud</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.pcd"/>
+    <magic priority="80">
+      <match type="string" value="# .PCD" offset="0"/>
+      <match type="string" value="VERSION" offset="0">
+        <match type="string" value="FIELDS" offset="0:256"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/vnd.pts">
+    <comment>PTS point cloud</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.pts"/>
+  </mime-type>
+
+  <mime-type type="application/vnd.ptx">
+    <comment>PTX laser scan</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.ptx"/>
+  </mime-type>
+
+  <!-- GZDoom's resource archives: zip (PK3) and 7z (PK7) files of Doom maps,
+       textures and scripts.  Slerp checks the archive's directory for Doom
+       content, so Quake III's PK3s (also zips) aren't drawn as Doom's. -->
+
+  <mime-type type="application/x-doom-pk3">
+    <comment>Doom resource archive</comment>
+    <sub-class-of type="application/zip"/>
+    <generic-icon name="package-x-generic"/>
+    <glob pattern="*.pk3"/>
+    <glob pattern="*.ipk3"/>
+    <glob pattern="*.pke"/>
+  </mime-type>
+
+  <mime-type type="application/x-doom-pk7">
+    <comment>Doom resource archive (7z)</comment>
+    <sub-class-of type="application/x-7z-compressed"/>
+    <generic-icon name="package-x-generic"/>
+    <glob pattern="*.pk7"/>
+    <glob pattern="*.ipk7"/>
+  </mime-type>
+
+  <!-- LDtk projects and the level files projects can save separately.
+       LDtk itself registers them only as JSON. -->
+
+  <mime-type type="application/x-ldtk">
+    <comment>LDtk project</comment>
+    <sub-class-of type="application/json"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.ldtk"/>
+    <magic priority="60">
+      <match type="string" value="LDtk Project JSON" offset="0:256"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-ldtk-level">
+    <comment>LDtk level</comment>
+    <sub-class-of type="application/json"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.ldtkl"/>
+    <magic priority="60">
+      <match type="string" value="LDtk Level" offset="0:256"/>
+    </magic>
+  </mime-type>
+
+  <!-- Blockbench projects, under the name Blockbench's own packages
+       register. -->
+
+  <mime-type type="model/vnd.blockbench.bbmodel">
+    <comment>Blockbench model</comment>
+    <sub-class-of type="application/json"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.bbmodel"/>
+  </mime-type>
+
+  <!-- 3D applications' own files, shown by the preview pictures they store.
+       None of them is in shared-mime-info.  3ds Max scenes are OLE compound
+       files like old Office documents, so only the extension tells them
+       apart. -->
+
+  <mime-type type="application/x-3dsmax">
+    <comment>3ds Max scene</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.max"/>
+  </mime-type>
+
+  <mime-type type="application/vnd.sketchup.skp">
+    <comment>SketchUp model</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.skp"/>
+    <magic priority="60">
+      <match type="string" value="\xff\xfe\xff\x0eS\x00k\x00e\x00t\x00c\x00h\x00U\x00p\x00" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-c4d">
+    <comment>Cinema 4D scene</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.c4d"/>
+    <magic priority="60">
+      <match type="string" value="QC4DC4D6" offset="0"/>
+      <match type="string" value="XC4DC4D6" offset="0"/>
+      <match type="string" value="6C4DC4D6" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-zbrush-tool">
+    <comment>ZBrush tool</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.ztl"/>
+    <magic priority="50">
+      <match type="string" value="ZBrush File." offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-zbrush-project">
+    <comment>ZBrush project</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.zpr"/>
+  </mime-type>
+
+  <mime-type type="application/x-zbrush-document">
+    <comment>ZBrush document</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.zbr"/>
+  </mime-type>
+
+  <!-- Unity scenes and prefabs saved as text (YAML with Unity's tag
+       directive).  Godot's scenes already have application/x-godot-scene
+       in shared-mime-info. -->
+  <mime-type type="application/x-unity-scene">
+    <comment>Unity scene</comment>
+    <sub-class-of type="application/yaml"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.unity"/>
+  </mime-type>
+
+  <mime-type type="application/x-unity-prefab">
+    <comment>Unity prefab</comment>
+    <sub-class-of type="application/yaml"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.prefab"/>
+  </mime-type>
+
+  <!-- Level editors' map sources.  Many unrelated files end in .map
+       (JavaScript and CSS source maps, Doxygen image maps, linker maps,
+       other games' maps), so Quake-family maps are recognised by their
+       content only, with no glob: a glob would make every .map file a
+       Quake map.  TrenchBroom starts its maps with "// Game:"; other
+       editors start with the worldspawn entity, whose classname pair
+       (quoted words separated by a space, never JSON's colon) comes within
+       its first lines.  Hammer's .vmf files are Valve's alone. -->
+  <mime-type type="model/x-quake-map">
+    <comment>Quake or Half-Life map source</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="model"/>
+    <magic priority="80">
+      <match type="string" value="// Game:" offset="0:3"/>
+      <match type="string" value="&quot;classname&quot; &quot;worldspawn&quot;" offset="0:4096"/>
+      <match type="string" value="&quot;classname&quot;\t&quot;worldspawn&quot;" offset="0:4096"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/x-valve-vmf">
+    <comment>Source engine map source</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.vmf"/>
+    <magic priority="60">
+      <match type="string" value="versioninfo" offset="0:8"/>
+    </magic>
+  </mime-type>
+
+  <!-- Creative apps' documents, shown by the preview pictures they store.
+       None is in shared-mime-info.  Where the app or another project named
+       the type (FreeCAD's application/x-extension-fcstd, Adobe XD's own
+       mimetype member) that name is used.  Figma shares .fig with Xfig
+       drawings and Cabri figures, which have magic of their own, so the
+       three globs weigh the same and the content decides: zipped Figma
+       files through the zip subclass, bare ones through their magic. -->
+
+  <mime-type type="application/x-procreate">
+    <comment>Procreate artwork</comment>
+    <sub-class-of type="application/zip"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.procreate"/>
+  </mime-type>
+
+  <mime-type type="application/x-affinity-photo">
+    <comment>Affinity Photo document</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.afphoto"/>
+    <magic priority="50">
+      <match type="string" value="\x00\xffKA" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-affinity-designer">
+    <comment>Affinity Designer document</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.afdesign"/>
+    <magic priority="50">
+      <match type="string" value="\x00\xffKA" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-affinity-publisher">
+    <comment>Affinity Publisher document</comment>
+    <generic-icon name="x-office-document"/>
+    <glob pattern="*.afpub"/>
+    <magic priority="50">
+      <match type="string" value="\x00\xffKA" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-affinity">
+    <comment>Affinity document</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.af"/>
+    <magic priority="50">
+      <match type="string" value="\x00\xffKA" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-sketch">
+    <comment>Sketch document</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.sketch"/>
+  </mime-type>
+
+  <mime-type type="application/x-figma">
+    <comment>Figma file</comment>
+    <sub-class-of type="application/zip"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.fig"/>
+    <magic priority="60">
+      <match type="string" value="fig-kiwi" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-clip-studio">
+    <comment>Clip Studio Paint illustration</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.clip"/>
+    <magic priority="60">
+      <match type="string" value="CSFCHUNK" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="image/x-paintnet">
+    <comment>Paint.NET image</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.pdn"/>
+    <magic priority="60">
+      <match type="string" value="PDN3" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-adobe-indesign">
+    <comment>InDesign document</comment>
+    <generic-icon name="x-office-document"/>
+    <glob pattern="*.indd"/>
+    <magic priority="60">
+      <match type="string" value="\x06\x06\xed\xf5\xd8\x1d\x46\xe5\xbd\x31\xef\xe7\xfe\x74\xb7\x1dDOCUMENT" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/vnd.adobe.sparkler.project+dcxucf">
+    <comment>Adobe XD document</comment>
+    <sub-class-of type="application/zip"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.xd"/>
+    <magic priority="70">
+      <match type="string" value="PK\x03\x04" offset="0">
+        <match type="string" value="mimetypeapplication/vnd.adobe.sparkler.project+dcxucf" offset="30"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-extension-fcstd">
+    <comment>FreeCAD document</comment>
+    <sub-class-of type="application/zip"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.fcstd"/>
+  </mime-type>
+
+  <!-- Colour palettes.  .ase is shared with Aseprite sprites, and both
+       have magic.  .pal and .hex name unrelated files too (raw game
+       palettes, Intel HEX firmware, Verilog memory images), so JASC and
+       RIFF palettes are found by magic alone, without a glob, and hex lists
+       share the .hex glob with text/x-hex and win only by content: three
+       lines of six characters, which Intel HEX records and 32-bit memory
+       words never are.  The hex type isn't a text/plain subclass, or Intel
+       HEX files (text with no magic) could fall to it.  Adobe colour tables
+       have no magic at all, only their size of 768 or 772 bytes, so their
+       glob weighs less than the default. -->
+
+  <mime-type type="application/x-adobe-ase">
+    <comment>Adobe Swatch Exchange palette</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.ase"/>
+    <magic priority="60">
+      <match type="string" value="ASEF" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-adobe-aco">
+    <comment>Photoshop swatches</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.aco"/>
+  </mime-type>
+
+  <mime-type type="application/x-adobe-act">
+    <comment>Adobe colour table</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.act" weight="40"/>
+  </mime-type>
+
+  <mime-type type="application/x-gimp-palette">
+    <comment>GIMP palette</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.gpl"/>
+    <magic priority="60">
+      <match type="string" value="GIMP Palette" offset="0"/>
+      <match type="string" value="\xef\xbb\xbfGIMP Palette" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-krita-palette">
+    <comment>Krita palette</comment>
+    <sub-class-of type="application/zip"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.kpl"/>
+  </mime-type>
+
+  <mime-type type="application/x-jasc-palette">
+    <comment>JASC palette</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="image-x-generic"/>
+    <magic priority="80">
+      <match type="string" value="JASC-PAL" offset="0"/>
+      <match type="string" value="\xef\xbb\xbfJASC-PAL" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-riff-palette">
+    <comment>RIFF palette</comment>
+    <generic-icon name="image-x-generic"/>
+    <magic priority="80">
+      <match type="string" value="RIFF" offset="0">
+        <match type="string" value="PAL " offset="8"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-hex-palette">
+    <comment>Hex colour palette</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.hex"/>
+    <magic priority="50">
+      <match type="byte" value="0x0a" offset="6">
+        <match type="byte" value="0x0a" offset="13">
+          <match type="byte" value="0x0a" offset="20"/>
+        </match>
+      </match>
+      <match type="string" value="\r\n" offset="6">
+        <match type="string" value="\r\n" offset="14">
+          <match type="string" value="\r\n" offset="22"/>
+        </match>
+      </match>
+      <match type="string" value="#" offset="0">
+        <match type="byte" value="0x0a" offset="7">
+          <match type="byte" value="0x0a" offset="15">
+            <match type="byte" value="0x0a" offset="23"/>
+          </match>
+        </match>
+        <match type="string" value="\r\n" offset="7">
+          <match type="string" value="\r\n" offset="16">
+            <match type="string" value="\r\n" offset="25"/>
+          </match>
+        </match>
+      </match>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-procreate-swatches">
+    <comment>Procreate swatches</comment>
+    <sub-class-of type="application/zip"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.swatches"/>
+  </mime-type>
+
+  <!-- G-code and GPS tracks (crates/paths).  text/x.gcode, application/gpx+xml,
+       application/vnd.google-earth.kml+xml, application/vnd.google-earth.kmz and
+       application/geo+json come with shared-mime-info.  FIT shares *.fit with
+       FITS astronomy images (application/fits), so the two globs tie and each
+       type's magic decides. -->
+  <mime-type type="text/x.gcode">
+    <glob pattern="*.gco"/>
+  </mime-type>
+
+  <mime-type type="application/x-bgcode">
+    <comment>Binary G-code</comment>
+    <generic-icon name="text-x-generic"/>
+    <glob pattern="*.bgcode"/>
+    <magic priority="80">
+      <match type="string" value="GCDE" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/vnd.garmin.tcx+xml">
+    <comment>Garmin Training Center activity</comment>
+    <acronym>TCX</acronym>
+    <expanded-acronym>Training Center XML</expanded-acronym>
+    <sub-class-of type="application/xml"/>
+    <generic-icon name="text-x-generic"/>
+    <glob pattern="*.tcx"/>
+    <root-XML namespaceURI="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2" localName="TrainingCenterDatabase"/>
+    <root-XML namespaceURI="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v1" localName="TrainingCenterDatabase"/>
+  </mime-type>
+
+  <mime-type type="application/vnd.ant.fit">
+    <comment>FIT activity</comment>
+    <acronym>FIT</acronym>
+    <expanded-acronym>Flexible and Interoperable Data Transfer</expanded-acronym>
+    <generic-icon name="application-octet-stream"/>
+    <glob pattern="*.fit"/>
+    <magic priority="80">
+      <match type="string" value=".FIT" offset="8"/>
+    </magic>
+  </mime-type>
+
+  <!-- CAD.  shared-mime-info has image/vnd.dxf with a glob and the magic of
+       text files that start with a HEADER section; binary DXF files, which
+       start with their own sentinel, are added here.  No database has a type
+       for Rhino's .3dm, so this one is new, with the names other software
+       uses as aliases. -->
+  <mime-type type="image/vnd.dxf">
+    <magic priority="60">
+      <match type="string" value="AutoCAD Binary DXF" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/x-3dm">
+    <comment>Rhino 3D model</comment>
+    <alias type="model/vnd.3dm"/>
+    <alias type="application/x-3dm"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.3dm"/>
+    <magic priority="80">
+      <match type="string" value="3D Geometry File Format " offset="0"/>
+    </magic>
+  </mime-type>
+
+  <!-- Retro computer pictures and game images (phase 21).  Dumps without a
+       header are known by extension; where an extension is shared with
+       unrelated files, the type carries magic (priority 80) so that content
+       decides: .p8 (PKCS#8 keys), .blp (GTK Blueprint) and .dd (D sources).
+       .scr (Windows screensavers) and .sr2 (Sony RAW) are left alone. -->
+
+  <mime-type type="image/x-atari-degas">
+    <comment>Atari ST DEGAS picture</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.pi1"/>
+    <glob pattern="*.pi2"/>
+    <glob pattern="*.pi3"/>
+    <glob pattern="*.pc1"/>
+    <glob pattern="*.pc2"/>
+    <glob pattern="*.pc3"/>
+  </mime-type>
+
+  <mime-type type="image/x-atari-neochrome">
+    <comment>Atari ST NEOchrome picture</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.neo"/>
+  </mime-type>
+
+  <mime-type type="image/x-atari-tiny">
+    <comment>Atari ST Tiny Stuff picture</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.tn1"/>
+    <glob pattern="*.tn2"/>
+    <glob pattern="*.tn3"/>
+    <glob pattern="*.tny"/>
+  </mime-type>
+
+  <mime-type type="image/x-c64-koala">
+    <comment>Commodore 64 Koala Painter picture</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.koa"/>
+    <glob pattern="*.kla"/>
+  </mime-type>
+
+  <!-- .art is also Build engine tile sets (below); both start differently,
+       so the magic tells them apart. -->
+  <mime-type type="image/x-c64-artstudio">
+    <comment>Commodore 64 Art Studio picture</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.art"/>
+    <glob pattern="*.aas"/>
+    <magic priority="50">
+      <match type="string" value="\x00\x20" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="image/x-c64-doodle">
+    <comment>Commodore 64 Doodle picture</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.dd"/>
+    <glob pattern="*.jj"/>
+    <magic priority="80">
+      <match type="string" value="\x00\x5c" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="image/x-c64-hires">
+    <comment>Commodore 64 hires bitmap</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.hir"/>
+    <glob pattern="*.hpi"/>
+    <glob pattern="*.ocp"/>
+  </mime-type>
+
+  <!-- ZX Spectrum and Amstrad CPC `.scr` dumps are not claimed: Windows
+       screensavers use the extension too, and no content test separates a
+       raw dump from them.  Slerp still reads them when opened by name. -->
+
+  <mime-type type="image/x-msx-screen">
+    <comment>MSX screen dump</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.sc2"/>
+    <glob pattern="*.sc5"/>
+    <glob pattern="*.sc6"/>
+    <glob pattern="*.sc7"/>
+    <glob pattern="*.sc8"/>
+    <glob pattern="*.sc12"/>
+    <glob pattern="*.sr5"/>
+    <glob pattern="*.sr6"/>
+    <glob pattern="*.sr7"/>
+    <glob pattern="*.sr8"/>
+    <glob pattern="*.sr12"/>
+    <glob pattern="*.s12"/>
+    <glob pattern="*.srs"/>
+  </mime-type>
+
+  <mime-type type="image/x-bbc-screen">
+    <comment>BBC Micro screen dump</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.bbc"/>
+  </mime-type>
+
+  <mime-type type="image/x-apple2-hires">
+    <comment>Apple II hi-res picture</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.hgr"/>
+  </mime-type>
+
+  <mime-type type="image/x-apple2-double-hires">
+    <comment>Apple II double hi-res picture</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.dhr"/>
+  </mime-type>
+
+  <mime-type type="image/x-atari8-screen">
+    <comment>Atari 8-bit picture</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.mic"/>
+    <glob pattern="*.g15"/>
+    <glob pattern="*.gr15"/>
+    <glob pattern="*.gr9"/>
+    <glob pattern="*.gr8"/>
+  </mime-type>
+
+  <!-- ANSI art.  A subclass of plain text with only the .ans glob: .txt,
+       .asc, .nfo and .diz files stay text, whatever they hold. -->
+  <mime-type type="text/x-ansi-art">
+    <comment>ANSI art</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="text-x-generic"/>
+    <glob pattern="*.ans"/>
+  </mime-type>
+
+  <mime-type type="application/x-pico8-cartridge">
+    <comment>PICO-8 cartridge</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="text-x-generic"/>
+    <glob pattern="*.p8" weight="75"/>
+    <magic priority="80">
+      <match type="string" value="pico-8 cartridge" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-tic80-cartridge">
+    <comment>TIC-80 cartridge</comment>
+    <generic-icon name="application-x-executable"/>
+    <glob pattern="*.tic"/>
+  </mime-type>
+
+  <mime-type type="application/x-xnb">
+    <comment>XNA or MonoGame compiled content</comment>
+    <generic-icon name="application-x-generic"/>
+    <glob pattern="*.xnb"/>
+    <magic priority="80">
+      <match type="string" value="XNB" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="image/x-blp">
+    <comment>Blizzard BLP texture</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.blp"/>
+    <magic priority="80">
+      <match type="string" value="BLP1" offset="0"/>
+      <match type="string" value="BLP2" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="image/x-pvr">
+    <comment>PowerVR texture</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.pvr"/>
+    <magic priority="80">
+      <match type="string" value="PVR\x03" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="image/x-pkm">
+    <comment>Ericsson ETC texture</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.pkm"/>
+    <magic priority="80">
+      <match type="string" value="PKM 10" offset="0"/>
+      <match type="string" value="PKM 20" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="image/x-build-art">
+    <comment>Build engine tile set</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.art"/>
+    <magic priority="80">
+      <match type="string" value="\x01\x00\x00\x00" offset="0"/>
+      <match type="string" value="BUILDART" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="image/x-quake-sprite">
+    <comment>Quake or Half-Life sprite</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.spr"/>
+    <magic priority="80">
+      <match type="string" value="IDSP" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="image/x-quake2-sprite">
+    <comment>Quake 2 sprite</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.sp2"/>
+    <magic priority="80">
+      <match type="string" value="IDS2" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <!-- Sprite-sheet descriptors with names of their own.  TexturePacker's
+       JSON and plist exports and Aseprite's JSON share generic extensions
+       and are not claimed. -->
+  <mime-type type="application/x-libgdx-atlas">
+    <comment>libGDX or Spine texture atlas</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="text-x-generic"/>
+    <glob pattern="*.atlas"/>
+  </mime-type>
+
+  <mime-type type="application/x-texturepacker-sheet">
+    <comment>TexturePacker sprite sheet data</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="text-x-generic"/>
+    <glob pattern="*.tpsheet"/>
+  </mime-type>
+
+
+  <!-- Metafiles (phase 21).  shared-mime-info defines WMF, EMF and PICT,
+       with magic for placeable and memory-type WMF files, EMF, and PICT 2
+       with an extended header.  These add the rest: disk-type and
+       version-1 WMF headers, PICT 2.0 and version 1, the gzip forms, and
+       CorelDRAW templates and Presentation Exchange files.  CorelDRAW
+       documents, Visio drawings and stencils already have types. -->
+  <mime-type type="image/wmf">
+    <magic priority="50">
+      <!-- A disk metafile (type 2) or a memory one (type 1) with the
+           standard header: header size 9, version 0x0100 or 0x0300. -->
+      <match type="little16" offset="0" value="2">
+        <match type="little16" offset="2" value="9">
+          <match type="little16" offset="4" value="0x0300"/>
+          <match type="little16" offset="4" value="0x0100"/>
+        </match>
+      </match>
+      <match type="little16" offset="0" value="1">
+        <match type="little16" offset="2" value="9">
+          <match type="little16" offset="4" value="0x0100"/>
+        </match>
+      </match>
+    </magic>
+  </mime-type>
+
+  <!-- shared-mime-info's EMF magic has the default priority, and the Build
+       engine's `.art` magic (four bytes, `01 00 00 00`, which every EMF
+       starts with too) beats it, so give EMF's own signature, ` EMF` at
+       offset 40, a higher one. -->
+  <mime-type type="image/emf">
+    <magic priority="90">
+      <match type="little32" offset="0" value="1">
+        <match type="little32" offset="40" value="0x464D4520"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <mime-type type="image/x-compressed-wmf">
+    <comment>Compressed Windows Metafile</comment>
+    <sub-class-of type="application/gzip"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.wmz"/>
+  </mime-type>
+
+  <mime-type type="image/x-compressed-emf">
+    <comment>Compressed Enhanced Metafile</comment>
+    <sub-class-of type="application/gzip"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.emz"/>
+  </mime-type>
+
+  <mime-type type="image/x-pict">
+    <magic priority="50">
+      <!-- PICT 2.0 (header version -1) and version 1, with and without the
+           512-byte application header. -->
+      <match type="big16" offset="10" value="0x0011">
+        <match type="big16" offset="12" value="0x02FF">
+          <match type="big16" offset="14" value="0x0C00">
+            <match type="big16" offset="16" value="0xFFFF"/>
+          </match>
+        </match>
+      </match>
+      <match type="big16" offset="522" value="0x0011">
+        <match type="big16" offset="524" value="0x02FF">
+          <match type="big16" offset="526" value="0x0C00">
+            <match type="big16" offset="528" value="0xFFFF"/>
+          </match>
+        </match>
+      </match>
+      <match type="string" offset="10" value="\x11\x01\x01\x00\x0a"/>
+      <match type="string" offset="522" value="\x11\x01\x01\x00\x0a"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-corel-draw-template">
+    <comment>CorelDRAW template</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.cdt"/>
+    <sub-class-of type="application/vnd.corel-draw"/>
+  </mime-type>
+
+  <mime-type type="image/x-corel-cmx">
+    <comment>Corel Presentation Exchange</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.cmx"/>
+    <magic priority="80">
+      <match type="string" offset="0" value="RIFF">
+        <match type="string" offset="8" value="CMX1"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <!-- Science and film images -->
+
+  <!-- shared-mime-info defines application/fits (with magic, and *.fits, *.fit
+       and *.fts) and image/jxr (JPEG XR, with magic and its three extensions),
+       so they need nothing here beyond FITS files compressed by fpack. -->
+  <mime-type type="application/fits">
+    <glob pattern="*.fits.fz"/>
+    <glob pattern="*.fit.fz"/>
+    <glob pattern="*.fts.fz"/>
+  </mime-type>
+
+  <mime-type type="image/x-xisf">
+    <comment>PixInsight XISF image</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.xisf"/>
+    <magic priority="50">
+      <match type="string" offset="0" value="XISF0100"/>
+    </magic>
+  </mime-type>
+
+  <!-- shared-mime-info's image/dpx recognises only big-endian files by magic
+       and has no extension. -->
+  <mime-type type="image/dpx">
+    <glob pattern="*.dpx"/>
+    <magic priority="50">
+      <match type="string" offset="0" value="XPDS"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="image/x-cineon">
+    <comment>Cineon film scan</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.cin"/>
+    <glob pattern="*.cineon"/>
+    <magic priority="50">
+      <match type="string" offset="0" value="\x80\x2a\x5f\xd7"/>
+      <match type="string" offset="0" value="\xd7\x5f\x2a\x80"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="image/x-portable-arbitrarymap">
+    <comment>PAM image</comment>
+    <acronym>PAM</acronym>
+    <expanded-acronym>Portable Arbitrary Map</expanded-acronym>
+    <generic-icon name="image-x-generic"/>
+    <sub-class-of type="image/x-portable-anymap"/>
+    <glob pattern="*.pam"/>
+    <magic priority="50">
+      <match type="string" offset="0" value="P7\n"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="image/x-farbfeld">
+    <comment>farbfeld image</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.ff"/>
+    <magic priority="50">
+      <match type="string" offset="0" value="farbfeld"/>
+    </magic>
+  </mime-type>
+
+  <!-- Scientific arrays, medical volumes and microscopy images (phase 21).
+       NumPy, NIfTI, MetaImage and NRRD files are known by magic or by names
+       nothing else uses.  Extensions other programs share are never claimed
+       by name alone: .hdr, .img, .raw and .dat belong to Radiance pictures, disk
+       images and every kind of binary dump.  An Analyze or NIfTI-pair header
+       is therefore told apart by its content (a header length of 348 and a
+       datatype Analyze defines, or NIfTI's "ni1"), which names it only where
+       the name doesn't: a file called *.hdr stays image/x-hdr in Qt, GLib and
+       xdg-mime alike, since the glob is the only candidate and they trust it.
+       That costs nothing here, because Slerp already thumbnails image/x-hdr
+       and sniffs the content itself, so Analyze headers are thumbnailed
+       beside the .img they describe and opened in the viewer either way.  .nc stays with
+       shared-mime-info's application/x-netcdf (CNC programs use it too, and
+       Slerp tells them apart by content); classic NetCDF's own magic is added
+       to that type.  HDF5 files (application/x-hdf) already have magic there. -->
+  <mime-type type="application/x-numpy-data">
+    <comment>NumPy array</comment>
+    <generic-icon name="application-x-generic"/>
+    <glob pattern="*.npy"/>
+    <magic priority="50">
+      <match type="string" offset="0" value="\x93NUMPY"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-numpy-archive">
+    <comment>NumPy archive of arrays</comment>
+    <generic-icon name="application-x-generic"/>
+    <sub-class-of type="application/zip"/>
+    <glob pattern="*.npz"/>
+  </mime-type>
+
+  <mime-type type="application/x-nifti">
+    <comment>NIfTI medical volume</comment>
+    <generic-icon name="application-x-generic"/>
+    <glob pattern="*.nii"/>
+    <glob pattern="*.nii.gz"/>
+    <magic priority="90">
+      <match type="string" offset="344" value="n+1\0"/>
+      <match type="string" offset="344" value="ni1\0"/>
+      <match type="string" offset="4" value="n+2\0\r\n\x1a\n"/>
+      <match type="string" offset="4" value="ni2\0\r\n\x1a\n"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-analyze-header">
+    <comment>Analyze or NIfTI header (a .hdr beside its .img)</comment>
+    <generic-icon name="application-x-generic"/>
+    <magic priority="80">
+      <match type="string" offset="344" value="ni1\0"/>
+      <match type="string" offset="0" value="\x5c\x01\x00\x00">
+        <match type="string" offset="70" value="\x02\x00"/>
+      </match>
+      <match type="string" offset="0" value="\x00\x00\x01\x5c">
+        <match type="string" offset="70" value="\x00\x02"/>
+      </match>
+      <match type="string" offset="0" value="\x5c\x01\x00\x00">
+        <match type="string" offset="70" value="\x04\x00"/>
+      </match>
+      <match type="string" offset="0" value="\x00\x00\x01\x5c">
+        <match type="string" offset="70" value="\x00\x04"/>
+      </match>
+      <match type="string" offset="0" value="\x5c\x01\x00\x00">
+        <match type="string" offset="70" value="\x08\x00"/>
+      </match>
+      <match type="string" offset="0" value="\x00\x00\x01\x5c">
+        <match type="string" offset="70" value="\x00\x08"/>
+      </match>
+      <match type="string" offset="0" value="\x5c\x01\x00\x00">
+        <match type="string" offset="70" value="\x10\x00"/>
+      </match>
+      <match type="string" offset="0" value="\x00\x00\x01\x5c">
+        <match type="string" offset="70" value="\x00\x10"/>
+      </match>
+      <match type="string" offset="0" value="\x5c\x01\x00\x00">
+        <match type="string" offset="70" value="\x20\x00"/>
+      </match>
+      <match type="string" offset="0" value="\x00\x00\x01\x5c">
+        <match type="string" offset="70" value="\x00\x20"/>
+      </match>
+      <match type="string" offset="0" value="\x5c\x01\x00\x00">
+        <match type="string" offset="70" value="\x40\x00"/>
+      </match>
+      <match type="string" offset="0" value="\x00\x00\x01\x5c">
+        <match type="string" offset="70" value="\x00\x40"/>
+      </match>
+      <match type="string" offset="0" value="\x5c\x01\x00\x00">
+        <match type="string" offset="70" value="\x80\x00"/>
+      </match>
+      <match type="string" offset="0" value="\x00\x00\x01\x5c">
+        <match type="string" offset="70" value="\x00\x80"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-metaimage">
+    <comment>MetaImage volume</comment>
+    <generic-icon name="application-x-generic"/>
+    <glob pattern="*.mha"/>
+    <glob pattern="*.mhd"/>
+    <magic priority="50">
+      <match type="string" offset="0" value="ObjectType = Image"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-nrrd">
+    <comment>NRRD volume</comment>
+    <generic-icon name="application-x-generic"/>
+    <glob pattern="*.nrrd"/>
+    <glob pattern="*.nhdr"/>
+    <magic priority="50">
+      <match type="string" offset="0" value="NRRD000"/>
+    </magic>
+  </mime-type>
+
+  <!-- TIFF-based microscopy and slides.  Each is a subclass of image/tiff,
+       found by its own extension, since a TIFF's content doesn't say which
+       microscope or format wrote it.  Ordinary .tif and .tiff files stay
+       image/tiff: other thumbnailers show those, and Slerp's viewer opens
+       their stacks, pages and pyramids.  Leica .scn shares its extension
+       with Godot's scenes: Leica's are BigTIFF, which its magic says, and Godot's
+       text scenes have their own magic.  (A BigTIFF with an unknown extension
+       is therefore called a Leica file, which Slerp reads all the same.) -->
+  <mime-type type="image/x-ome-tiff">
+    <comment>OME-TIFF microscopy image</comment>
+    <generic-icon name="image-x-generic"/>
+    <sub-class-of type="image/tiff"/>
+    <glob pattern="*.ome.tif"/>
+    <glob pattern="*.ome.tiff"/>
+    <glob pattern="*.ome.btf"/>
+    <glob pattern="*.ome.tf2"/>
+    <glob pattern="*.ome.tf8"/>
+  </mime-type>
+
+  <mime-type type="image/x-bigtiff">
+    <comment>BigTIFF image</comment>
+    <generic-icon name="image-x-generic"/>
+    <sub-class-of type="image/tiff"/>
+    <glob pattern="*.btf"/>
+    <glob pattern="*.tf2"/>
+    <glob pattern="*.tf8"/>
+  </mime-type>
+
+  <mime-type type="image/x-aperio-svs">
+    <comment>Aperio whole-slide image</comment>
+    <generic-icon name="image-x-generic"/>
+    <sub-class-of type="image/tiff"/>
+    <glob pattern="*.svs"/>
+  </mime-type>
+
+  <mime-type type="image/x-hamamatsu-ndpi">
+    <comment>Hamamatsu whole-slide image</comment>
+    <generic-icon name="image-x-generic"/>
+    <sub-class-of type="image/tiff"/>
+    <glob pattern="*.ndpi"/>
+  </mime-type>
+
+  <mime-type type="image/x-leica-scn">
+    <comment>Leica whole-slide image</comment>
+    <generic-icon name="image-x-generic"/>
+    <sub-class-of type="image/tiff"/>
+    <glob pattern="*.scn"/>
+    <magic priority="50">
+      <match type="string" offset="0" value="II+\0\x08\0\0\0"/>
+      <match type="string" offset="0" value="MM\0+\0\x08\0\0"/>
+    </magic>
+  </mime-type>
+
+  <!-- Classic NetCDF's magic, which shared-mime-info's type lacks: the first
+       three letters and a version byte. -->
+  <mime-type type="application/x-netcdf">
+    <magic priority="50">
+      <match type="string" offset="0" value="CDF\x01"/>
+      <match type="string" offset="0" value="CDF\x02"/>
+      <match type="string" offset="0" value="CDF\x05"/>
+    </magic>
+  </mime-type>
+
+  <!-- MATLAB v7.3 files are HDF5 with a user block that starts with this
+       text.  No extension is claimed: .mat is also Unity's material files. -->
+  <mime-type type="application/x-matlab-data">
+    <comment>MATLAB data file</comment>
+    <generic-icon name="application-x-generic"/>
+    <magic priority="50">
+      <match type="string" offset="0" value="MATLAB 5.0 MAT-file"/>
+      <match type="string" offset="0" value="MATLAB 7.3 MAT-file"/>
+    </magic>
+  </mime-type>
+
+  <!-- Game archives, which Slerp lists and opens files from.  Each is found
+       by its first bytes, and gets a glob only where the extension is not
+       shared with unrelated formats (so none for .pck, which Wwise audio
+       packages also use).  Doom WADs (application/x-doom-wad, from
+       shared-mime-info), Quake and Half-Life WADs (application/x-quake-wad),
+       PK3 and PK7 (application/x-doom-pk3 and -pk7) are defined above.  PK3,
+       PK4 and PK7 have no magic of their own because they are plain zip and
+       7z files; only the extension tells them apart. -->
+
+  <!-- Quake, Quake II and Soldier of Fortune PAK.  shared-mime-info's
+       application/x-pak already owns *.pak (Unreal and many other games use
+       it too), and a lone extension match always beats the contents, so this
+       type claims *.pak with weight 40, below x-pak's 50.  That makes the
+       extension a tie that content settles, the way image/apng sits under
+       image/png: a .pak that starts like a PAK (magic of priority 80, which
+       overrules the extension only when two types claim it) becomes this
+       type, and any other .pak stays application/x-pak.  The same magic finds
+       PAKs with another name or none.  Git pack files also start with PACK,
+       followed by the big-endian version 2 or 3, which read as a PAK
+       directory offset would be exactly 32 or 48 MiB.  The magic therefore
+       requires a directory length under 16 MiB (byte 11 is 0, which also
+       rejects text starting with "PACK" and 255 of 256 git packs) and a
+       directory offset other than 0x02000000 and 0x03000000.  The format has
+       no "not", so that is written as the offset having some bit set that
+       those two lack, or bit 25 clear. -->
+  <mime-type type="application/x-quake-pak">
+    <comment>Quake PAK archive</comment>
+    <sub-class-of type="application/x-pak"/>
+    <generic-icon name="package-x-generic"/>
+    <glob pattern="*.pak" weight="40"/>
+    <magic priority="80">
+      <match type="string" value="PACK" offset="0">
+        <match type="byte" value="0" offset="11">
+          <match type="little32" offset="4" value="0x00000000" mask="0x02000000"/>
+          <match type="little32" offset="4" value="0x04000000" mask="0x04000000"/>
+          <match type="little32" offset="4" value="0x08000000" mask="0x08000000"/>
+          <match type="little32" offset="4" value="0x10000000" mask="0x10000000"/>
+          <match type="little32" offset="4" value="0x20000000" mask="0x20000000"/>
+          <match type="little32" offset="4" value="0x40000000" mask="0x40000000"/>
+          <match type="little32" offset="4" value="0x80000000" mask="0x80000000"/>
+          <match type="little32" offset="4" value="0x00000001" mask="0x00000001"/>
+          <match type="little32" offset="4" value="0x00000002" mask="0x00000002"/>
+          <match type="little32" offset="4" value="0x00000004" mask="0x00000004"/>
+          <match type="little32" offset="4" value="0x00000008" mask="0x00000008"/>
+          <match type="little32" offset="4" value="0x00000010" mask="0x00000010"/>
+          <match type="little32" offset="4" value="0x00000020" mask="0x00000020"/>
+          <match type="little32" offset="4" value="0x00000040" mask="0x00000040"/>
+          <match type="little32" offset="4" value="0x00000080" mask="0x00000080"/>
+          <match type="little32" offset="4" value="0x00000100" mask="0x00000100"/>
+          <match type="little32" offset="4" value="0x00000200" mask="0x00000200"/>
+          <match type="little32" offset="4" value="0x00000400" mask="0x00000400"/>
+          <match type="little32" offset="4" value="0x00000800" mask="0x00000800"/>
+          <match type="little32" offset="4" value="0x00001000" mask="0x00001000"/>
+          <match type="little32" offset="4" value="0x00002000" mask="0x00002000"/>
+          <match type="little32" offset="4" value="0x00004000" mask="0x00004000"/>
+          <match type="little32" offset="4" value="0x00008000" mask="0x00008000"/>
+          <match type="little32" offset="4" value="0x00010000" mask="0x00010000"/>
+          <match type="little32" offset="4" value="0x00020000" mask="0x00020000"/>
+          <match type="little32" offset="4" value="0x00040000" mask="0x00040000"/>
+          <match type="little32" offset="4" value="0x00080000" mask="0x00080000"/>
+          <match type="little32" offset="4" value="0x00100000" mask="0x00100000"/>
+          <match type="little32" offset="4" value="0x00200000" mask="0x00200000"/>
+          <match type="little32" offset="4" value="0x00400000" mask="0x00400000"/>
+          <match type="little32" offset="4" value="0x00800000" mask="0x00800000"/>
+        </match>
+      </match>
+    </magic>
+    <magic priority="80">
+      <match type="string" value="SPAK" offset="0">
+        <match type="byte" value="0" offset="11"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <!-- id Tech 4 (Doom 3, Quake 4) resource archive: a zip. -->
+  <mime-type type="application/x-idtech4-pk4">
+    <comment>id Tech 4 resource archive</comment>
+    <sub-class-of type="application/zip"/>
+    <generic-icon name="package-x-generic"/>
+    <glob pattern="*.pk4"/>
+  </mime-type>
+
+  <!-- Godot packs.  No glob: Wwise audio packages are also *.pck. -->
+  <mime-type type="application/x-godot-pck">
+    <comment>Godot engine package</comment>
+    <generic-icon name="package-x-generic"/>
+    <magic priority="50">
+      <match type="string" value="GDPC" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <!-- Valve VPK, whose header signature is 0x55AA1234 (little-endian).  The
+       numbered chunk files of a multi-file pack (pak01_000.vpk) have no
+       header and share the extension. -->
+  <mime-type type="application/x-valve-vpk">
+    <comment>Valve package</comment>
+    <generic-icon name="package-x-generic"/>
+    <glob pattern="*.vpk"/>
+    <magic priority="50">
+      <match type="little32" value="0x55aa1234" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <!-- Build engine group file (Duke Nukem 3D, Shadow Warrior, Blood). -->
+  <mime-type type="application/x-build-grp">
+    <comment>Build engine group file</comment>
+    <generic-icon name="package-x-generic"/>
+    <glob pattern="*.grp"/>
+    <magic priority="50">
+      <match type="string" value="KenSilverman" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <!-- Ordinary pictures Slerp opens beyond what shared-mime-info recognises.
+       Its animated PNG rule looks for the acTL chunk at byte 37, which is
+       right only when nothing but IHDR comes before it; gamma, colour
+       space and resolution chunks may legally come first, so look for acTL
+       anywhere before the pixel data.  Same name as the system's type, so
+       the two sets of rules are added together. -->
+  <mime-type type="image/apng">
+    <comment>animated PNG image</comment>
+    <magic priority="55">
+      <match type="string" value="\x89PNG\r\n\x1A\n" offset="0">
+        <match type="string" value="acTL" offset="33:4096"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <!-- Skinned models and animations from games and animation tools, and
+       Draco geometry (phase 23).  Draco and Unreal animation sets share
+       their extensions with unrelated files (Delphi's .drc resource strings,
+       Photoshop Album's .psa catalogues), so they are found by magic alone.
+       .smd is also a Mega Drive ROM and StarMail mail, and .pmd a PageMaker
+       document: those keep their weight-50 globs, and these weight-40 globs
+       with priority-80 magic take only files whose content matches, as the
+       Quake PAK type does.  Animation files (VMD, MD5 anims, PSA) carry no
+       geometry; the viewer adds them to a model. -->
+  <mime-type type="application/vnd.drc">
+    <comment>Draco geometry</comment>
+    <generic-icon name="model"/>
+    <magic priority="80">
+      <match type="string" value="DRACO" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/x-mmd-pmx">
+    <comment>MikuMikuDance model</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.pmx"/>
+    <magic priority="80">
+      <match type="string" value="PMX " offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/x-mmd-pmd">
+    <comment>MikuMikuDance model (PMD)</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.pmd" weight="40"/>
+    <magic priority="80">
+      <match type="string" value="Pmd\x00\x00\x80\x3f" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/x-mmd-vmd">
+    <comment>MikuMikuDance motion</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.vmd"/>
+    <magic priority="80">
+      <match type="string" value="Vocaloid Motion Data" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/x-md5mesh">
+    <comment>Doom 3 model</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.md5mesh"/>
+    <magic priority="80">
+      <match type="string" value="MD5Version" offset="0">
+        <match type="string" value="numMeshes" offset="10:256"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/x-md5anim">
+    <comment>Doom 3 animation</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.md5anim"/>
+    <magic priority="80">
+      <match type="string" value="MD5Version" offset="0">
+        <match type="string" value="numFrames" offset="10:256"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/x-iqm">
+    <comment>Inter-Quake Model</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.iqm"/>
+    <magic priority="80">
+      <match type="string" value="INTERQUAKEMODEL\x00" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/x-iqe">
+    <comment>Inter-Quake Export model</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.iqe"/>
+    <magic priority="80">
+      <match type="string" value="# Inter-Quake Export" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <!-- studiomdl's source files: "version 1", then "nodes" on the next line
+       (LF or CRLF), as every exporter writes them. -->
+  <mime-type type="model/x-source-smd">
+    <comment>Source engine model source</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.smd" weight="40"/>
+    <magic priority="80">
+      <match type="string" value="version 1" offset="0">
+        <match type="string" value="nodes" offset="9:16"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/x-unreal-psk">
+    <comment>Unreal skeletal mesh</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.psk"/>
+    <glob pattern="*.pskx"/>
+    <magic priority="80">
+      <match type="string" value="ACTRHEAD\x00" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/x-unreal-psa">
+    <comment>Unreal animation set</comment>
+    <generic-icon name="model"/>
+    <magic priority="80">
+      <match type="string" value="ANIMHEAD\x00" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <!-- Minecraft schematics.  All are NBT, usually gzip-compressed, so
+       nothing inside can be matched here and the extensions decide.  The
+       loader checks the content; for .nbt, which other Minecraft data uses
+       too, it draws only structures (size, palette and blocks), and other
+       NBT files simply get no thumbnail. -->
+  <mime-type type="application/x-sponge-schematic">
+    <comment>WorldEdit schematic</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.schem"/>
+  </mime-type>
+
+  <mime-type type="application/x-litematica-schematic">
+    <comment>Litematica schematic</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.litematic"/>
+  </mime-type>
+
+  <mime-type type="application/x-minecraft-structure">
+    <comment>Minecraft structure</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.nbt"/>
+  </mime-type>
+
+  <mime-type type="application/x-mcedit-schematic">
+    <comment>MCEdit schematic</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.schematic"/>
+  </mime-type>
+
+  <!-- Phase 23 pictures.  Photoshop's large-document format (PSB) has the
+       same 8BPS magic as PSD, which shared-mime-info already matches; only
+       the extension is missing. -->
+  <mime-type type="image/vnd.adobe.photoshop">
+    <glob pattern="*.psb"/>
+  </mime-type>
+
+  <!-- shared-mime-info knows SGI images by *.sgi alone (and *.rgb as
+       image/x-rgb), without magic.  SGI's tools also write .rgba, .bw, .int
+       and .inta, which raw RGBA dumps, bigWig genome tracks and others share,
+       so those are found by the magic alone (474, then a storage byte of 0
+       or 1 and 1 or 2 bytes per sample), under any name. -->
+  <mime-type type="image/x-sgi">
+    <magic priority="50">
+      <match type="big16" value="474" offset="0">
+        <match type="string" value="\x00\x01" offset="2"/>
+        <match type="string" value="\x00\x02" offset="2"/>
+        <match type="string" value="\x01\x01" offset="2"/>
+        <match type="string" value="\x01\x02" offset="2"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <!-- Stored previews (phase 23, crates/previews): CAD and creative-app files
+       shown by the picture their program saved.  image/vnd.dwg and the iWork
+       types come with shared-mime-info.  Extensions other files share are
+       claimed by content alone, without a glob, so a glob can't retype every
+       assembler source (.asm), parity or parameter file (.par), Cython
+       declaration (.pxd) or other .psp and .tub file: Solid Edge's OLE files
+       by their root storage's class id (in the directory, within the first
+       16 KB in every sample, so Qt's 16 KB read sees it), Pixelmator Pro's
+       zips by their first member, Paint Shop Pro files by their signature. -->
+  <mime-type type="model/vnd.dwf">
+    <comment>Autodesk DWF file</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.dwf"/>
+    <magic priority="80">
+      <match type="string" value="(DWF V" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="model/vnd.dwfx+xps">
+    <comment>Autodesk DWFx file</comment>
+    <sub-class-of type="application/zip"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.dwfx"/>
+  </mime-type>
+
+  <mime-type type="application/x-solidworks-part">
+    <comment>SolidWorks part</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.sldprt"/>
+  </mime-type>
+
+  <mime-type type="application/x-solidworks-assembly">
+    <comment>SolidWorks assembly</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.sldasm"/>
+  </mime-type>
+
+  <mime-type type="application/x-solidworks-drawing">
+    <comment>SolidWorks drawing</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.slddrw"/>
+  </mime-type>
+
+  <mime-type type="application/x-autodesk-inventor-part">
+    <comment>Autodesk Inventor part</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.ipt"/>
+  </mime-type>
+
+  <mime-type type="application/x-autodesk-inventor-assembly">
+    <comment>Autodesk Inventor assembly</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.iam"/>
+  </mime-type>
+
+  <mime-type type="application/x-autodesk-inventor-drawing">
+    <comment>Autodesk Inventor drawing</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.idw"/>
+  </mime-type>
+
+  <mime-type type="application/x-autodesk-inventor-presentation">
+    <comment>Autodesk Inventor presentation</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.ipn"/>
+  </mime-type>
+
+  <mime-type type="application/x-autodesk-revit-project">
+    <comment>Autodesk Revit project</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.rvt"/>
+  </mime-type>
+
+  <mime-type type="application/x-autodesk-revit-family">
+    <comment>Autodesk Revit family</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.rfa"/>
+  </mime-type>
+
+  <mime-type type="application/x-autodesk-revit-template">
+    <comment>Autodesk Revit template</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.rte"/>
+  </mime-type>
+
+  <mime-type type="application/x-solidedge-part">
+    <comment>Solid Edge part</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="model"/>
+    <magic priority="80">
+      <match type="string" value="\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1" offset="0">
+        <match type="string" value="\x80\x2e\xc5\x23\x98\x46\xce\x11\xb3\x07\x08\x00\x36\x3a\x1e\x02" offset="512:16384"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-solidedge-sheetmetal">
+    <comment>Solid Edge sheet metal part</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.psm"/>
+    <magic priority="80">
+      <match type="string" value="\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1" offset="0">
+        <match type="string" value="\xe0\x22\x85\xdd\x75\x23\xd0\x11\xac\x05\x08\x00\x36\xfd\x18\x02" offset="512:16384"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-solidedge-assembly">
+    <comment>Solid Edge assembly</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="model"/>
+    <magic priority="80">
+      <match type="string" value="\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1" offset="0">
+        <match type="string" value="\x00\xbf\xc6\x00\x3b\x48\xce\x11\x95\x1a\x08\x00\x36\x01\xbe\x52" offset="512:16384"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-solidedge-draft">
+    <comment>Solid Edge draft</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.dft"/>
+    <magic priority="80">
+      <match type="string" value="\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1" offset="0">
+        <match type="string" value="\xfb\x11\x6b\x01\xc0\xcd\xce\x11\xa0\x35\x08\x00\x36\x01\xe5\x3b" offset="512:16384"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-autodesk-fusion360">
+    <comment>Autodesk Fusion design</comment>
+    <sub-class-of type="application/zip"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.f3d"/>
+    <magic priority="60">
+      <match type="string" value="PK\x03\x04" offset="0">
+        <match type="string" value="FusionAssetName[" offset="30"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <mime-type type="image/x-paintshoppro">
+    <comment>Paint Shop Pro image</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.pspimage"/>
+    <magic priority="80">
+      <match type="string" value="Paint Shop Pro Image File\n\x1a" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="image/x-paintshoppro-frame">
+    <comment>Paint Shop Pro picture frame</comment>
+    <sub-class-of type="image/x-paintshoppro"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.pspframe"/>
+  </mime-type>
+
+  <mime-type type="image/x-paintshoppro-tube">
+    <comment>Paint Shop Pro picture tube</comment>
+    <sub-class-of type="image/x-paintshoppro"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.psptube"/>
+  </mime-type>
+
+  <mime-type type="image/x-pixelmator-pro">
+    <comment>Pixelmator Pro document</comment>
+    <sub-class-of type="application/zip"/>
+    <generic-icon name="image-x-generic"/>
+    <magic priority="70">
+      <match type="string" value="PK\x03\x04" offset="0">
+        <match type="string" value="metadata.info" offset="30"/>
+      </match>
+    </magic>
+  </mime-type>
+
+  <mime-type type="image/x-sai">
+    <comment>PaintTool SAI document</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.sai"/>
+  </mime-type>
+
+  <mime-type type="image/x-sai2">
+    <comment>PaintTool SAI 2 document</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.sai2"/>
+    <magic priority="80">
+      <match type="string" value="SAI-CANVAS-TYPE0" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="image/x-pyxel">
+    <comment>Pyxel Edit document</comment>
+    <sub-class-of type="application/zip"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.pyxel"/>
+  </mime-type>
+
+  <mime-type type="image/x-piskel">
+    <comment>Piskel sprite</comment>
+    <sub-class-of type="application/json"/>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.piskel"/>
+  </mime-type>
+
+  <mime-type type="application/x-unitypackage">
+    <comment>Unity package</comment>
+    <sub-class-of type="application/gzip"/>
+    <generic-icon name="package-x-generic"/>
+    <glob pattern="*.unitypackage"/>
+  </mime-type>
+
+  <!-- Roblox places and models, each in a binary and an XML encoding.  The
+       binary signature ("<roblox!" and six fixed bytes) and the XML root
+       element are the same for places and models, so the extension tells
+       them apart; a file without one is taken for a model, the general
+       kind, by the magic below.  Old places (before 2013) are XML under
+       .rbxl; Slerp reads them by content whatever the type says. -->
+  <mime-type type="application/x-roblox-place">
+    <comment>Roblox place</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.rbxl"/>
+  </mime-type>
+
+  <mime-type type="application/x-roblox-place+xml">
+    <comment>Roblox place (XML)</comment>
+    <sub-class-of type="application/xml"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.rbxlx"/>
+  </mime-type>
+
+  <mime-type type="application/x-roblox-model">
+    <comment>Roblox model</comment>
+    <generic-icon name="model"/>
+    <glob pattern="*.rbxm"/>
+    <magic priority="80">
+      <match type="string" value="&lt;roblox!\x89\xff\r\n\x1a\n" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-roblox-model+xml">
+    <comment>Roblox model (XML)</comment>
+    <sub-class-of type="application/xml"/>
+    <generic-icon name="model"/>
+    <glob pattern="*.rbxmx"/>
+    <magic priority="60">
+      <match type="string" value="&lt;roblox " offset="0"/>
+      <match type="string" value="\xef\xbb\xbf&lt;roblox " offset="0"/>
+      <match type="string" value="&lt;?xml" offset="0:3">
+        <match type="string" value="&lt;roblox xmlns" offset="0:256"/>
+        <match type="string" value="&lt;roblox version" offset="0:256"/>
+      </match>
+    </magic>
+    <root-XML namespaceURI="" localName="roblox"/>
+  </mime-type>
+
+  <!-- Maya scenes (phase 24).  Mathematica notebooks and other programs
+       use .ma and .mb too, so these are found by content alone: Maya
+       ASCII's first line, and Maya binary's IFF group of type "Maya" (FOR4
+       with 32-bit sizes, FOR8 with 64-bit ones).  Maya's own IFF pictures
+       are FOR4 groups of type CIMG and don't match. -->
+  <mime-type type="application/x-maya-ascii">
+    <comment>Maya ASCII scene</comment>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="model"/>
+    <magic priority="80">
+      <match type="string" value="//Maya ASCII" offset="0"/>
+      <match type="string" value="\xef\xbb\xbf//Maya ASCII" offset="0"/>
+    </magic>
+  </mime-type>
+
+  <mime-type type="application/x-maya-binary">
+    <comment>Maya binary scene</comment>
+    <generic-icon name="model"/>
+    <magic priority="80">
+      <match type="string" value="FOR4" offset="0">
+        <match type="string" value="Maya" offset="8"/>
+      </match>
+      <match type="string" value="FOR8" offset="0">
+        <match type="string" value="Maya" offset="16"/>
+      </match>
+    </magic>
+  </mime-type>
+
+</mime-info>

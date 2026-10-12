@@ -1,0 +1,11 @@
+[gd_resource type="ArrayMesh" load_steps=2 format=3]
+
+[sub_resource type="StandardMaterial3D" id="1"]
+
+[resource]
+_surfaces = [{
+"aabb": AABB(-1, -1, -1, 2, 2, 2),
+"format": 34359742465,
+"material": SubResource("1")
+}]
+0/foo = 1

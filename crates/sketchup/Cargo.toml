@@ -1,0 +1,20 @@
+[package]
+name = "slerp-sketchup"
+description = "SketchUp models (.skp) for Slerp: geometry, components, materials, textures and tags, read without SketchUp's SDK"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+glam.workspace = true
+# The zip inside 2021 and later files, read entry by entry with its own caps
+# on sizes and compression ratios.
+slerp-archive = { path = "../archive" }
+# Faces with holes and concave outlines.  Also used by quake, blend and cad
+# (ISC).
+earcut = "0.4"
+# material.xml and style.xml inside 2021 and later files (MIT OR
+# Apache-2.0); already in the binary through other crates.
+roxmltree = "0.21"

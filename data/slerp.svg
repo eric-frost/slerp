@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Slerp's placeholder icon: a shaded cube with the right-handed X, Y
+     and Z axes (red, green, blue) from its front corner, Z towards the viewer. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3b4252"/>
+      <stop offset="1" stop-color="#232731"/>
+    </linearGradient>
+    <marker id="head-x" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="2.6" markerHeight="2.6" orient="auto">
+      <path d="M0,0 L6,3 L0,6 z" fill="#e5484d"/>
+    </marker>
+    <marker id="head-y" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="2.6" markerHeight="2.6" orient="auto">
+      <path d="M0,0 L6,3 L0,6 z" fill="#46a758"/>
+    </marker>
+    <marker id="head-z" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="2.6" markerHeight="2.6" orient="auto">
+      <path d="M0,0 L6,3 L0,6 z" fill="#3e8ef7"/>
+    </marker>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="12" fill="url(#bg)"/>
+  <!-- Cube: top, left and right faces of an isometric box. -->
+  <path d="M32 10 L48 19 L32 28 L16 19 z" fill="#d8dee9"/>
+  <path d="M16 19 L32 28 L32 46 L16 37 z" fill="#a3acbd"/>
+  <path d="M48 19 L32 28 L32 46 L48 37 z" fill="#7c879b"/>
+  <!-- Axes from the cube's front corner. -->
+  <g stroke-width="2.6" stroke-linecap="round" fill="none">
+    <path d="M32 46 L53 34" stroke="#e5484d" marker-end="url(#head-x)"/>
+    <path d="M32 46 L32 31" stroke="#46a758" marker-end="url(#head-y)"/>
+    <path d="M32 46 L14 56" stroke="#3e8ef7" marker-end="url(#head-z)"/>
+  </g>
+</svg>

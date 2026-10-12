@@ -1,0 +1,28 @@
+[package]
+name = "slerp-jxr"
+description = "JPEG XR (HD Photo, Windows HDR screenshots) through Microsoft's jxrlib, run where a fault can't take Slerp down"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+# Slerp's own code; the vendored jxrlib in `vendor/jxrlib/` is BSD-2-Clause
+# (Microsoft, its LICENSE kept beside it).
+license.workspace = true
+build = "build.rs"
+links = "slerp_jxrlib"
+
+[dependencies]
+thiserror.workspace = true
+
+# The decode runs in a forked child process with limits, so a fault in the C
+# code costs one thumbnail instead of the helper serving every file manager.
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[build-dependencies]
+cc = { version = "1.2", features = ["parallel"] }
+
+# An independent decoder (a safe Rust port of jxrlib, BSD-2-Clause) the tests
+# compare 128-bit float pictures with, since Microsoft's own encoder can't
+# write those back faithfully.  Not part of the build.
+[dev-dependencies]
+openreadout-jpegxr = "0.1"

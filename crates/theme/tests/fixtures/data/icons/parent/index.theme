@@ -1,0 +1,13 @@
+[Icon Theme]
+Name=Parent
+Directories=actions/32,scalable/actions
+
+[actions/32]
+Size=32
+Type=Threshold
+
+[scalable/actions]
+Size=48
+MinSize=8
+MaxSize=512
+Type=Scalable

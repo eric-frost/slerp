@@ -1,0 +1,13 @@
+[Icon Theme]
+Name=Child
+Inherits=parent
+FollowsColorScheme=true
+Directories=actions/16,actions/22
+
+[actions/16]
+Size=16
+Type=Fixed
+
+[actions/22]
+Size=22
+Type=Fixed

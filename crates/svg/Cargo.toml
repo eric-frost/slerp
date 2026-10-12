@@ -1,0 +1,23 @@
+[package]
+name = "slerp-svg"
+description = "SVG and SVGZ drawings for Slerp, drawn by resvg at any size in a child process"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+# Parsing and drawing (MIT OR Apache-2.0): the same release egui_extras uses
+# for the viewer's icons, here with text (system fonts, shaping) and the
+# raster images an SVG may embed.
+usvg = { version = "0.45", default-features = false, features = ["text", "system-fonts", "memmap-fonts"] }
+resvg = { version = "0.45", default-features = false, features = ["text", "system-fonts", "memmap-fonts", "raster-images"] }
+# The drawing runs where a hostile file costs one picture (a forked child
+# with time and memory limits).
+slerp-isolate = { path = "../isolate" }
+# .svgz files are gzip.
+miniz_oxide = "0.8"
+
+[dev-dependencies]
+png = "0.18"

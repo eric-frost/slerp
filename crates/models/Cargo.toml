@@ -1,0 +1,33 @@
+[package]
+name = "slerp-models"
+description = "OBJ, STL, PLY, FBX, Collada, MagicaVoxel, 3MF, OFF, 3DS, DirectX, VRML/X3D and point cloud loaders for Slerp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+glam.workspace = true
+rayon.workspace = true
+ufbx = "0.11"
+roxmltree = "0.21"
+# 3MF packages (zip) and their entries.
+slerp-archive = { path = "../archive" }
+# Inflates gzipped VRML and X3D, and MSZIP-compressed DirectX
+# files.
+miniz_oxide = "0.8"
+# Blockbench projects embed their textures as base64 data URLs.
+base64 = "0.22"
+serde_json = "1"
+# Reads 3MF model parts as a stream: slicers write hundreds of megabytes of
+# XML, which a document tree would multiply several times over.
+quick-xml = "0.41"
+# LAZ (LASzip) point decompression; LAS itself is read by our own code.
+laz = { version = "0.13", features = ["parallel"] }
+# E57 laser scans.
+e57 = "0.11"
+
+[dev-dependencies]
+# Writes zip packages for the tests.
+slerp-archive = { path = "../archive", features = ["testutil"] }

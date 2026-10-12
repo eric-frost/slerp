@@ -1,0 +1,21 @@
+[package]
+name = "slerp-gameimages"
+description = "Game image formats other tools skip for Slerp: XNA/MonoGame XNB textures, Blizzard BLP, PowerVR PVR, PKM and Build engine ART tile sets"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+# XNB's LZX compression (the 64 KB window variant XNA uses).
+lzxd = "0.2"
+# DXT blocks in XNB and BLP, ETC and PVRTC blocks in PVR and PKM; the
+# textures crate builds both already.
+bcdec_rs = "0.2"
+texture2ddecoder = "0.1.2"
+# BLP1's JPEG content.
+jpeg-decoder = "0.3"
+
+[dev-dependencies]
+png = "0.18"

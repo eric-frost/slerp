@@ -1,0 +1,18 @@
+[package]
+name = "slerp-rigged"
+description = "Skinned model formats from games and animation tools for Slerp: MikuMikuDance PMX, PMD and VMD, Doom 3 MD5, Inter-Quake IQM and IQE, Source SMD, Unreal PSK and PSA"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+glam.workspace = true
+# Shift-JIS names in MikuMikuDance's PMD models and VMD motions.
+encoding_rs = "0.8"
+
+[dev-dependencies]
+# Checks that motions opened on their own play on models through the
+# viewer's "Add animations".
+slerp-retarget = { path = "../retarget" }

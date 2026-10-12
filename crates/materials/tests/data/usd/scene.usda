@@ -1,0 +1,154 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "World" (
+    prepend apiSchemas = ["AssetPreviewsAPI"]
+    assetInfo = {
+        dictionary previews = {
+            dictionary thumbnails = {
+                dictionary default = {
+                    asset defaultImage = @preview.png@
+                }
+            }
+        }
+    }
+)
+{
+    def Mesh "Box" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+        int[] faceVertexIndices = [0, 1, 3, 2, 2, 3, 5, 4, 4, 5, 7, 6, 6, 7, 1, 0, 1, 7, 5, 3, 6, 0, 2, 4]
+        rel material:binding = </World/Looks/Red>
+        point3f[] points = [(-0.5, -0.5, 0.5), (0.5, -0.5, 0.5), (-0.5, 0.5, 0.5), (0.5, 0.5, 0.5), (-0.5, 0.5, -0.5), (0.5, 0.5, -0.5), (-0.5, -0.5, -0.5), (0.5, -0.5, -0.5)]
+        texCoord2f[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1)] (
+            interpolation = "faceVarying"
+        )
+        int[] primvars:st:indices = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3]
+        double3 xformOp:translate = (1, 2, 3)
+        float3 xformOp:rotateXYZ = (0, 0, 90)
+        float3 xformOp:scale = (1, 1, 1)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+
+        def GeomSubset "top" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            uniform token elementType = "face"
+            uniform token familyName = "materialBind"
+            int[] indices = [1]
+            rel material:binding = </World/Looks/Textured>
+        }
+    }
+
+    def Sphere "Ball"
+    {
+        color3f[] primvars:displayColor = [(0, 1, 0)]
+        double radius = 0.5
+        double3 xformOp:translate.timeSamples = {
+            0: (0, 0, 2),
+            10: (0, 0, 4),
+        }
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def "Instance" (
+        prepend references = </World/Proto>
+    )
+    {
+        quatf xformOp:orient = (0.7071068, 0, 0.7071068, 0)
+        uniform token[] xformOpOrder = ["xformOp:orient"]
+    }
+
+    class Xform "Proto"
+    {
+        def Cube "C"
+        {
+            double size = 0.5
+        }
+    }
+
+    def Xform "Switch" (
+        variants = {
+            string look = "b"
+        }
+        prepend variantSets = "look"
+    )
+    {
+        variantSet "look" = {
+            "a" {
+                def Cube "A"
+                {
+                }
+
+            }
+            "b" {
+                def Cylinder "B"
+                {
+                    uniform token axis = "X"
+                }
+
+            }
+        }
+    }
+
+    def Scope "Looks"
+    {
+        def Material "Red"
+        {
+            token outputs:surface.connect = </World/Looks/Red/S.outputs:surface>
+
+            def Shader "S"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.8, 0.1, 0.1)
+                float inputs:roughness = 0.3
+                token outputs:surface
+            }
+        }
+
+        def Material "Textured"
+        {
+            float inputs:rough = 0.7
+            token outputs:surface.connect = </World/Looks/Textured/S.outputs:surface>
+
+            def Shader "S"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor.connect = </World/Looks/Textured/T.outputs:rgb>
+                float inputs:roughness.connect = </World/Looks/Textured.inputs:rough>
+                token outputs:surface
+            }
+
+            def Shader "T"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @tex.png@
+                float2 inputs:st.connect = </World/Looks/Textured/X.outputs:result>
+                token inputs:wrapS = "mirror"
+                float3 outputs:rgb
+            }
+
+            def Shader "X"
+            {
+                uniform token info:id = "UsdTransform2d"
+                float2 inputs:in.connect = </World/Looks/Textured/P.outputs:result>
+                float inputs:rotation = 90
+                float2 inputs:scale = (2, 2)
+                float2 outputs:result
+            }
+
+            def Shader "P"
+            {
+                uniform token info:id = "UsdPrimvarReader_float2"
+                string inputs:varname = "st"
+                float2 outputs:result
+            }
+        }
+    }
+}

@@ -1,0 +1,11 @@
+[package]
+name = "slerp-lut"
+description = "3D and 1D colour lookup tables (.cube, .3dl) for Slerp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+rayon.workspace = true

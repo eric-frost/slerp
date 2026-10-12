@@ -1,0 +1,23 @@
+[package]
+name = "slerp-dicom"
+description = "DICOM medical images (CT, MR, X-ray, ultrasound) for Slerp: data sets, every common compression, windowing and series order"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+rayon.workspace = true
+# Deflated data sets.
+miniz_oxide = "0.8"
+# 8-bit baseline, progressive and lossless JPEG; already used by
+# slerp-textures, so it adds nothing to the binary.
+jpeg-decoder = "0.3"
+# JPEG 2000: a memory-safe pure-Rust decoder that can skip the finest
+# wavelet levels for thumbnails.  `simd` speeds up the wavelet and colour
+# transforms; `image` (an image-rs integration) isn't needed.
+hayro-jpeg2000 = { version = "0.4", default-features = false, features = ["std", "simd"] }
+
+[dev-dependencies]
+png = "0.18"

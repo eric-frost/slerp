@@ -1,0 +1,146 @@
+[package]
+name = "slerp-viewer"
+description = "Slerp's viewer: models, levels, textures and materials in an egui window"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-core.workspace = true
+slerp-formats.workspace = true
+slerp-associate.workspace = true
+slerp-render.workspace = true
+slerp-scene.workspace = true
+slerp-theme.workspace = true
+slerp-retarget.workspace = true
+slerp-dna.workspace = true
+slerp-sprites = { path = "../sprites" }
+slerp-lut = { path = "../lut" }
+glam.workspace = true
+# egui's own fonts back the desktop's: its emoji and symbols.
+egui = { workspace = true, features = ["default_fonts"] }
+# The window (`src/shell.rs`): egui's winit input and wgpu painter, the
+# parts eframe is made of, driven by the viewer itself so the window opens
+# before the GPU is ready.  Only the renderer's wgpu backends (Vulkan on
+# Linux, Direct3D 12 on Windows, Metal on macOS): egui-wgpu's default
+# features would also turn on wgpu's others.  accesskit makes the panels
+# visible to screen readers.  The Wayland and X11 features do nothing on
+# Windows and macOS.
+egui-winit = { version = "0.35", default-features = false, features = ["accesskit", "clipboard", "links", "wayland", "x11"] }
+egui-wgpu = { workspace = true, default-features = false, features = ["winit", "capture", "wayland", "x11"] }
+# Waits for egui-wgpu's surface setup, whose futures complete at once on
+# native backends (MIT OR Apache-2.0; already in the build through wgpu's
+# users).
+pollster = "0.4"
+# The desktop's own file dialogs: the XDG portal on Linux, without GTK; the
+# system's own dialogs on Windows and macOS, which need no features.
+rfd = { version = "0.17", default-features = false, features = ["xdg-portal", "wayland"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# The side panels as tabs that can be dragged and docked anywhere around
+# the view, which itself stays without a tab bar (Rerun's, MIT OR
+# Apache-2.0); 0.16 is the release for egui 0.35.  `serde` saves the layout
+# with the viewer's state.
+egui_tiles = { version = "0.16.0", features = ["serde"] }
+thiserror.workspace = true
+# Watch mode: inotify on Linux, FSEvents on macOS, ReadDirectoryChangesW on
+# Windows.  CC0.
+notify = "8.2"
+# Puts archive entries on the clipboard as a file list (the Contents panel's
+# Ctrl+C).  The Wayland data-control feature lets it do so on Wayland too;
+# egui-winit already brings the rest (MIT OR Apache-2.0).
+arboard = { version = "3.6", default-features = false, features = ["wayland-data-control"] }
+# The warm viewer's socket, shared with the thumbnail helper's rules.
+slerp-helper.workspace = true
+# egui-winit's winit, for an event loop that outlives a window (the warm
+# viewer) and starts while the GPU does.
+winit = { version = "0.30", default-features = false, features = ["rwh_06"] }
+# Dragging items out of the window (src/dragout) takes the window and
+# display handles that winit exposes.
+raw-window-handle = "0.6"
+
+# malloc_trim, which hands a closed window's memory back to the system.
+# Drag-out on Wayland (src/dragout/wayland.rs) uses winit's own connection
+# through a second event queue; wayland-client and rustix are already in
+# the build through winit, the `system` feature is the one that wraps a
+# foreign wl_display.
+[target.'cfg(target_os = "linux")'.dependencies]
+libc = "0.2"
+wayland-client = { version = "0.31", features = ["system"] }
+rustix = { version = "1", features = ["event", "fs"] }
+
+# The window's picture before the GPU is ready (`src/placeholder.rs`),
+# drawn by the CPU: a Wayland window appears only once it has one, and X11
+# and Windows show whatever was beneath a new window until it draws.  The
+# libraries are opened at run time, as winit's are (MIT OR Apache-2.0;
+# adds only tiny-xlib to the build).
+[target.'cfg(any(target_os = "linux", windows))'.dependencies]
+softbuffer = { version = "0.4", default-features = false, features = ["wayland", "wayland-dlopen", "x11", "x11-dlopen"] }
+
+# On macOS, present with the window's own transaction while it is resized,
+# so the picture doesn't jitter (eframe's default there).  The Objective-C
+# crates receive files from Finder (`src/macos.rs`); winit and wgpu already
+# build these versions.
+[target.'cfg(target_os = "macos")'.dependencies]
+egui-wgpu = { workspace = true, default-features = false, features = ["macos-window-resize-jitter-fix"] }
+objc2 = "0.6"
+objc2-foundation = { version = "0.3", default-features = false, features = [
+    "std", "block2", "NSArray", "NSEnumerator", "NSNotification", "NSOperation", "NSString", "NSURL",
+    # Drag-out (src/dragout/appkit.rs): points and rectangles, the NSNumber that names an item, the
+    # error handed to a drop target, the clock for a made-up mouse event.
+    "NSDictionary", "NSError", "NSGeometry", "NSProcessInfo", "NSValue",
+] }
+objc2-app-kit = { version = "0.3", default-features = false, features = [
+    "std", "NSApplication", "NSResponder",
+    # Drag-out: a dragging session of file promises, and its picture.
+    "NSBitmapImageRep", "NSDragging", "NSDraggingItem", "NSDraggingSession", "NSEvent", "NSFilePromiseProvider",
+    "NSGraphics", "NSGraphicsContext", "NSImage", "NSImageRep", "NSPasteboard", "NSView", "NSWindow", "NSWorkspace",
+] }
+block2 = "0.6"
+
+# examples/finder_open.rs runs a window-less event loop of its own, with the
+# winit above.
+
+# Drag-out on Windows (src/dragout/ole.rs) is OLE's DoDragDrop with a data
+# object of our own, and examples/dragout_target.rs is a drop target that
+# logs what it is given.  The COM classes use the `implement` macro, which
+# names windows-core.  Both crates are MIT or Apache-2.0 and already in the
+# build through the thumbnail handler.
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.62", features = [
+    "Win32_Foundation",
+    "Win32_Graphics_Gdi",
+    "Win32_System_Com",
+    "Win32_System_Com_StructuredStorage",
+    "Win32_System_DataExchange",
+    "Win32_System_LibraryLoader",
+    "Win32_System_Memory",
+    "Win32_System_Ole",
+    "Win32_System_SystemServices",
+    "Win32_System_Threading",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_Shell",
+    "Win32_UI_WindowsAndMessaging",
+] }
+windows-core = "0.62"
+
+# examples/dragout_testbed.rs is a Wayland drop target and a fake pointer
+# for testing drag-out in a nested compositor (tools/test-dragout.sh).
+[target.'cfg(target_os = "linux")'.dev-dependencies]
+wayland-protocols = { version = "0.32", features = ["client"] }
+wayland-protocols-wlr = { version = "0.3", features = ["client"] }
+wayland-protocols-plasma = { version = "0.3", features = ["client"] }
+
+# examples/dragout_promise_check.rs plays Finder against the macOS drag-out
+# file promises: it reads them off a pasteboard and runs the main run loop
+# until the files have been written.
+[target.'cfg(target_os = "macos")'.dev-dependencies]
+objc2-foundation = { version = "0.3", default-features = false, features = ["NSDate", "NSRunLoop"] }
+objc2-app-kit = { version = "0.3", default-features = false, features = ["NSFilePromiseReceiver"] }
+
+[dev-dependencies]
+# Builds archives for the Contents panel's tests.
+slerp-archive = { path = "../archive", features = ["testutil"] }
+# examples/dragout_demo.rs is a small eframe window.
+eframe = { workspace = true, features = ["wgpu_no_default_features", "default_fonts", "wayland", "x11"] }

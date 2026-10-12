@@ -1,0 +1,48 @@
+#usda 1.0
+(
+    defaultPrim = "X"
+)
+
+def Xform "A"
+{
+    def Xform "B" (
+        prepend references = </A>
+    )
+    {
+    }
+}
+
+def Xform "X" (
+    prepend references = </Y>
+)
+{
+    def Cube "c" (
+        prepend references = </Y>
+    )
+    {
+    }
+
+    def Cube "d" (
+        prepend references = </Y>
+    )
+    {
+    }
+}
+
+def Xform "Y" (
+    prepend references = </X>
+    prepend inherits = </Y/inner>
+)
+{
+    def Sphere "inner" (
+        prepend inherits = </Y>
+    )
+    {
+    }
+}
+
+def Xform "Self" (
+    prepend references = @cycles.usda@</Self>
+)
+{
+}

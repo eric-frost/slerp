@@ -1,0 +1,27 @@
+[package]
+name = "slerp-quake"
+description = "Quake, Half-Life and Doom files, and Unreal package thumbnails, for Slerp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+glam.workspace = true
+# Triangulates Doom sectors (MIT OR Apache-2.0).
+earcut = "0.4"
+rayon.workspace = true
+# ZDoom's compressed nodes (MIT OR Zlib OR Apache-2.0).
+miniz_oxide = "0.8"
+# PK3, PK7 and VPK archives.
+slerp-archive = { path = "../archive" }
+# DXT and ATI block decoding in Source's VTF textures (MIT), as the
+# textures crate uses it.
+bcdec_rs = "0.2"
+
+[dev-dependencies]
+# Builds archives for the tests.
+slerp-archive = { path = "../archive", features = ["testutil"] }
+# Writes PK7 archives for the tests.
+sevenz-rust2 = { version = "0.23", default-features = false, features = ["compress"] }

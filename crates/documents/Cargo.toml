@@ -1,0 +1,33 @@
+[package]
+name = "slerp-documents"
+description = "PDF, Adobe Illustrator, EPS and PostScript pages for Slerp: PDF through hayro in a child process, EPS previews, the system's Ghostscript when installed"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+# Runs the PDF renderer in a child process with time and memory limits.
+slerp-isolate = { path = "../isolate" }
+# TIFF previews of EPS files.
+slerp-tiff = { path = "../tiff" }
+# PDF parsing and drawing, pure Rust (MIT OR Apache-2.0).  The default
+# features embed substitutes for the 14 standard fonts (Foxit's, BSD) and
+# the predefined CJK character maps, which PDFs may use without including.
+hayro = "0.8"
+# Ghostscript's output.
+png = "0.18"
+# The JPEG thumbnails Adobe's programs keep in XMP metadata, and finding
+# them in the file's bytes; both are already in the binary.
+jpeg-decoder = "0.3"
+memchr = "2"
+libc = "0.2"
+
+[target.'cfg(unix)'.dependencies]
+# Maps a PDF into the renderer's child process rather than reading it all.
+memmap2 = "0.9"
+
+[dev-dependencies]
+# Builds compressed streams for the damaged-file tests.
+miniz_oxide = "0.8"

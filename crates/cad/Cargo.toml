@@ -1,0 +1,24 @@
+[package]
+name = "slerp-cad"
+description = "DXF drawings and Rhino 3dm models for Slerp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+slerp-scene.workspace = true
+glam.workspace = true
+# Splitting text DXF files into lines, which run to tens of megabytes.  Already
+# in the binary through other crates.
+memchr = "2"
+# Triangulating hatch boundaries with islands.  Also used by quake and blend.
+earcut = "0.4"
+# Old DXF files store text in the code page named in their header (Windows
+# 1250-1258, Shift-JIS, GBK, Big5, ...).
+encoding_rs = "0.8"
+# Compressed preview pictures and meshes in Rhino files.
+miniz_oxide = "0.8"
+
+[dev-dependencies]
+png = "0.18"
