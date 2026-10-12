@@ -591,7 +591,9 @@ fn window_controls(ui: &mut Ui, d: &mut DicomView) {
             }
             None => {}
         }
-        ui.label(egui::RichText::new("Drag with the right mouse button (or Ctrl) to adjust.").small().weak());
+        ui.label(
+            egui::RichText::new(crate::keys("Drag with the right mouse button (or Ctrl) to adjust.")).small().weak(),
+        );
     }
     let mut invert = d.invert;
     if ui.add(widgets::CheckBox::new(&mut invert, "Invert")).changed() {

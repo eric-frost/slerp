@@ -16,7 +16,6 @@
 
 use slerp_helper::{Reply, Request, request, request_at};
 use std::cell::Cell;
-use std::io::{Read, Write};
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
@@ -39,7 +38,10 @@ fn main() {
     // A C or C++ host doesn't ignore SIGPIPE, so the library mode doesn't
     // either; the raw mode reports a closed socket rather than dying of it.
     // SAFETY: called before any other thread exists.
-    unsafe { libc::signal(libc::SIGPIPE, if raw { libc::SIG_IGN } else { libc::SIG_DFL }) };
+    #[cfg(unix)]
+    unsafe {
+        libc::signal(libc::SIGPIPE, if raw { libc::SIG_IGN } else { libc::SIG_DFL })
+    };
 
     if raw {
         let Some(socket) = socket else { return println!("received=error no socket") };
@@ -68,7 +70,9 @@ fn main() {
 
 /// Sends a valid version 1 request by hand and counts the reply's bytes,
 /// however the connection ends.
+#[cfg(unix)]
 fn raw_request(socket: &std::path::Path, file: &std::path::Path, size: u32) -> String {
+    use std::io::{Read, Write};
     use std::os::unix::ffi::OsStrExt;
     let path = file.as_os_str().as_bytes();
     let mut message = b"PT\x01\x01".to_vec();
@@ -89,4 +93,10 @@ fn raw_request(socket: &std::path::Path, file: &std::path::Path, size: u32) -> S
     let mut reply = Vec::new();
     let _ = stream.read_to_end(&mut reply);
     reply.len().to_string()
+}
+
+/// The helper's socket is Unix-only (Windows uses `slerp-winshell`'s pipe).
+#[cfg(not(unix))]
+fn raw_request(_socket: &std::path::Path, _file: &std::path::Path, _size: u32) -> String {
+    "error Unix sockets only".into()
 }

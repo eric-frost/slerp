@@ -660,7 +660,7 @@ fn camera(ui: &mut Ui, view: &mut SceneView, actions: &mut Vec<Action>) {
             ("Top", "7", 0.0, 90.0),
             ("Back", "Ctrl+1", 180.0, 0.0),
         ] {
-            if ui.button(text).on_hover_text(tip).clicked() {
+            if ui.button(text).on_hover_text(crate::keys(tip)).clicked() {
                 actions.push(Action::View(yaw, pitch));
             }
         }
@@ -970,7 +970,7 @@ fn texture_controls(ui: &mut Ui, t: &mut crate::texture_view::TextureView, actio
                 if ui.button("Fit").on_hover_text("F").clicked() {
                     t.fit_now();
                 }
-                if ui.button("1:1").on_hover_text("Ctrl+0").clicked() {
+                if ui.button("1:1").on_hover_text(crate::keys("Ctrl+0")).clicked() {
                     t.actual_size();
                 }
             });

@@ -300,10 +300,13 @@ mod tests {
         // Freedoom alone: the fallback.
         let found = find(&pwad, &wanted, &[free.clone(), steam.clone()]).unwrap();
         assert!(found.0.ends_with("freedoom2.wad"));
-        // Doom II anywhere beats Freedoom beside the mod; case doesn't matter.
+        // Doom II anywhere beats Freedoom beside the mod; case doesn't matter
+        // (a file system that ignores case, as macOS's, gives the name asked
+        // for, which is the same file).
         iwad(&steam.join("DOOM2.WAD"));
         let found = find(&pwad, &wanted, &[free.clone(), steam.clone()]).unwrap();
-        assert!(found.0.ends_with("DOOM2.WAD"), "{:?}", found.0);
+        let real = |p: &Path| std::fs::canonicalize(p).unwrap();
+        assert_eq!(real(&found.0), real(&steam.join("DOOM2.WAD")), "{:?}", found.0);
         // Not an IWAD: skipped.
         std::fs::write(steam.join("DOOM2.WAD"), b"PWAD\0\0\0\0").unwrap();
         assert!(find(&pwad, &wanted, &[free.clone(), steam.clone()]).unwrap().0.ends_with("freedoom2.wad"));

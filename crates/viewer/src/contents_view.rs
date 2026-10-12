@@ -1888,7 +1888,7 @@ pub(crate) fn contents(v: &mut Viewer, ui: &mut Ui) {
         }
         if ui
             .add_enabled(!busy && !state.selection.set.is_empty(), egui::Button::new("Copy"))
-            .on_hover_text("Copy the selection as files (Ctrl+C), then paste in a file manager")
+            .on_hover_text(crate::keys("Copy the selection as files (Ctrl+C), then paste in a file manager"))
             .clicked()
         {
             asked.push(Do::Copy);
@@ -1905,7 +1905,7 @@ pub(crate) fn contents(v: &mut Viewer, ui: &mut Ui) {
         }
     });
     if tree_focused {
-        ui.label(egui::RichText::new("Arrows move, Space or Enter shows, Ctrl+C copies").weak().small());
+        ui.label(egui::RichText::new(crate::keys("Arrows move, Space or Enter shows, Ctrl+C copies")).weak().small());
     }
 
     // 5. Facts about the entry shown.
@@ -2229,8 +2229,11 @@ mod tests {
         let paths = materialize(&ids, &auto);
         let shown: Vec<String> = paths.iter().map(|p| p.file_name().unwrap().to_string_lossy().into_owned()).collect();
         assert_eq!(shown, ["TITLEPIC.png", "TROOA1.png", "PLAYPAL.lmp"]);
+        // Compared as real paths: on Windows extraction reports them as
+        // `\\?\C:\...`, which Explorer takes for drops and pastes alike.
+        let root = std::fs::canonicalize(temp().unwrap().root()).unwrap();
         for p in &paths {
-            assert!(p.is_file() && p.starts_with(temp().unwrap().root()), "{p:?}");
+            assert!(p.is_file() && std::fs::canonicalize(p).unwrap().starts_with(&root), "{p:?}");
         }
         let png = std::fs::read(&paths[0]).unwrap();
         assert_eq!(&png[..4], b"\x89PNG");

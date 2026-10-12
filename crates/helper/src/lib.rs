@@ -252,12 +252,11 @@ pub(crate) use log;
 
 //endregion
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
 
     #[test]
-    #[cfg(unix)]
     fn runtime_dir_needs_an_existing_absolute_directory() {
         assert_eq!(runtime_dir(None), None);
         assert_eq!(runtime_dir(Some("".into())), None);

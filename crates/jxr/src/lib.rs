@@ -17,8 +17,6 @@
 //! float RGBA (half, fixed-point and float formats, as HDR screenshots
 //! store them).  CMYK and N-channel files are refused with a message.
 
-use std::time::Duration;
-
 /// Why a file couldn't be decoded.
 #[derive(Debug, thiserror::Error)]
 pub enum JxrError {
@@ -230,8 +228,10 @@ pub fn sniff(head: &[u8]) -> bool {
         || head.starts_with(b"WMPHOTO")
 }
 
-/// Seconds a decode may take before it is abandoned.
-const TIMEOUT: Duration = Duration::from_secs(30);
+/// Seconds a decode may take before it is abandoned (in the forked child,
+/// which Windows doesn't have).
+#[cfg(unix)]
+const TIMEOUT: std::time::Duration = std::time::Duration::from_secs(30);
 
 /// Decodes a JPEG XR file in memory.  With a `min_size` the picture comes
 /// back reduced by a power of two, as much as leaves its longer side at

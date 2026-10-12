@@ -949,7 +949,7 @@ fn window_section(ui: &mut Ui, v: &mut VolumeView) {
         Some(WindowEdit::Custom { center, width }) => v.set_window((center, width), "Custom"),
         None => {}
     }
-    ui.label(egui::RichText::new("Drag with the right mouse button (or Ctrl) to adjust.").small().weak());
+    ui.label(egui::RichText::new(crate::keys("Drag with the right mouse button (or Ctrl) to adjust.")).small().weak());
     if v.is_grey_layout() {
         egui::Grid::new("volume-map").num_columns(2).spacing([8.0, 4.0]).show(ui, |ui| {
             ui.label("Colours:");

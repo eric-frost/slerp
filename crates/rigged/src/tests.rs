@@ -153,7 +153,8 @@ fn sample_files_load() {
     }
     let mut failures = Vec::new();
     for path in &samples {
-        let name = path.strip_prefix(&root).unwrap_or(path).to_string_lossy().into_owned();
+        // With `/` between folders on every system, as `EXPECTED` names them.
+        let name = path.strip_prefix(&root).unwrap_or(path).to_string_lossy().replace('\\', "/");
         let damaged = name.contains("invalid/") || name.contains("malformed/");
         let bytes = std::fs::read(path).unwrap();
         let Some(format) = sniff(path, &bytes[..bytes.len().min(4096)]) else {
@@ -274,6 +275,9 @@ fn winding_and_axes() {
 /// MikuMikuDance's usual case: a model with its motions.  Beside the
 /// model, a motion plays as a clip that moves bones and the face's morphs;
 /// added through the viewer (the retargeting crate), it plays by bone name.
+// Links the files into a scratch folder, which Windows allows only with
+// developer mode or administrator rights.
+#[cfg(unix)]
 #[test]
 fn gene_plays_its_motions() {
     let root = assets().join("rigged-extra");

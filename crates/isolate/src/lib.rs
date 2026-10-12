@@ -618,7 +618,10 @@ mod tests {
         assert!(e.contains("too large"), "{e}");
     }
 
+    /// Only Linux limits the child's memory: `RLIMIT_DATA` doesn't count
+    /// the memory macOS's malloc maps, and macOS doesn't enforce `RLIMIT_AS`.
     #[test]
+    #[cfg(target_os = "linux")]
     fn a_greedy_child_is_stopped_by_the_memory_limit() {
         let l = Limits { memory: 64 << 20, ..limits() };
         let r = run(l, || {

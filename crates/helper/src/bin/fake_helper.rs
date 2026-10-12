@@ -40,7 +40,10 @@ fn main() {
     // Behave like a C or C++ host, where a write to a closed socket raises
     // SIGPIPE and kills the process, to prove the helper never does that.
     // SAFETY: called before any other thread exists.
-    unsafe { libc::signal(libc::SIGPIPE, libc::SIG_DFL) };
+    #[cfg(unix)]
+    unsafe {
+        libc::signal(libc::SIGPIPE, libc::SIG_DFL)
+    };
 
     let mut opts = ServeOptions::default();
     let mut record: Option<PathBuf> = None;

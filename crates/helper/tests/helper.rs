@@ -1,6 +1,9 @@
 //! Integration tests: a real helper process (`src/bin/fake_helper.rs`,
 //! whose handler sleeps, panics or hangs on request) and clients in this
 //! process, in `src/bin/probe.rs`, under bubblewrap and as another uid.
+//! The helper speaks over a Unix socket; on Windows, Explorer's handler
+//! uses a named pipe instead (`slerp-winshell`).
+#![cfg(unix)]
 
 use slerp_helper::{
     ClientError, Exit, HANG_EXIT_CODE, Reply, Request, ServeError, ServeOptions, Server, request_at, spawn_detached,

@@ -41,7 +41,8 @@ pub enum FrameKey {
 /// The renderer, which a thread of its own may still be making (compiling
 /// pipelines and building the studio lighting) while the window opens.
 /// The first use waits for it; the window's first frames, which only lay
-/// out the panels, don't use it.  If that thread fails, the renderer is
+/// out the panels, don't use it, since a loaded file is taken only once it
+/// has [arrived](Waiting::arrived).  If that thread fails, the renderer is
 /// made on the spot.
 pub struct Waiting {
     value: OnceCell<Renderer>,

@@ -12,11 +12,13 @@ use slerp_scene::{
 use slerp_textures::{ColorSpace, Level, Original, Pixels, TextureKind};
 use std::sync::Arc;
 
+/// A new empty folder, by its real path: extraction reports real paths, and
+/// on macOS the temporary folder is reached through a link.
 fn temp(name: &str) -> PathBuf {
     let dir = std::env::temp_dir().join(format!("slerp-pieces-{}-{name}", std::process::id()));
     let _ = std::fs::remove_dir_all(&dir);
     std::fs::create_dir_all(&dir).unwrap();
-    dir
+    std::fs::canonicalize(dir).unwrap()
 }
 
 fn item<'a>(c: &'a Contents, path: &str) -> &'a Item {
@@ -376,8 +378,9 @@ fn extraction_writes_pieces_and_skips_what_cant_stand_alone() {
     let out = temp("extract");
     let ids: Vec<ItemId> = c.items().iter().map(|i| i.id).collect();
     let report = extract(&c, &ids, &out, &ExtractOptions::default()).unwrap();
+    // With `/` between folders on every system.
     let mut written: Vec<String> =
-        report.written.iter().map(|p| p.strip_prefix(&out).unwrap().to_string_lossy().into_owned()).collect();
+        report.written.iter().map(|p| p.strip_prefix(&out).unwrap().to_string_lossy().replace('\\', "/")).collect();
     written.sort();
     assert!(written.contains(&"Textures/Skin Colour.png".to_string()), "{written:?}");
     assert!(written.contains(&"Meshes/Hat.glb".to_string()), "{written:?}");

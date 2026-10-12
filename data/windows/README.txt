@@ -1,5 +1,5 @@
 Slerp for Windows
-=====================
+=================
 
 Thumbnails and a viewer for game and 3D asset files: KTX2, DDS, glTF, FBX,
 USD, Quake and Doom files, materials and more (README.md lists them all).

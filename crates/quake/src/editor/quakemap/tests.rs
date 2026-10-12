@@ -2,6 +2,7 @@ use super::*;
 use crate::miptex::tests::build;
 use crate::testutil::{asset, external};
 use crate::wad::tests::build_wad;
+#[cfg(unix)]
 use slerp_scene::Aabb;
 
 fn describe(s: &Scene) -> String {
@@ -37,6 +38,7 @@ fn scratch(name: &str) -> PathBuf {
 }
 
 /// The bounds of everything drawn except skies.
+#[cfg(unix)]
 fn drawn_bounds(s: &Scene) -> Aabb {
     let mut b = Aabb::EMPTY;
     for m in &s.meshes {
@@ -330,6 +332,7 @@ fn real_maps_load() {
 
 /// The summed area (square metres) of everything drawn except skies and
 /// liquids, which compilers treat differently from solid faces.
+#[cfg(unix)]
 fn solid_area(s: &Scene, visible_only: bool) -> f64 {
     let mut area = 0.0;
     for n in &s.nodes {
@@ -347,6 +350,7 @@ fn solid_area(s: &Scene, visible_only: bool) -> f64 {
     area
 }
 
+#[cfg(unix)]
 fn detail(s: &Scene, name: &str) -> usize {
     s.info.details.iter().find(|(k, _)| k == name).and_then(|(_, v)| v.parse().ok()).unwrap_or(0)
 }
@@ -357,6 +361,9 @@ fn detail(s: &Scene, name: &str) -> usize {
 /// drawn area is at most the map's, and its face count is of the same
 /// order.  LibreQuake's WADs are found through the relative paths its maps
 /// give (`../../../../texture-wads/`), laid out here as in its repository.
+// Links the sources into a scratch folder, which Windows allows only with
+// developer mode or administrator rights.
+#[cfg(unix)]
 #[test]
 fn maps_agree_with_their_compiled_bsps() {
     let pairs = [

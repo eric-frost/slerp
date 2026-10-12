@@ -230,11 +230,15 @@ mod tests {
         std::fs::write(dir.join("body.tga"), b"x").unwrap();
         let limits = Limits::viewer();
         let mut t = Textures::new(&dir.join("model.pmx"), &limits);
-        assert_eq!(t.find(&dir, "tex\\hair.png"), Some(sub.join("Hair.PNG")));
-        assert_eq!(t.locate("C:\\Users\\me\\tex\\HAIR.png", false), Some(sub.join("Hair.PNG")));
+        // Compared as real paths: a file system that ignores case (macOS)
+        // finds the name as asked for, which is the same file.
+        let real = |p: Option<PathBuf>| p.map(|p| std::fs::canonicalize(p).unwrap());
+        let hair = real(Some(sub.join("Hair.PNG")));
+        assert_eq!(real(t.find(&dir, "tex\\hair.png")), hair);
+        assert_eq!(real(t.locate("C:\\Users\\me\\tex\\HAIR.png", false)), hair);
         assert_eq!(t.find(&dir, "missing.png"), None);
         // The bare name in the usual folder, and another extension.
-        assert_eq!(t.locate("models/x/hair.png", false), Some(sub.join("Hair.PNG")));
+        assert_eq!(real(t.locate("models/x/hair.png", false)), hair);
         assert_eq!(t.locate("body.png", true), Some(dir.join("body.tga")));
         assert_eq!(t.locate("body.png", false), None);
         let found = siblings(&dir, &["tga"], 10);

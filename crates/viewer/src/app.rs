@@ -457,9 +457,14 @@ impl Viewer {
 
     /// Picks up finished loads and other background work.
     fn poll_background(&mut self, ctx: &egui::Context) {
-        // 1. The file being loaded.  A reload that fails keeps what was
-        //    shown, with a note.
-        if let Some((path, result)) = self.loader.poll() {
+        // 1. The file being loaded, once the renderer is there to take it.
+        //    The GPU thread may still be compiling its pipelines (seconds on
+        //    Windows' software renderer), and the window's first frames
+        //    shouldn't wait for that; the thread wakes the window when it is
+        //    done.  A reload that fails keeps what was shown, with a note.
+        if self.gfx.renderer.arrived()
+            && let Some((path, result)) = self.loader.poll()
+        {
             let aspect = self.aspect();
             let reload =
                 self.reloading.take_if(|p| *p == path).is_some() && self.doc.as_ref().is_some_and(|d| d.path == path);
@@ -1736,7 +1741,12 @@ impl Viewer {
         } else if let Some((path, elapsed)) = self.loader.busy() {
             let name = path.file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_default();
             let size = std::fs::metadata(path).map(|m| m.len()).unwrap_or(0);
-            let stage = self.loader.stage();
+            // A file read before the GPU is ready waits for it (see
+            // `poll_background`).
+            let stage = match self.loader.stage() {
+                "Uploading" if !self.gfx.renderer.arrived() => "Starting the GPU",
+                stage => stage,
+            };
             let text = format!("Loading {name} ({})\n{stage}…  {:.1} s", bytes(size), elapsed.as_secs_f32());
             card(ui, rect, |ui| {
                 ui.horizontal(|ui| {
@@ -1773,7 +1783,7 @@ impl Viewer {
                 doc.mode_name(),
                 doc.name()
             ),
-            None => "Empty view.  Press Ctrl+O to open a file.".into(),
+            None => crate::keys("Empty view.  Press Ctrl+O to open a file.").into_owned(),
         }
     }
 
@@ -1859,7 +1869,7 @@ impl Viewer {
                 ui.spacing_mut().item_spacing.x = 0.0;
                 let mut tool =
                     |ui: &mut egui::Ui, icon: &str, fallback: &str, tip: &str, checked: bool, action: Action| {
-                        if widgets::tool_button(ui, icon, fallback, checked).on_hover_text(tip).clicked() {
+                        if widgets::tool_button(ui, icon, fallback, checked).on_hover_text(crate::keys(tip)).clicked() {
                             actions.push(action);
                         }
                     };
@@ -1946,7 +1956,7 @@ impl Viewer {
         egui::Panel::top("menu").frame(widgets::menu_bar_frame(&ctx)).show_separator_line(false).show(ui, |ui| {
             widgets::menu_bar(&ctx).ui(ui, |ui| {
                 let item = |ui: &mut egui::Ui, text: &str, keys: &str, enabled: bool| -> bool {
-                    ui.add_enabled(enabled, egui::Button::new(text).shortcut_text(keys)).clicked()
+                    ui.add_enabled(enabled, egui::Button::new(text).shortcut_text(crate::keys(keys))).clicked()
                 };
                 widgets::menu_button(ui, "File", |ui| {
                     if item(ui, "Open…", "Ctrl+O", true) {
@@ -2093,8 +2103,11 @@ impl Viewer {
                     if item(ui, "File Types…", "", true) {
                         actions.push(Action::FileTypes);
                     }
-                    ui.separator();
-                    keep_alive_menu(ui, keep_alive, actions);
+                    // Windows has no warm viewer (see `warm`).
+                    if cfg!(unix) {
+                        ui.separator();
+                        keep_alive_menu(ui, keep_alive, actions);
+                    }
                     let mut with_helper = with_helper;
                     if cfg!(target_os = "linux")
                         && ui
@@ -2145,7 +2158,7 @@ impl Viewer {
                     egui::ScrollArea::vertical().max_height(520.0).show(ui, |ui| {
                         egui::Grid::new("shortcuts").num_columns(2).striped(true).spacing([16.0, 4.0]).show(ui, |ui| {
                             for (keys, what) in SHORTCUTS {
-                                ui.label(egui::RichText::new(*keys).monospace());
+                                ui.label(egui::RichText::new(crate::keys(keys)).monospace());
                                 ui.label(*what);
                                 ui.end_row();
                             }

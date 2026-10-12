@@ -178,6 +178,10 @@ impl HasDisplayHandle for Frame {
 └─────────────────╯*/
 //region Window
 
+/// How long a closed window's loop waits for the window system to say the
+/// window is gone (see `Shell::close`) before ending anyway.
+const DESTROY_TIMEOUT: Duration = Duration::from_millis(500);
+
 /// The GPU a window draws with: there already (a warm viewer), or still
 /// starting on its thread.
 pub enum GpuSource {
@@ -246,6 +250,9 @@ pub struct Shell<'a> {
     resizing: bool,
     /// The viewer asked to close; the window goes at the loop's next turn.
     closing: bool,
+    /// The window has been dropped; the loop ends when the window system
+    /// has destroyed it, or at the deadline if it never says so.
+    ending: Option<(WindowId, Instant)>,
     result: Result<(), ViewerError>,
 }
 
@@ -292,6 +299,7 @@ impl<'a> Shell<'a> {
             actions: Vec::new(),
             resizing: false,
             closing: false,
+            ending: None,
             result: Ok(()),
         }
     }
@@ -308,7 +316,7 @@ impl<'a> Shell<'a> {
     /// Opens the window, hidden until it has a picture: accesskit's adapter
     /// must exist before a window is first shown.
     fn open(&mut self, event_loop: &ActiveEventLoop) -> Result<(), ViewerError> {
-        let builder = self.builder.clone().with_visible(false);
+        let builder = fit_to_screen(self.builder.clone(), event_loop).with_visible(false);
         let window = egui_winit::create_window(&self.ctx, event_loop, &builder)
             .map_err(|e| ViewerError::Window(e.to_string()))?;
         let window = Arc::new(window);
@@ -358,48 +366,80 @@ impl<'a> Shell<'a> {
 
     /// Takes what other threads have finished: the theme and the GPU.  The
     /// painter starts on the window as soon as the GPU is there, and the
-    /// viewer once the theme is too.
+    /// viewer once the theme is too.  Whatever arrived is drawn: the
+    /// placeholder once the theme is known, the viewer's first frame once it
+    /// is made, and a running viewer's next frame, for the renderer the GPU
+    /// thread has just finished (a loaded file may be waiting for it, see
+    /// `Viewer::poll_background`).
     fn progress(&mut self, event_loop: &ActiveEventLoop) {
         self.serve_env();
         let Some(window) = self.window.clone() else { return };
+        let mut arrived = self.running.is_some();
         if self.theme.is_none()
             && let Ok(theme) = self.theme_rx.try_recv()
         {
             self.theme = Some(theme);
+            arrived = true;
             if self.timing {
                 eprintln!("slerp view: theme ready at {:.0} ms", self.ms());
             }
-            window.request_redraw();
         }
-        if self.running.is_some() {
-            return;
-        }
-        if self.painter.is_none() {
-            let gpu = match self.gpu.take() {
-                Some(GpuSource::Ready(gpu)) => gpu,
-                Some(GpuSource::Coming(rx)) => match rx.try_recv() {
-                    Ok(Ok(gpu)) => gpu,
-                    Ok(Err(e)) => return self.fail(event_loop, ViewerError::Gpu(e)),
-                    Err(mpsc::TryRecvError::Empty) => {
-                        self.gpu = Some(GpuSource::Coming(rx));
-                        return;
-                    }
-                    Err(mpsc::TryRecvError::Disconnected) => {
-                        return self.fail(event_loop, ViewerError::Gpu("the GPU thread stopped".into()));
-                    }
-                },
-                None => return,
-            };
-            match self.painter_for(&window, &gpu) {
-                Ok(painter) => self.painter = Some((painter, gpu)),
-                Err(e) => return self.fail(event_loop, e),
+        if self.running.is_none() {
+            if let Err(e) = self.take_gpu(&window) {
+                return self.fail(event_loop, e);
+            }
+            if self.theme.is_some()
+                && let Some((painter, gpu)) = self.painter.take()
+            {
+                if let Err(e) = self.start(window, painter, gpu) {
+                    return self.fail(event_loop, e);
+                }
+                arrived = true;
             }
         }
-        if self.theme.is_some()
-            && let Some((painter, gpu)) = self.painter.take()
-            && let Err(e) = self.start(window, painter, gpu)
-        {
-            self.fail(event_loop, e);
+        if arrived {
+            self.redraw(event_loop);
+        }
+    }
+
+    /// Puts egui's painter on the window once the GPU thread has a device.
+    fn take_gpu(&mut self, window: &Arc<Window>) -> Result<(), ViewerError> {
+        if self.painter.is_some() {
+            return Ok(());
+        }
+        let gpu = match self.gpu.take() {
+            Some(GpuSource::Ready(gpu)) => gpu,
+            Some(GpuSource::Coming(rx)) => match rx.try_recv() {
+                Ok(Ok(gpu)) => gpu,
+                Ok(Err(e)) => return Err(ViewerError::Gpu(e)),
+                Err(mpsc::TryRecvError::Empty) => {
+                    self.gpu = Some(GpuSource::Coming(rx));
+                    return Ok(());
+                }
+                Err(mpsc::TryRecvError::Disconnected) => {
+                    return Err(ViewerError::Gpu("the GPU thread stopped".into()));
+                }
+            },
+            None => return Ok(()),
+        };
+        self.painter = Some((self.painter_for(window, &gpu)?, gpu));
+        Ok(())
+    }
+
+    /// Draws the window's next picture: at once while the window is still
+    /// hidden, else through the window system.  Windows sends a hidden
+    /// window no WM_PAINT, and so winit no `RedrawRequested`, at least not
+    /// always: started through slerpw.exe (Explorer's "Open with"), the
+    /// window waited for a redraw that never came and stayed hidden, since
+    /// only its first picture shows it.
+    fn redraw(&mut self, event_loop: &ActiveEventLoop) {
+        let Some(window) = &self.window else { return };
+        if self.shown {
+            window.request_redraw();
+        } else if self.running.is_some() {
+            self.frame(event_loop);
+        } else {
+            self.paint_placeholder();
         }
     }
 
@@ -441,8 +481,7 @@ impl<'a> Shell<'a> {
             return Err(ViewerError::Window("started twice".into()));
         };
         let viewer = make(Parts { ctx: &self.ctx, render_state: &render_state, gpu, theme });
-        self.running = Some(Running { viewer: Box::new(viewer), painter, frame: Frame { window: window.clone() } });
-        window.request_redraw();
+        self.running = Some(Running { viewer: Box::new(viewer), painter, frame: Frame { window } });
         Ok(())
     }
 
@@ -453,17 +492,28 @@ impl<'a> Shell<'a> {
 
     /// Ends the window: the viewer (which sends the renderer home for a
     /// warm viewer), the painter and the window go now, inside the event
-    /// loop, which destroys the window and tells the window system before
-    /// it returns.  Dropped after the loop returned, a Wayland window would
-    /// stay on screen, frozen, for as long as a warm viewer waits without
-    /// turning the loop.  Not called while drawing (see `frame`).
+    /// loop, and the loop ends once the window system has destroyed the
+    /// window (`WindowEvent::Destroyed`).  winit destroys a dropped window
+    /// only in a later step of its loop: on Wayland when it next handles
+    /// window requests, on Windows through a message it posts to itself.
+    /// Were the loop to stop first, the window would stay on screen,
+    /// frozen, until the process exits or, for a warm viewer, until its
+    /// next window's loop runs.  Not called while drawing (see `frame`).
     fn close(&mut self, event_loop: &ActiveEventLoop) {
+        // Hidden first where the window system allows it (not Wayland), so
+        // it goes at once: letting go of the painter's surface waits for
+        // the GPU, which a software renderer can take a second for.
+        if let Some(window) = &self.window {
+            window.set_visible(false);
+        }
         self.running = None;
         self.painter = None;
         self.placeholder = None;
         self.input = None;
-        self.window = None;
-        event_loop.exit();
+        match self.window.take() {
+            Some(window) => self.ending = Some((window.id(), Instant::now() + DESTROY_TIMEOUT)),
+            None => event_loop.exit(),
+        }
     }
 
     /// The placeholder's picture, once the theme's colours are known, and
@@ -602,8 +652,41 @@ impl<'a> Shell<'a> {
     }
 }
 
+/// Shrinks the window's starting size to fit the primary screen, leaving
+/// room for the title bar and a taskbar, and centres it there.  Windows and
+/// macOS place a new window at the size asked for, so a 1400 x 900 window
+/// ran off a screen of 1280 x 720 points (a 1920 x 1080 laptop at 150 %),
+/// its close button with it.  A window that fits keeps the system's
+/// placement; under Wayland no screen is known before the window shows,
+/// and the compositor fits it itself.
+fn fit_to_screen(builder: egui::ViewportBuilder, event_loop: &ActiveEventLoop) -> egui::ViewportBuilder {
+    const MARGIN: f32 = 16.0;
+    const TITLE_BAR: f32 = 32.0;
+    const TASKBAR: f32 = 48.0;
+    let (Some(monitor), Some(size)) = (event_loop.primary_monitor(), builder.inner_size) else { return builder };
+    let scale = monitor.scale_factor() as f32;
+    let screen = monitor.size();
+    let (width, height) = (screen.width as f32 / scale, screen.height as f32 / scale);
+    let room = egui::vec2(width - 2.0 * MARGIN, height - TASKBAR - TITLE_BAR - 2.0 * MARGIN);
+    if size.x <= room.x && size.y <= room.y {
+        return builder;
+    }
+    let min = builder.min_inner_size.unwrap_or(egui::Vec2::ZERO);
+    let fitted = size.min(room).max(min);
+    let corner = monitor.position();
+    let x = corner.x as f32 / scale + ((width - fitted.x) / 2.0).max(0.0);
+    let y = corner.y as f32 / scale + ((height - TASKBAR - TITLE_BAR - fitted.y) / 2.0).max(0.0);
+    builder.with_inner_size(fitted).with_position([x, y])
+}
+
 impl ApplicationHandler<UserEvent> for Shell<'_> {
     fn new_events(&mut self, event_loop: &ActiveEventLoop, _: winit::event::StartCause) {
+        if let Some((_, deadline)) = self.ending {
+            if Instant::now() >= deadline {
+                event_loop.exit();
+            }
+            return;
+        }
         if self.closing {
             return self.close(event_loop);
         }
@@ -643,7 +726,13 @@ impl ApplicationHandler<UserEvent> for Shell<'_> {
         }
     }
 
-    fn window_event(&mut self, event_loop: &ActiveEventLoop, _: WindowId, event: WindowEvent) {
+    fn window_event(&mut self, event_loop: &ActiveEventLoop, id: WindowId, event: WindowEvent) {
+        if let Some((ended, _)) = self.ending {
+            if id == ended && matches!(event, WindowEvent::Destroyed) {
+                event_loop.exit();
+            }
+            return;
+        }
         let Some(window) = self.window.clone() else { return };
         let keeps_resizing = matches!(event, WindowEvent::Resized(_))
             || (cfg!(target_os = "macos") && matches!(event, WindowEvent::Moved(_)));
@@ -705,9 +794,9 @@ impl ApplicationHandler<UserEvent> for Shell<'_> {
     }
 
     fn about_to_wait(&mut self, event_loop: &ActiveEventLoop) {
-        event_loop.set_control_flow(match self.repaint_at {
-            Some(at) => ControlFlow::WaitUntil(at),
-            None => ControlFlow::Wait,
+        event_loop.set_control_flow(match (self.ending, self.repaint_at) {
+            (Some((_, deadline)), _) | (None, Some(deadline)) => ControlFlow::WaitUntil(deadline),
+            (None, None) => ControlFlow::Wait,
         });
     }
 }

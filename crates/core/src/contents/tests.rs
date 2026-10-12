@@ -5,11 +5,14 @@ use super::*;
 use slerp_archive::testutil;
 use std::path::Path;
 
+/// A new empty folder, by its real path: extraction reports real paths, and
+/// on macOS the temporary folder is reached through a link (`/var` is
+/// `/private/var`).
 fn temp(name: &str) -> PathBuf {
     let dir = std::env::temp_dir().join(format!("slerp-contents-{}-{name}", std::process::id()));
     let _ = std::fs::remove_dir_all(&dir);
     std::fs::create_dir_all(&dir).unwrap();
-    dir
+    std::fs::canonicalize(dir).unwrap()
 }
 
 /// Colour `i` is (i, 255 - i, i / 2).
@@ -595,10 +598,17 @@ fn hostile_names_cannot_leave_the_output_folder() {
     assert!(files_under(&parent).iter().all(|f| f.starts_with("out/")));
     assert!(!parent.join("evil.txt").exists() && !parent.join("b.txt").exists());
     assert!(!Path::new("/etc/slerp-test-passwd").exists());
-    // Case-only and exact duplicates get their own names.
+    // Case-only and exact duplicates get their own names.  On a file
+    // system that ignores case (macOS, Windows) "Normal" and "normal" are
+    // one folder, named as it was made first.
     let names = files_under(&out);
     assert!(names.contains(&"normal/ok.txt".to_string()));
-    assert!(names.contains(&"Normal/OK.txt".to_string()) || names.contains(&"Normal/OK~2.txt".to_string()));
+    assert!(
+        names.iter().any(|n| n
+            .split_once('/')
+            .is_some_and(|(dir, file)| dir.eq_ignore_ascii_case("normal") && (file == "OK.txt" || file == "OK~2.txt"))),
+        "{names:?}"
+    );
     assert_eq!(names.iter().filter(|n| n.to_lowercase().starts_with("normal/ok")).count(), 3);
     assert!(names.iter().all(|n| n.split('/').all(|p| p.len() <= 200)), "{names:?}");
     let _ = std::fs::remove_dir_all(parent);
@@ -762,6 +772,9 @@ fn temporary_batches_are_private_and_cleaned() {
     std::fs::create_dir_all(&stale).unwrap();
     clean_stale();
     assert!(!stale.exists() || !cfg!(target_os = "linux"));
+    // Elsewhere it stays a day, in the user's own folder (macOS and Windows
+    // keep these beside the settings), so the test takes it away itself.
+    let _ = std::fs::remove_dir(&stale);
     assert!(t.root().exists());
     t.clean();
     assert!(!t.root().exists());

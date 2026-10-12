@@ -11,12 +11,23 @@
 //! above the examples, on a scratch socket, and runs `probe` from there to
 //! time whole client processes.  Build them first with `cargo build -p
 //! slerp-helper --bins`.
+//!
+//! The helper speaks over a Unix socket; on Windows, Explorer's thumbnail
+//! handler talks to `slerp.exe helper` over a named pipe instead (see
+//! `slerp-winshell`), so there is nothing here to measure.
+#![cfg_attr(not(unix), allow(dead_code, unused_imports))]
 
 use slerp_helper::{ClientError, Reply, Request, request_at, spawn_detached, stop_at};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::time::{Duration, Instant};
 
+#[cfg(not(unix))]
+fn main() {
+    eprintln!("bench: the helper's socket is Unix-only");
+}
+
+#[cfg(unix)]
 fn main() {
     let exe = std::env::current_exe().unwrap();
     let bin = exe.parent().unwrap().parent().unwrap().to_path_buf();
@@ -151,6 +162,7 @@ fn main() {
     let _ = std::fs::remove_dir_all(&dir);
 }
 
+#[cfg(unix)]
 fn wait_ready(socket: &PathBuf) {
     let until = Instant::now() + Duration::from_secs(10);
     while std::os::unix::net::UnixStream::connect(socket).is_err() {

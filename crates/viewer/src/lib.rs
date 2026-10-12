@@ -234,6 +234,9 @@
 //! - `SLERP_TIMING=1` prints start-up times and, at exit, how many
 //!   frames were drawn.
 //! - `SLERP_WINDOW_SIZE=<width>x<height>` sets the window's size.
+//! - `SLERP_GPU_DELAY_MS=<ms>` starts the GPU that much later, to see the
+//!   placeholder window on systems whose GPU is usually ready before the
+//!   window opens (Direct3D 12 often is).
 //! - `SLERP_FILE_TYPES=1` opens Settings > File Types at start;
 //!   `SLERP_FILE_TYPES=<text>` opens it searching for that text.
 //! - `SLERP_NO_VSYNC=1` presents frames without waiting for the display,
@@ -306,6 +309,13 @@ pub enum ViewerError {
     Window(String),
 }
 
+/// A text that names keys, as this desktop names them.  Shortcuts written
+/// with Ctrl use egui's `Modifiers::COMMAND`, which on macOS is the Command
+/// key, so there they read "Cmd".
+pub(crate) fn keys(text: &str) -> std::borrow::Cow<'_, str> {
+    if cfg!(target_os = "macos") { text.replace("Ctrl", "Cmd").into() } else { text.into() }
+}
+
 /// Opens the viewer, showing `file` if given.  `class` replaces the window
 /// class and Wayland app id `slerp`, for tests behind `hide-windows`.
 ///
@@ -342,29 +352,38 @@ pub fn run(file: Option<PathBuf>, class: Option<String>) -> Result<(), ViewerErr
     let gpu_wake = wake.clone();
     std::thread::Builder::new()
         .name("slerp-gpu".into())
-        .spawn(move || match slerp_render::open_gpu_with(&policy, &mut keeper) {
-            Ok(gpu) => {
-                let gpu = Arc::new(gpu);
-                if timing {
-                    eprintln!("slerp view: GPU {} ({}) ready at {:.0} ms", gpu.info.name, gpu.chosen_by, at());
-                }
-                let _ = gpu_tx.send(Ok(gpu.clone()));
-                gpu_wake.wake();
-                let start = Instant::now();
-                let mut renderer = Renderer::new(&gpu, gfx::TARGET_FORMAT);
-                renderer.warm_up(&gpu);
-                if timing {
-                    eprintln!(
-                        "slerp view: renderer warmed up at {:.0} ms ({:.0} ms)",
-                        at(),
-                        start.elapsed().as_secs_f64() * 1000.0
-                    );
-                }
-                let _ = renderer_tx.send(renderer);
+        .spawn(move || {
+            // Testing hook: a GPU that is ready only after the window has
+            // opened, for seeing the placeholder where it usually is first.
+            if let Some(ms) = env::var("SLERP_GPU_DELAY_MS").and_then(|v| v.parse().ok()) {
+                std::thread::sleep(Duration::from_millis(ms));
             }
-            Err(e) => {
-                let _ = gpu_tx.send(Err(e.to_string()));
-                gpu_wake.wake();
+            match slerp_render::open_gpu_with(&policy, &mut keeper) {
+                Ok(gpu) => {
+                    let gpu = Arc::new(gpu);
+                    if timing {
+                        eprintln!("slerp view: GPU {} ({}) ready at {:.0} ms", gpu.info.name, gpu.chosen_by, at());
+                    }
+                    let _ = gpu_tx.send(Ok(gpu.clone()));
+                    gpu_wake.wake();
+                    let start = Instant::now();
+                    let mut renderer = Renderer::new(&gpu, gfx::TARGET_FORMAT);
+                    renderer.warm_up(&gpu);
+                    if timing {
+                        eprintln!(
+                            "slerp view: renderer warmed up at {:.0} ms ({:.0} ms)",
+                            at(),
+                            start.elapsed().as_secs_f64() * 1000.0
+                        );
+                    }
+                    let _ = renderer_tx.send(renderer);
+                    // The window may be holding a loaded file for it.
+                    gpu_wake.wake();
+                }
+                Err(e) => {
+                    let _ = gpu_tx.send(Err(e.to_string()));
+                    gpu_wake.wake();
+                }
             }
         })
         .map_err(|e| ViewerError::Gpu(e.to_string()))?;

@@ -794,7 +794,7 @@ pub fn controls(ui: &mut Ui, c: &mut PagesView) -> bool {
             if ui.button("Fit Width").clicked() {
                 c.fit_width_now();
             }
-            if ui.button("100 %").on_hover_text("Ctrl+0").clicked() {
+            if ui.button("100 %").on_hover_text(crate::keys("Ctrl+0")).clicked() {
                 c.actual_size();
             }
         });
@@ -811,7 +811,7 @@ pub fn controls(ui: &mut Ui, c: &mut PagesView) -> bool {
             ui.label(egui::RichText::new(why).color(ui.visuals().warn_fg_color));
         }
         let help = "Drag across text to select it, elsewhere to pan; scroll to zoom; double-click a word to select it, elsewhere to zoom in or out; Ctrl+A selects all text, Ctrl+C copies it.";
-        ui.label(egui::RichText::new(help).weak().small());
+        ui.label(egui::RichText::new(crate::keys(help)).weak().small());
     });
     changed
 }

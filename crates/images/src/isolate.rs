@@ -17,7 +17,8 @@
 pub struct Limits {
     /// Seconds before the child is killed.
     pub seconds: u64,
-    /// Bytes of memory the child may add to what the parent holds.
+    /// Bytes of memory the child may add to what the parent holds (Linux
+    /// only; elsewhere unchecked).
     pub memory: u64,
     /// The most bytes the child may send back.
     pub output: usize,
@@ -569,7 +570,10 @@ mod tests {
         assert!(e.contains("too large"), "{e}");
     }
 
+    /// Only Linux limits the child's memory: `RLIMIT_DATA` doesn't count
+    /// the memory macOS's malloc maps, and macOS doesn't enforce `RLIMIT_AS`.
     #[test]
+    #[cfg(target_os = "linux")]
     fn a_greedy_child_is_stopped_by_the_memory_limit() {
         let l = Limits { memory: 64 << 20, ..limits() };
         let r = run(l, || {
