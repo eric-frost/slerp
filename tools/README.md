@@ -98,12 +98,20 @@ deno run -A tools/glb-sweep.ts --slerp local/target/release/slerp --out local/gl
 
 ## Packages and release files
 
+`.github/workflows/release.yml` makes every release file with the tools below on GitHub's machines and smoke-tests each: a pushed `v*` tag ends in a draft release with `SHA256SUMS` and build attestations, and running it by hand (Actions, Release, Run workflow) keeps the files as the run's artifacts.  The text of the release is `packaging/release-notes.md`.
+
 | Tool | What it does |
 |---|---|
-| `build-deb.sh [--no-qt] [--no-build]` | Builds the Debian packages `slerp` (cargo-deb, from `[package.metadata.deb]` in `Cargo.toml`) and `slerp-qt-plugin` (CMake and dpkg-deb, from `packaging/debian/qt-plugin/`) into `local/dist/`.  `CARGO`, `CARGO_DEB`, `CARGO_TARGET_DIR` and `DIST` choose the commands and folders. |
+| `build-linux.sh [--no-qt] [--no-build] [deb] [rpm] [tar]` | Builds the program and the Qt plugin once and makes the Linux release files in `local/dist/`: the Debian packages `slerp` (cargo-deb, from `[package.metadata.deb]` in `Cargo.toml`) and `slerp-qt-plugin` (CMake and dpkg-deb, from `packaging/debian/qt-plugin/`), the same two as rpms for Fedora (nfpm, from `packaging/rpm/`), and `slerp-<version>-linux-<arch>.tar.gz` with `packaging/linux/install.sh` for other distributions.  Build on the oldest system the files should run on; the workflow uses Ubuntu 22.04.  `CARGO`, `CARGO_DEB`, `NFPM`, `CARGO_TARGET_DIR` and `DIST` choose the commands and folders. |
+| `build-windows.sh [cargo ...]` | Cross-compiles `slerp.exe`, `slerpw.exe` and `slerp_shell.dll` with MinGW, with the icon and version information of `data/windows/slerp.rc`, and packs `local/dist/Slerp-windows-x64.zip`; with `cargo ...`, runs any cargo command for Windows.  The installer comes from the zip's files and `packaging/windows/slerp.iss`, compiled on Windows with Inno Setup 6 (`iscc /DSource=<folder> slerp.iss`). |
+| `test-windows-installer.ps1 -Setup <exe> [-Keep]` | Installs Slerp silently, checks its files, registry entries, Start menu entry and uninstall entry, uninstalls it silently and checks that all of it is gone and a thumbnail handler Slerp replaced is back. |
+| `macos-app.sh [install\|uninstall]` | On a Mac: builds `Slerp.app` with its Quick Look extension, signs it ad hoc, and packs `local/dist/Slerp-macos-arm64.zip` and `Slerp-macos-arm64.dmg`; `install` also installs it in `~/Applications`. |
+| `build-macos.sh [install\|uninstall\|cargo ...\|run ...]` | Runs `macos-app.sh` (or any cargo command) on a Mac over SSH from Linux and copies the zip and disk image back. |
+| `make-icons.sh` | Renders `data/slerp.svg` into `data/windows/slerp.ico` and `packaging/macos/icon-1024.png`, which are committed so that builds need no SVG renderer.  Run it after changing the SVG. |
+| `smoke-test.sh SLERP OUT [FILE...]` | Checks a built program: its version, its format table, and thumbnails of a palette and a cube it writes itself.  `SMOKE_GPU=optional` lets the cube fail on machines without any renderer. |
 | `source-tarball.sh` | Packs the files Git would track into `local/dist/slerp-<version>.tar.gz`, laid out as GitHub's release archives, for `packaging/aur/PKGBUILD`. |
-| `test-packages.sh deb\|aur` | Installs the `.deb` files in a fresh Ubuntu 26.04 container, or builds the PKGBUILD from the tarball in Arch Linux, and runs smoke tests (version, format table, CPU and lavapipe thumbnails, MIME and menu caches, the Qt plugin's libraries), lintian or namcap, and removal.  `CONTAINER` picks docker or podman with its options, `RUN_OPTS` adds `run` options. |
-| `third-party.ts [--check]` | Rewrites the generated half of `THIRD-PARTY.md`: the crates compiled into Slerp's programs for Linux, Windows and macOS, and each distinct licence text once with the copyright lines of the crates using it.  Run it after dependencies change; `build-deb.sh` refuses to package while it is stale. |
+| `test-packages.sh deb\|rpm\|arch\|aur\|tar [IMAGE...]` | Installs the Linux release files in fresh containers (by default Ubuntu 26.04, Fedora, Arch Linux and Debian 12; the PKGBUILD is built in Arch Linux first), and runs the smoke tests, checks of the MIME and menu caches and the Qt plugin, lintian, rpmlint or namcap, and removal.  `QT_CHECK` names the `slerp-qt-check` program (built from `qt/`), which reads a model through Qt to show the plugin loads.  `CONTAINER` picks docker or podman with its options, `RUN_OPTS` adds `run` options, `DIST` where the files are. |
+| `third-party.ts [--check]` | Rewrites the generated half of `THIRD-PARTY.md`: the crates compiled into Slerp's programs for Linux, Windows and macOS, and each distinct licence text once with the copyright lines of the crates using it.  Run it after dependencies change; `build-linux.sh` refuses to package while it is stale. |
 | `format-list/` | Writes `docs/formats.md` and the website's format search list, `site/formats.json`, from the format table: `cargo run --manifest-path tools/format-list/Cargo.toml` (`-- --check` fails when it is stale). |
 | `readme-images.sh [SLERP]` | Makes the README's pictures in `docs/images/` from freely licensed corpus samples: a thumbnail sheet and four viewer screenshots, taken in a private Xvfb on lavapipe. |
 
@@ -113,5 +121,5 @@ With rootless podman, keep its storage in a folder without ACLs (they break `cp 
 P="podman --root local/podman/storage"
 P="$P --runroot $XDG_RUNTIME_DIR/slerp-podman --storage-driver vfs"
 CONTAINER="$P" RUN_OPTS="--cgroup-parent=heavy-slerp.slice" \
-  tools/test-packages.sh aur
+  tools/test-packages.sh deb ubuntu:22.04 ubuntu:26.04 debian:13
 ```

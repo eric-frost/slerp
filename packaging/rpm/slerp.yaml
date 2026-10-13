@@ -1,0 +1,83 @@
+# The `slerp` rpm, for Fedora and other rpm-based distributions, made by
+# tools/build-linux.sh with nfpm (https://nfpm.goreleaser.com), which fills
+# in the ${SLERP_...} values.  It holds what the Debian package holds (the
+# [package.metadata.deb] table in Cargo.toml), with Fedora's folder for
+# licences.  Fedora's shared-mime-info, desktop-file-utils and
+# hicolor-icon-theme update their caches with file triggers, so the package
+# needs no scripts.
+name: slerp
+version: ${SLERP_VERSION}
+release: ${SLERP_RELEASE}
+arch: ${SLERP_ARCH}
+platform: linux
+maintainer: ${SLERP_MAINTAINER}
+homepage: https://github.com/eric-frost/slerp
+license: MIT OR Apache-2.0
+description: |-
+  Slerp makes file-manager thumbnails of the files desktops show as generic
+  icons, and opens them in a viewer: GPU textures (KTX2, DDS, ASTC), 3D models
+  (glTF, FBX, OBJ, USD, Blender, SketchUp, Maya and many more), Gaussian
+  splats, materials, Quake and Doom levels, 2D game formats, CAD drawings,
+  Illustrator and EPS drawings, and scientific, medical and retro images.
+  Thumbnails work in Dolphin, GNOME Files, Nemo, Caja, Thunar and
+  PCManFM-Qt; Dolphin needs `slerp associate --apply` run once by each user.
+rpm:
+  summary: Thumbnailer and viewer for 3D models, textures, game assets and other graphics
+  group: Applications/Multimedia
+  compression: xz
+# The program links the C and C++ runtime itself, and loads the Vulkan
+# loader, Wayland, xkbcommon and X11 at run time, which rpm can't see; all
+# are named by their libraries, as rpm's own dependency finder would.
+depends:
+  - libc.so.6()(64bit)
+  - libm.so.6()(64bit)
+  - libgcc_s.so.1()(64bit)
+  - libstdc++.so.6()(64bit)
+  - libvulkan.so.1()(64bit)
+  - libwayland-client.so.0()(64bit)
+  - libxkbcommon.so.0()(64bit)
+  - libxkbcommon-x11.so.0()(64bit)
+  - libX11.so.6()(64bit)
+  - libX11-xcb.so.1()(64bit)
+  - libXcursor.so.1()(64bit)
+  - libXi.so.6()(64bit)
+  - shared-mime-info
+# lavapipe, Mesa's CPU Vulkan driver, draws 3D thumbnails where there is no
+# GPU driver and inside GNOME's thumbnail sandbox, which hides the GPU.
+recommends:
+  - mesa-vulkan-drivers
+  - desktop-file-utils
+  - hicolor-icon-theme
+suggests:
+  - slerp-qt-plugin
+  - libheif
+  - ghostscript
+contents:
+  - src: ${SLERP_BINARY}
+    dst: /usr/bin/slerp
+    expand: true
+    file_info:
+      mode: 0755
+  - src: data/slerp.thumbnailer
+    dst: /usr/share/thumbnailers/slerp.thumbnailer
+  - src: data/slerp.xml
+    dst: /usr/share/mime/packages/slerp.xml
+  - src: data/slerp.desktop
+    dst: /usr/share/applications/slerp.desktop
+  - src: data/slerp.svg
+    dst: /usr/share/icons/hicolor/scalable/apps/slerp.svg
+  - src: ${SLERP_MAN}
+    dst: /usr/share/man/man1/slerp.1.gz
+    expand: true
+  - src: README.md
+    dst: /usr/share/doc/slerp/README.md
+    type: doc
+  - src: THIRD-PARTY.md
+    dst: /usr/share/licenses/slerp/THIRD-PARTY.md
+    type: license
+  - src: LICENSE-MIT
+    dst: /usr/share/licenses/slerp/LICENSE-MIT
+    type: license
+  - src: LICENSE-APACHE
+    dst: /usr/share/licenses/slerp/LICENSE-APACHE
+    type: license

@@ -6,7 +6,13 @@
 # app.  Several agents building at once once exhausted the machine's
 # memory, so each build also runs at most three jobs unless CARGO_BUILD_JOBS
 # says otherwise.
+#
+# Where there is no systemd user session to make the cgroup in (a CI runner
+# or a container), or CI is set, it runs cargo directly with no cap.
 SLICE=heavy-slerp.slice
+if [ -n "${CI:-}" ] || ! systemctl --user show-environment >/dev/null 2>&1; then
+  exec cargo "$@"
+fi
 if ! systemctl --user show "$SLICE" -p MemoryMax | grep -q 'MemoryMax=[0-9]'; then
   systemctl --user set-property --runtime "$SLICE" \
     MemoryHigh=6G MemoryMax=8G MemorySwapMax=1G CPUWeight=20 IOWeight=20

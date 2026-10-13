@@ -1,7 +1,7 @@
 #!/bin/bash
 # Builds Slerp on a Mac over SSH and packs Slerp.app, run from Linux.
 #
-#   SLERP_MAC=user@host tools/build-macos.sh            # release build, app, zip
+#   SLERP_MAC=user@host tools/build-macos.sh            # release build, app, zip, disk image
 #   SLERP_MAC=user@host tools/build-macos.sh install    # ...and install it there
 #   SLERP_MAC=user@host tools/build-macos.sh uninstall  # remove it from the Mac
 #   SLERP_MAC=user@host tools/build-macos.sh cargo test -p slerp-helper
@@ -14,7 +14,8 @@
 # The Mac must see this folder at the same path (through Syncthing, say), so
 # this first waits until the Mac's copy of the source matches this one.
 # local/ is not shared: the Mac builds into its own local/target, and the
-# bundle and zip are made in its local/dist, then copied to local/dist here.
+# bundle, zip and disk image are made in its local/dist, then the zip and
+# the disk image are copied to local/dist here.
 # Builds run two jobs at a time (SLERP_MAC_JOBS), which suits a Mac with
 # 8 GB of memory; never run two builds there at once.
 #
@@ -69,7 +70,7 @@ copy() {
 
 # 1. Wait for Syncthing: the same list of files with the same contents.
 #    Mac droppings and Syncthing's temporary files don't count.
-MANIFEST='find Cargo.toml Cargo.lock rustfmt.toml README.md ARCHITECTURE.md .cargo src crates data tools -type f \
+MANIFEST='find Cargo.toml Cargo.lock rustfmt.toml README.md ARCHITECTURE.md .cargo src crates data packaging tools -type f \
   ! -name .DS_Store ! -name "._*" ! -name ".syncthing.*" -print0 | LC_ALL=C sort -z | xargs -0 shasum | shasum'
 for i in $(seq 1 60); do
   # This side is read again each time, so edits made meanwhile (another
@@ -109,24 +110,12 @@ if [ "${1:-}" = run ]; then
   exit
 fi
 
-# 3. The icon, rendered here (the Mac has no SVG renderer on the command
-#    line) and turned into an .icns there.
-mkdir -p local/dist
-if [ "$MODE" != uninstall ] && command -v inkscape >/dev/null; then
-  tmp=$(mktemp -d)
-  trap 'rm -rf "$tmp"' EXIT
-  if inkscape data/slerp.svg -w 1024 -h 1024 -o "$tmp/icon.png" >/dev/null 2>&1; then
-    remote "mkdir -p '$DIR/local/dist'"
-    copy "$tmp/icon.png" "$HOST:$DIR/local/dist/icon-1024.png"
-  fi
-fi
-
-# 4. The app, its Quick Look extension and the zip, made on the Mac by
-#    tools/macos-app.sh, which also installs and uninstalls.
+# 3. The app, its Quick Look extension, the zip and the disk image, made on
+#    the Mac by tools/macos-app.sh, which also installs and uninstalls.
 remote "zsh -lc 'cd \"$DIR\" && SLERP_MAC_JOBS=$JOBS tools/macos-app.sh $MODE'"
 [ "$MODE" = uninstall ] && exit
 
-# 5. Bring the zip back.
+# 4. Bring the zip and the disk image back.
 mkdir -p local/dist
-copy "$HOST:$DIR/local/dist/slerp-macos-arm64.zip" local/dist/
-ls -l local/dist/slerp-macos-arm64.zip
+copy "$HOST:$DIR/local/dist/Slerp-macos-arm64.zip" "$HOST:$DIR/local/dist/Slerp-macos-arm64.dmg" local/dist/
+ls -l local/dist/Slerp-macos-arm64.zip local/dist/Slerp-macos-arm64.dmg

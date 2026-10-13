@@ -1,0 +1,39 @@
+// Slerp's icon and version information, which tools/build-windows.sh
+// compiles with windres and links into slerp.exe, slerpw.exe and
+// slerp_shell.dll.  It replaces @VERSION@ (such as 0.1.0) and
+// @VERSION_COMMAS@ (0,1,0,0) first.  The icon comes from data/slerp.svg
+// through tools/make-icons.sh.  Its ID is 1, which Explorer, the Start menu
+// and Icon::from_resource(1, ...) use.
+
+#include <winver.h>
+
+1 ICON "slerp.ico"
+
+1 VERSIONINFO
+FILEVERSION @VERSION_COMMAS@
+PRODUCTVERSION @VERSION_COMMAS@
+FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
+FILEFLAGS 0
+FILEOS VOS_NT_WINDOWS32
+FILETYPE VFT_APP
+FILESUBTYPE VFT2_UNKNOWN
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    // US English, Unicode.
+    BLOCK "040904B0"
+    BEGIN
+      // "Open with" and Task Manager name the program by its description.
+      VALUE "FileDescription", "Slerp"
+      VALUE "FileVersion", "@VERSION@"
+      VALUE "ProductName", "Slerp"
+      VALUE "ProductVersion", "@VERSION@"
+      VALUE "LegalCopyright", "Copyright 2026 the Slerp authors.  MIT or Apache-2.0."
+      VALUE "Comments", "https://github.com/eric-frost/slerp"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x409, 1200
+  END
+END

@@ -1,0 +1,40 @@
+# The `slerp-qt-plugin` rpm: Slerp's Qt image plugin in Fedora's Qt 6 plugin
+# folder, made by tools/build-linux.sh with nfpm like slerp.yaml.  A plugin
+# built against an older Qt 6 loads in every newer Qt 6.
+name: slerp-qt-plugin
+version: ${SLERP_VERSION}
+release: ${SLERP_RELEASE}
+arch: ${SLERP_ARCH}
+platform: linux
+maintainer: ${SLERP_MAINTAINER}
+homepage: https://github.com/eric-frost/slerp
+license: MIT OR Apache-2.0
+description: |-
+  Lets every Qt program that reads pictures open the files Slerp reads:
+  Gwenview opens KTX2, KTX and ASTC textures and the other formats no Qt
+  plugin reads, and Dolphin's Information panel and Gwenview show models,
+  levels and materials slowly turning.  The plugin decodes and renders
+  nothing itself: it asks Slerp's helper process, so no file parser or GPU
+  driver runs inside those programs.  Programs load it when they start.
+rpm:
+  summary: Qt image plugin that shows Slerp's textures and models in Gwenview and Dolphin
+  group: Applications/Multimedia
+  compression: xz
+# It starts slerp's helper, which rpm can't see.
+depends:
+  - slerp
+  - libc.so.6()(64bit)
+  - libgcc_s.so.1()(64bit)
+  - libstdc++.so.6()(64bit)
+  - libQt6Core.so.6()(64bit)
+  - libQt6Gui.so.6()(64bit)
+contents:
+  - src: ${SLERP_PLUGIN}
+    dst: /usr/lib64/qt6/plugins/imageformats/slerp_qimage.so
+    expand: true
+  - src: LICENSE-MIT
+    dst: /usr/share/licenses/slerp-qt-plugin/LICENSE-MIT
+    type: license
+  - src: LICENSE-APACHE
+    dst: /usr/share/licenses/slerp-qt-plugin/LICENSE-APACHE
+    type: license
