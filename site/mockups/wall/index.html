@@ -52,7 +52,7 @@
     <div class="intro">
       <h1 id="hero-title">Slerp</h1>
       <p class="tagline">Thumbnails for the files your file manager doesn't preview.</p>
-      <p class="lede">Thumbnails and a viewer for about 200 formats: 3D models, GPU textures, HDR skies, game levels, Gaussian splats, voxels, retro art, CAD drawings and scans.  For Linux, Windows and macOS.  Open source, and not released yet.</p>
+      <p class="lede">Thumbnails and a viewer for about 200 formats: 3D models, GPU textures, HDR skies, game levels, Gaussian splats, voxels, retro art, CAD drawings and scans.  For Linux, Windows and macOS.  Open source, and 0.1.0 is its first release.</p>
       <div class="actions">
         <a class="btn primary" href="#download">Install</a>
         <a class="btn" href="https://github.com/eric-frost/slerp">Source on GitHub</a>
@@ -67,7 +67,7 @@
     <li><b>About 200</b> formats in 16 categories</li>
     <li><b>3</b> operating systems: Linux, Windows 11, macOS</li>
     <li><b>38</b> fuzz targets for the file readers</li>
-    <li><b>0.1</b> version, not released yet</li>
+    <li><b>0.1.0</b> the first release</li>
   </ul>
 </div>
 
@@ -224,40 +224,44 @@
 
 <section class="sect" id="download" aria-labelledby="install-title">
   <div class="wrap">
-    <p class="eyebrow">Packages</p>
+    <p class="eyebrow">Downloads</p>
     <h2 id="install-title">Install</h2>
-    <p class="notice"><b>No releases yet.</b>  Slerp is a young project with one developer, Eric, who vibe coded it: AI coding agents wrote all of the code from his descriptions, and he never looked at the code himself.  Until the first release, each package builds from the source with one script.  Most of the testing so far has been on one Linux laptop with KDE, a Windows 11 virtual machine and one Mac, so expect files it gets wrong.  Bug reports are welcome on <a href="https://github.com/eric-frost/slerp/issues">GitHub</a>, most of all with a file you are free to share.</p>
+    <p class="notice"><b>0.1.0 is the first release.</b>  Slerp is a young project with one developer, Eric, who vibe coded it: AI coding agents wrote all of the code from his descriptions, and he never looked at the code himself.  Most of the testing so far has been on one Linux laptop with KDE, a Windows 11 virtual machine and one Mac, so expect files it gets wrong.  Bug reports are welcome on <a href="https://github.com/eric-frost/slerp/issues">GitHub</a>, most of all with a file you are free to share.  The Windows and macOS builds aren't signed with a certificate, so both warn about them the first time; their cards below say how to get past the warning.</p>
 
     <div class="installs">
       <article class="inst">
-        <header><h3>Debian and Ubuntu</h3><span class="soon">Package coming</span></header>
-        <p>A <code>.deb</code> with the thumbnailer, viewer and menu entry, and an optional Qt plugin package for KDE.</p>
-        <pre><code>tools/build-deb.sh
-cd local/dist
-sudo apt install ./slerp_0.1.0-1_amd64.deb</code></pre>
+        <header><h3>Debian and Ubuntu</h3><span class="soon">x86_64, arm64</span></header>
+        <p>Debian 12 or newer, Ubuntu 22.04 or newer.  The <a href="https://github.com/eric-frost/slerp/releases/latest">Releases page</a> has the program and an optional Qt plugin package for KDE.</p>
+        <pre><code>sudo apt install ./slerp_0.1.0-1_amd64.deb \
+  ./slerp-qt-plugin_0.1.0-1_amd64.deb</code></pre>
       </article>
       <article class="inst">
-        <header><h3>Arch Linux</h3><span class="soon">AUR coming</span></header>
-        <p>A PKGBUILD for <code>slerp</code> and <code>slerp-qt-plugin</code>.  Put the source tarball beside it and build.</p>
-        <pre><code>tools/source-tarball.sh
-makepkg -si</code></pre>
+        <header><h3>Fedora</h3><span class="soon">x86_64, arm64</span></header>
+        <p>The program and the optional Qt plugin, from the <a href="https://github.com/eric-frost/slerp/releases/latest">Releases page</a>.</p>
+        <pre><code>sudo dnf install ./slerp-0.1.0-1.x86_64.rpm \
+  ./slerp-qt-plugin-0.1.0-1.x86_64.rpm</code></pre>
       </article>
       <article class="inst">
-        <header><h3>Windows 11</h3><span class="soon">Zip coming</span></header>
-        <p>Unpack the zip into a folder that stays put, then register it once.  No installer, no administrator rights.</p>
+        <header><h3>Arch Linux</h3><span class="soon">x86_64</span></header>
+        <p>The program and the optional Qt plugin, from the <a href="https://github.com/eric-frost/slerp/releases/latest">Releases page</a>.</p>
+        <pre><code>sudo pacman -U slerp-0.1.0-1-x86_64.pkg.tar.zst \
+  slerp-qt-plugin-0.1.0-1-x86_64.pkg.tar.zst</code></pre>
+      </article>
+      <article class="inst">
+        <header><h3>Windows 10 and 11</h3><span class="soon">Not signed</span></header>
+        <p><a href="https://github.com/eric-frost/slerp/releases/latest/download/Slerp-Setup-windows-x64.exe"><code>Slerp-Setup-windows-x64.exe</code></a> installs Slerp for your account, without administrator rights.  SmartScreen says "Windows protected your PC": click "More info", then "Run anyway".  <a href="https://github.com/eric-frost/slerp/releases/latest/download/Slerp-windows-x64.zip"><code>Slerp-windows-x64.zip</code></a> holds the same programs without an installer; unpack it into a folder that stays put and register it once.</p>
         <pre><code>slerp.exe register</code></pre>
       </article>
       <article class="inst">
-        <header><h3>macOS</h3><span class="soon">App coming</span></header>
-        <p><code>Slerp.app</code> for Apple Silicon, with a Quick Look extension for Finder.  Builds with Rust and the Command Line Tools.</p>
-        <pre><code>tools/macos-app.sh install</code></pre>
-      </article>
-      <article class="inst">
-        <header><h3>From source</h3><span class="soon ok">Works today</span></header>
-        <p>Rust 1.93 or newer, a C and C++ compiler and libclang.  The README lists where each file goes.</p>
-        <pre><code>cargo build --release</code></pre>
+        <header><h3>macOS 11 or newer</h3><span class="soon">Not signed</span></header>
+        <p><a href="https://github.com/eric-frost/slerp/releases/latest/download/Slerp-macos-arm64.dmg"><code>Slerp-macos-arm64.dmg</code></a>, for Apple Silicon: drag Slerp to Applications.  macOS blocks it the first time; open System Settings, Privacy &amp; Security, and click "Open Anyway" beside the message about Slerp.  Or install it from Terminal, which avoids the warning and also updates Slerp later:</p>
+        <pre><code>curl -fL -o /tmp/Slerp.zip \
+  https://github.com/eric-frost/slerp/releases/latest/download/Slerp-macos-arm64.zip &amp;&amp;
+  rm -rf /Applications/Slerp.app &amp;&amp; ditto -x -k /tmp/Slerp.zip /Applications &amp;&amp;
+  open /Applications/Slerp.app</code></pre>
       </article>
     </div>
+    <p class="after">On other Linux distributions, unpack <code>slerp-0.1.0-linux-x86_64.tar.gz</code> from the <a href="https://github.com/eric-frost/slerp/releases/latest">Releases page</a> and run <code>sudo ./install.sh</code> in it; GNOME's file managers need <code>--prefix /usr</code>.  These file names are for x86_64; on arm64 they end in <code>arm64.deb</code>, <code>aarch64.rpm</code> and <code>aarch64.tar.gz</code>.  To build from source, see the <a href="https://github.com/eric-frost/slerp#from-source">README</a>.</p>
     <p class="after">Using Dolphin?  Run <code>slerp associate --apply</code> once, then restart Dolphin, so it lists Slerp among its preview plugins.</p>
   </div>
 </section>

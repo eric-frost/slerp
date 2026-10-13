@@ -11,7 +11,7 @@ const FORMATS_URL = '../../formats.json';
 // page states, and only the highlighted examples leave PDF out.
 const UNLISTED_FORMATS = new Set();
 
-const PLATFORM_NAMES = {linux: 'Linux', windows: 'Windows 11', macos: 'macOS'};
+const PLATFORM_NAMES = {linux: 'Linux', windows: 'Windows', macos: 'macOS'};
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -47,7 +47,7 @@ function initPlatform() {
 	const link = (p, text = PLATFORM_NAMES[p]) => `<a href="#install" data-tab-link="${p}">${text}</a>`;
 	const others = Object.keys(PLATFORM_NAMES).filter(p => p !== platform);
 	for (const label of $$('[data-download-label]'))
-		label.textContent = platform ? `Install on ${platform === 'windows' ? 'Windows' : PLATFORM_NAMES[platform]}` : 'Install Slerp';
+		label.textContent = platform ? `Install on ${PLATFORM_NAMES[platform]}` : 'Install Slerp';
 	for (const a of $$('a[data-download]'))
 		a.dataset.tabLink = platform || 'linux';
 	const also = $('[data-also]');

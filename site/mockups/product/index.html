@@ -88,7 +88,7 @@
         <span>View the source</span>
       </a>
     </div>
-    <p class="cta-note" data-also>Also for <a href="#install" data-tab-link="windows">Windows 11</a> and <a href="#install" data-tab-link="macos">macOS</a>.</p>
+    <p class="cta-note" data-also>Also for <a href="#install" data-tab-link="windows">Windows</a> and <a href="#install" data-tab-link="macos">macOS</a>.</p>
   </div>
 
   <div class="wrap hero-visual">
@@ -110,7 +110,7 @@
       <div><dt>16</dt><dd>categories, from 3D models to retro computer art</dd></div>
       <div><dt>3</dt><dd>operating systems: Linux, Windows 11 and macOS</dd></div>
       <div><dt>38</dt><dd>fuzz targets that feed the readers broken files</dd></div>
-      <div><dt>0.1</dt><dd>the version so far.  There are no releases yet.</dd></div>
+      <div><dt>0.1.0</dt><dd>the version so far, and the first release.</dd></div>
     </dl>
   </div>
 </section>
@@ -374,7 +374,7 @@
     <div class="section-head">
       <p class="kicker">Install</p>
       <h2 id="install-title">Install Slerp.</h2>
-      <p>There are no releases yet.  Until the first one, a script in the source builds each package.</p>
+      <p>0.1.0 is the first release.  Its files are on the <a href="https://github.com/eric-frost/slerp/releases/latest">Releases page</a>, with their checksums in <code>SHA256SUMS</code>.  The Windows and Mac builds aren't signed with a certificate, so each warns the first time; the steps are below.</p>
     </div>
 
     <div class="install-card">
@@ -387,18 +387,37 @@
 
       <div class="panel" role="tabpanel" id="panel-linux" aria-labelledby="tab-linux" tabindex="0">
         <h3 class="panel-title">Linux</h3>
-        <div class="soon"><svg viewBox="0 0 20 20" aria-hidden="true"><use href="#i-clock"/></svg><p><b>Packages for Debian, Ubuntu and Arch are coming.</b>  Build them today with <code>tools/build-deb.sh</code> or the PKGBUILD in <code>packaging/aur/</code>.</p></div>
         <div class="steps">
           <div class="step">
+            <h3>Download</h3>
+            <p>Each distribution gets two packages: <code>slerp</code>, and the optional <code>slerp-qt-plugin</code>, which lets Gwenview and Dolphin's Information panel show Slerp's formats.  The names here are for x86_64; on arm64 they end in <code>arm64.deb</code>, <code>aarch64.rpm</code> and <code>aarch64.tar.gz</code>.</p>
+            <p><a class="btn btn-primary" href="https://github.com/eric-frost/slerp/releases/latest">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><use href="#i-download"/></svg>
+              <span>Open the Releases page</span>
+            </a></p>
+          </div>
+          <div class="step">
             <h3>Debian and Ubuntu</h3>
-            <p>Two packages: <code>slerp</code>, and the optional <code>slerp-qt-plugin</code>, which lets Gwenview and Dolphin's Information panel show Slerp's formats.  apt fetches what they need.</p>
+            <p>Debian 12 or newer, Ubuntu 22.04 or newer.  apt fetches what the packages need.</p>
             <div class="code"><pre><code>sudo apt install ./slerp_0.1.0-1_amd64.deb \
   ./slerp-qt-plugin_0.1.0-1_amd64.deb</code></pre><button type="button" class="copy">Copy</button></div>
           </div>
           <div class="step">
+            <h3>Fedora</h3>
+            <p>dnf fetches what the packages need.</p>
+            <div class="code"><pre><code>sudo dnf install ./slerp-0.1.0-1.x86_64.rpm \
+  ./slerp-qt-plugin-0.1.0-1.x86_64.rpm</code></pre><button type="button" class="copy">Copy</button></div>
+          </div>
+          <div class="step">
             <h3>Arch Linux</h3>
-            <p>Until the package is in the AUR, make the source tarball with <code>tools/source-tarball.sh</code>, put it beside <code>packaging/aur/PKGBUILD</code> and run:</p>
-            <div class="code"><pre><code>makepkg -si</code></pre><button type="button" class="copy">Copy</button></div>
+            <p>x86_64 only.</p>
+            <div class="code"><pre><code>sudo pacman -U slerp-0.1.0-1-x86_64.pkg.tar.zst \
+  slerp-qt-plugin-0.1.0-1-x86_64.pkg.tar.zst</code></pre><button type="button" class="copy">Copy</button></div>
+          </div>
+          <div class="step">
+            <h3>Other distributions</h3>
+            <p>Unpack <code>slerp-0.1.0-linux-x86_64.tar.gz</code> and run this in it.  It installs under <code>/usr/local</code>, and <code>--uninstall</code> removes it again.  GNOME's file managers need <code>--prefix /usr</code>, because their thumbnail sandbox sees only <code>/usr</code>.</p>
+            <div class="code"><pre><code>sudo ./install.sh</code></pre><button type="button" class="copy">Copy</button></div>
           </div>
           <div class="step">
             <h3>Then, in Dolphin</h3>
@@ -410,36 +429,53 @@
 
       <div class="panel" role="tabpanel" id="panel-windows" aria-labelledby="tab-windows" tabindex="0">
         <h3 class="panel-title">Windows</h3>
-        <div class="soon"><svg viewBox="0 0 20 20" aria-hidden="true"><use href="#i-clock"/></svg><p><b>A zip for Windows 11 is coming.</b>  Build it today on Linux with <code>tools/build-windows.sh</code>.</p></div>
         <div class="steps">
           <div class="step">
-            <h3>1. Unpack</h3>
-            <p>The zip holds <code>slerp.exe</code>, <code>slerpw.exe</code> and Explorer's thumbnail handler, <code>slerp_shell.dll</code>, with no other DLLs.  Unpack them into a folder that stays put, such as <code>%LOCALAPPDATA%\Programs\Slerp</code>.</p>
+            <h3>1. Download</h3>
+            <p>The installer is for Windows 10 and 11 on x64.  It installs Slerp for your account only, without administrator rights, sets up Explorer's thumbnails and Open with, and adds the viewer to the Start menu.</p>
+            <p><a class="btn btn-primary" href="https://github.com/eric-frost/slerp/releases/latest/download/Slerp-Setup-windows-x64.exe">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><use href="#i-download"/></svg>
+              <span>Download the installer</span>
+            </a></p>
           </div>
           <div class="step">
-            <h3>2. Register</h3>
-            <p>Run this once in a terminal in that folder.  It needs no administrator rights.</p>
-            <div class="code"><pre><code>slerp.exe register</code></pre><button type="button" class="copy">Copy</button></div>
+            <h3>2. Get past SmartScreen</h3>
+            <p>The installer isn't signed, so SmartScreen says "Windows protected your PC".  Click "More info", then "Run anyway".  If Smart App Control is switched on, Windows blocks unsigned programs outright, and Slerp can't be installed.</p>
           </div>
           <div class="step">
             <h3>3. Done</h3>
-            <p>Explorer shows thumbnails of Slerp's formats, and Slerp appears under Open with.  <code>slerp.exe unregister</code> removes both, and puts back any thumbnail handler Slerp replaced.</p>
+            <p>Explorer shows thumbnails of Slerp's formats, and Slerp appears under Open with.  Settings, Apps, Installed apps removes Slerp again, and puts back any thumbnail handler it replaced.</p>
+          </div>
+          <div class="step">
+            <h3>Without the installer</h3>
+            <p><a href="https://github.com/eric-frost/slerp/releases/latest/download/Slerp-windows-x64.zip"><code>Slerp-windows-x64.zip</code></a> holds the same programs.  Unpack them into a folder that stays put and run this there once, without administrator rights.  <code>slerp.exe unregister</code> undoes it.</p>
+            <div class="code"><pre><code>slerp.exe register</code></pre><button type="button" class="copy">Copy</button></div>
           </div>
         </div>
       </div>
 
       <div class="panel" role="tabpanel" id="panel-macos" aria-labelledby="tab-macos" tabindex="0">
         <h3 class="panel-title">macOS</h3>
-        <div class="soon"><svg viewBox="0 0 20 20" aria-hidden="true"><use href="#i-clock"/></svg><p><b>A download of Slerp.app is coming.</b>  On a Mac with Rust and Apple's Command Line Tools, <code>tools/macos-app.sh install</code> builds it and installs it today.</p></div>
         <div class="steps">
           <div class="step">
-            <h3>The app</h3>
-            <p><code>Slerp.app</code>, for Apple Silicon, holds the viewer and a Quick Look extension that gives Finder thumbnails of the formats macOS doesn't know.  Move it to Applications.</p>
+            <h3>1. Download</h3>
+            <p>For macOS 11 or newer on Apple Silicon; Intel Macs aren't supported.  Open the disk image and drag Slerp to Applications.  The app holds the viewer and a Quick Look extension that gives Finder thumbnails of the formats macOS doesn't know.</p>
+            <p><a class="btn btn-primary" href="https://github.com/eric-frost/slerp/releases/latest/download/Slerp-macos-arm64.dmg">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><use href="#i-download"/></svg>
+              <span>Download the disk image</span>
+            </a></p>
           </div>
           <div class="step">
-            <h3>First start</h3>
-            <p>The app is signed ad hoc, not notarized, so a copy downloaded from the web needs its quarantine flag cleared once:</p>
-            <div class="code"><pre><code>xattr -dr com.apple.quarantine ~/Applications/Slerp.app</code></pre><button type="button" class="copy">Copy</button></div>
+            <h3>2. First start</h3>
+            <p>The app is signed ad hoc but not notarized by Apple, so macOS blocks it the first time you open it.  Then open System Settings, Privacy &amp; Security, click "Open Anyway" beside the message about Slerp, and confirm.  Finder shows Slerp's thumbnails once the app has been opened.</p>
+          </div>
+          <div class="step">
+            <h3>Or from Terminal</h3>
+            <p>This avoids the warning, since curl doesn't mark what it downloads as coming from the internet.  The same command updates Slerp later: it replaces the app that is there.</p>
+            <div class="code"><pre><code>curl -fL -o /tmp/Slerp.zip \
+  https://github.com/eric-frost/slerp/releases/latest/download/Slerp-macos-arm64.zip &amp;&amp;
+  rm -rf /Applications/Slerp.app &amp;&amp; ditto -x -k /tmp/Slerp.zip /Applications &amp;&amp;
+  open /Applications/Slerp.app</code></pre><button type="button" class="copy">Copy</button></div>
           </div>
         </div>
       </div>
@@ -493,7 +529,7 @@ cargo build --release</code></pre><button type="button" class="copy">Copy</butto
       </details>
       <details>
         <summary>Who makes it, and how far along is it?</summary>
-        <p>One developer, Eric, who vibe coded it: AI coding agents wrote all of the code, the tests included, from his descriptions, and he never looked at the code himself.  Slerp is a young project with no releases yet.  For many formats it reads only part of what the format can hold, and most of the testing so far has been on one Linux laptop with KDE, a Windows 11 virtual machine and one Mac, so expect files it gets wrong.  Bug reports are welcome on <a href="https://github.com/eric-frost/slerp/issues">GitHub</a>, most of all with a file you are free to share.</p>
+        <p>One developer, Eric, who vibe coded it: AI coding agents wrote all of the code, the tests included, from his descriptions, and he never looked at the code himself.  Slerp is a young project, and 0.1.0 is its first release.  For many formats it reads only part of what the format can hold, and most of the testing so far has been on one Linux laptop with KDE, a Windows 11 virtual machine and one Mac, so expect files it gets wrong.  Bug reports are welcome on <a href="https://github.com/eric-frost/slerp/issues">GitHub</a>, most of all with a file you are free to share.</p>
       </details>
       <details>
         <summary>Why the name?</summary>
@@ -507,7 +543,7 @@ cargo build --release</code></pre><button type="button" class="copy">Copy</butto
 <section class="closing" aria-labelledby="closing-title">
   <div class="wrap closing-inner">
     <h2 id="closing-title">Thumbnails and a viewer for graphics files.</h2>
-    <p>Open source and offline, for Linux, Windows 11 and macOS.  No releases yet.</p>
+    <p>Open source and offline, for Linux, Windows and macOS.  0.1.0 is the first release.</p>
     <div class="cta-row">
       <a class="btn btn-primary" href="#install" data-download>
         <svg viewBox="0 0 20 20" aria-hidden="true"><use href="#i-download"/></svg>
