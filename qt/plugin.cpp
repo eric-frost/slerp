@@ -28,6 +28,7 @@
 #include "formats.h"
 
 #include <QBuffer>
+#include <QCoreApplication>
 #include <QCryptographicHash>
 #include <QFile>
 #include <QFileInfo>
@@ -608,7 +609,10 @@ private:
 			m_turntable = fetch(*m_entry, &Entry::turntable, work(kTurntableFrames, requestSize(), kBackgroundDeadline), true);
 			m_waitSince = Clock::now();
 		}
-		const bool gui = QThread::isMainThread();
+		// The thread QCoreApplication lives in; QThread::isMainThread() says
+		// the same, but only from Qt 6.8, and the packages build on Qt 6.2.
+		const QCoreApplication *app = QCoreApplication::instance();
+		const bool gui = app && QThread::currentThread() == app->thread();
 		if (!m_turntable->wait(gui ? Clock::now() : m_waitSince + kDeadline)) {
 			return gui && Clock::now() < m_waitSince + kBackgroundDeadline;
 		}

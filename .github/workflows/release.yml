@@ -68,7 +68,7 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq --no-install-recommends libclang-dev libwayland-dev libxkbcommon-dev \
-            pkg-config g++ cmake qt6-base-dev dpkg-dev
+            pkg-config g++ cmake qt6-base-dev libgl-dev dpkg-dev
           tools/ci-rustup.sh "$RUST_VERSION"
           export PATH=$HOME/.cargo/bin:$PATH
           cargo install cargo-deb --version "$CARGO_DEB_VERSION" --locked

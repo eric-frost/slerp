@@ -84,7 +84,8 @@ QByteArray bytes(std::initializer_list<int> values) {
 }
 
 void le32(QByteArray &b, int at, uint32_t v) {
-	if (b.size() < at + 4) b.resize(at + 4, '\0');
+	// QByteArray::resize(size, fill) is Qt 6.4's; the packages build on 6.2.
+	if (b.size() < at + 4) b.append(QByteArray(at + 4 - b.size(), '\0'));
 	for (int i = 0; i < 4; i++) b[at + i] = char(v >> (8 * i));
 }
 
@@ -189,7 +190,7 @@ void testSniffing() {
 		"Godot material");
 	check(!sniffBytes("[gd_resource type=\"Theme\" format=3]\n", -1, "tres"), "other Godot resources are refused");
 	QByteArray usdz("PK\x03\x04", 4);
-	usdz.resize(30, '\0');
+	usdz.append(QByteArray(30 - usdz.size(), '\0'));
 	usdz[26] = 10;
 	usdz.append("scene.usdc");
 	check(keyOf(sniffBytes(usdz, -1, nullptr)) == "usdz", "USDZ whose first file is a layer");

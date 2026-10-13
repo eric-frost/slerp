@@ -58,6 +58,8 @@ SMOKE='
 set -eu
 data=$1
 prefix=$2
+# A desktop session sets it; the helper keeps its socket there.
+export XDG_RUNTIME_DIR=$(mktemp -d)
 bash /smoke-test.sh slerp /out "$data/rgb24.jxr"
 echo "== slerp info smoke.stl"; slerp info /out/smoke.stl | head -8
 echo "== MIME types and menu entry"
@@ -72,7 +74,8 @@ if ldd "$plugin" | grep "not found"; then exit 1; fi
 echo "all its libraries resolve"
 if [ -x /check/slerp-qt-check ]; then
 	echo "== Qt reads smoke.stl through the plugin"
-	QT_QPA_PLATFORM=offscreen /check/slerp-qt-check read --size 128 /out/smoke.stl | tee /tmp/qt.txt
+	QT_QPA_PLATFORM=offscreen QT_LOGGING_RULES=slerp.qimage.debug=true /check/slerp-qt-check read --size 128 /out/smoke.stl \
+		| tee /tmp/qt.txt
 	grep -q "^OK .*fmt=stl " /tmp/qt.txt || { echo "Qt did not read the model through the plugin"; exit 1; }
 fi
 '
