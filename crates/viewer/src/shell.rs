@@ -319,6 +319,8 @@ impl<'a> Shell<'a> {
         let builder = fit_to_screen(self.builder.clone(), event_loop).with_visible(false);
         let window = egui_winit::create_window(&self.ctx, event_loop, &builder)
             .map_err(|e| ViewerError::Window(e.to_string()))?;
+        #[cfg(windows)]
+        set_title_bar_icon(&window);
         let window = Arc::new(window);
         let mut input = egui_winit::State::new(
             self.ctx.clone(),
@@ -650,6 +652,20 @@ impl<'a> Shell<'a> {
             accesskit_winit::WindowEvent::AccessibilityDeactivated => self.ctx.disable_accesskit(),
         }
     }
+}
+
+/// Gives the window Slerp's icon in its title bar.  The taskbar takes the
+/// icon from the program file, but the title bar shows the window's own,
+/// which winit leaves as Windows' blank one.  The program's icon is resource
+/// 1 (data/windows/slerp.rc, linked in by tools/build-windows.sh), loaded at
+/// the small-icon size for the window's scale; a build without it keeps the
+/// blank icon.
+#[cfg(windows)]
+fn set_title_bar_icon(window: &Window) {
+    use winit::platform::windows::IconExtWindows;
+    let size = (16.0 * window.scale_factor()).round() as u32;
+    let icon = winit::window::Icon::from_resource(1, Some(winit::dpi::PhysicalSize::new(size, size)));
+    window.set_window_icon(icon.ok());
 }
 
 /// Shrinks the window's starting size to fit the primary screen, leaving

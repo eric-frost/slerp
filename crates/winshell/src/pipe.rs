@@ -116,14 +116,18 @@ fn connect(name: &HSTRING, deadline: Instant) -> Result<Pipe, String> {
 
 /// Starts `slerp.exe helper` from the DLL's folder, with no console
 /// window and none of the host's handles: Explorer's open files mustn't be
-/// held by the helper.
+/// held by the helper.  Its current folder is Windows' own, since a running
+/// process's current folder can't be deleted: uninstalling Slerp must be
+/// able to remove its folder while a helper is still idling, and the host's
+/// current folder may be one the user wants to delete.
 fn start_helper() -> Result<(), String> {
     let dll = crate::this_dll().map_err(|e| e.to_string())?;
     let exe = dll.with_file_name("slerp.exe");
     if !exe.is_file() {
         return Err(format!("{} is missing", exe.display()));
     }
-    let dir = HSTRING::from(dll.parent().unwrap_or(Path::new(".")).as_os_str());
+    let windows = std::env::var_os("SystemRoot").map(std::path::PathBuf::from).unwrap_or_else(std::env::temp_dir);
+    let dir = HSTRING::from(windows.as_os_str());
     let mut command: Vec<u16> = format!("\"{}\" helper", exe.display()).encode_utf16().chain([0]).collect();
     let startup = STARTUPINFOW { cb: size_of::<STARTUPINFOW>() as u32, ..Default::default() };
     let mut info = PROCESS_INFORMATION::default();

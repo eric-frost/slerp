@@ -85,7 +85,9 @@ Source: "{#Source}\LICENSE-APACHE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#Source}\THIRD-PARTY.md"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{autoprograms}\Slerp"; Filename: "{app}\slerpw.exe"; Comment: "View 3D models, textures and game files"
+; The viewer starts in the user's own folder rather than the installation's,
+; so a running viewer doesn't keep that folder from being removed.
+Name: "{autoprograms}\Slerp"; Filename: "{app}\slerpw.exe"; WorkingDir: "{%USERPROFILE}"; Comment: "View 3D models, textures and game files"
 
 [UninstallDelete]
 ; The thumbnail handler's diagnostic log, when someone turned it on.
@@ -189,11 +191,18 @@ begin
     Log('slerp.exe register succeeded');
 end;
 
+{ The finished page says so when Explorer still had the old thumbnail
+  handler loaded.  The label is sized for the standard text, so it grows,
+  and the line below it moves down. }
 procedure CurPageChanged(CurPageID: Integer);
 begin
   if (CurPageID = wpFinished) and OldStillLoaded then
+  begin
     WizardForm.FinishedLabel.Caption := WizardForm.FinishedLabel.Caption + #13#10#13#10 +
       'Explorer may go on using the previous version''s thumbnails until you sign out and back in.';
+    WizardForm.FinishedLabel.AdjustHeight;
+    WizardForm.ClickFinishLabel.Top := WizardForm.FinishedLabel.Top + WizardForm.FinishedLabel.Height + ScaleY(12);
+  end;
 end;
 
 { Uninstalling: unregisters, then moves what is still in use into %TEMP%, so
