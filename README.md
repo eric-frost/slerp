@@ -2,7 +2,7 @@
 
 Slerp makes file-manager thumbnails for 3D models, game files, GPU textures and other graphics files that desktops usually show as generic icons, and opens them in a viewer.  It runs on Linux, Windows 11 and macOS.
 
-It is a young project with one developer and no releases yet.  It reads about 200 formats, but for many of them only part of what the format can hold; [docs/format-details.md](docs/format-details.md) says what each reader leaves out.  Most of the testing so far has been on one Linux laptop with KDE, a Windows 11 virtual machine and one Mac, so expect files it gets wrong.  Bug reports are welcome, most of all with a file that you're free to share.
+It is a young project with one developer, and 0.1.0 is its first release.  It reads about 200 formats, but for many of them only part of what the format can hold; [docs/format-details.md](docs/format-details.md) says what each reader leaves out.  Most of the testing so far has been on one Linux laptop with KDE, a Windows 11 virtual machine and one Mac, so expect files it gets wrong.  Bug reports are welcome, most of all with a file that you're free to share.
 
 Slerp is vibe coded.  Its developer, Eric, described what he wanted, and AI coding agents wrote all of the code, the tests included; he never looked at the code himself.
 
@@ -50,42 +50,39 @@ The pictures show freely licensed samples: Poly Haven's Lantern, ArmChair and Ve
 
 ## Installing
 
-Slerp has no published releases yet; the scripts below build each package from this source tree.
-
-### Debian and Ubuntu
-
-`tools/build-deb.sh` builds two packages into `local/dist/` with [cargo-deb](https://github.com/kornelski/cargo-deb): `slerp`, the program with its thumbnailer, MIME types, menu entry and icon, and `slerp-qt-plugin`, the optional Qt image plugin (below), kept apart so that only Qt desktops pull in Qt.  Install them with apt, which fetches what they need:
-
-```
-cd local/dist
-sudo apt install ./slerp_0.1.0-1_amd64.deb ./slerp-qt-plugin_0.1.0-1_amd64.deb
-```
-
-A package fits the release it was built on and newer ones (Ubuntu 26.04 here), so build on the oldest one it should install on.  It recommends `mesa-vulkan-drivers`, whose lavapipe draws 3D thumbnails where there is no GPU driver, and suggests `libheif1` (HEIC pictures) and `ghostscript` (PostScript and EPS files without a stored preview).
-
-### Arch Linux
-
-`packaging/aur/PKGBUILD` builds the `slerp` and `slerp-qt-plugin` packages from a source tarball.  Until the package is in the AUR, make the tarball with `tools/source-tarball.sh`, put it beside the PKGBUILD, and run `makepkg -si` there.
+Ready-made builds are on the [Releases page](https://github.com/eric-frost/slerp/releases/latest): for Windows 10 and 11 (x64), for macOS 11 or newer on Apple Silicon, and for Linux on x86_64 and arm64.  They aren't signed with a certificate, so Windows and macOS warn about them the first time; the steps are below.  `SHA256SUMS` on the same page lists their checksums, and each file has a build attestation that shows it was built from the release's source by the repository's workflow (`gh attestation verify FILE --repo eric-frost/slerp`).
 
 ### Windows
 
-`tools/build-windows.sh` cross-compiles the Windows build on Linux into `local/dist/slerp-windows-x86_64.zip`: `slerp.exe` (the command line and the viewer), `slerpw.exe` (opens files in the viewer without a console window) and `slerp_shell.dll` (Explorer's thumbnail handler), which need no other DLLs.  Unpack them into a folder that stays put, such as `%LOCALAPPDATA%\Programs\Slerp`, and run this once in a terminal there, without administrator rights:
+[`Slerp-Setup-windows-x64.exe`](https://github.com/eric-frost/slerp/releases/latest/download/Slerp-Setup-windows-x64.exe) installs Slerp for your account only, without administrator rights, in `%LOCALAPPDATA%\Programs\Slerp`.  It sets up Explorer's thumbnails and the "Open with" entry, and adds the viewer to the Start menu.  Because the installer isn't signed, SmartScreen says "Windows protected your PC": click "More info", then "Run anyway".  Smart App Control, when it is switched on, blocks unsigned programs outright.  Settings, Apps, Installed apps removes Slerp again and puts back any thumbnail handler it replaced.  The installer and the uninstaller also run silently, with `/VERYSILENT`.
 
-```
-slerp.exe register
-```
-
-Explorer then shows thumbnails of Slerp's formats and offers Slerp under "Open with".  `slerp.exe unregister` removes both again (run it before deleting the folder), and puts back any thumbnail handler Slerp replaced.  Explorer keeps the DLL loaded, so to update it, restart Explorer (Task Manager, Windows Explorer, Restart) or sign out first.
+[`Slerp-windows-x64.zip`](https://github.com/eric-frost/slerp/releases/latest/download/Slerp-windows-x64.zip) holds the same programs without an installer: `slerp.exe` (the command line and the viewer), `slerpw.exe` (opens files in the viewer without a console window) and `slerp_shell.dll` (Explorer's thumbnail handler).  Unpack them into a folder that stays put and run `slerp.exe register` there once, without administrator rights; `slerp.exe unregister` undoes it before you delete the folder.  Explorer keeps the DLL loaded, so to replace it by hand, sign out first.
 
 ### macOS
 
-`tools/build-macos.sh` builds `Slerp.app` (Apple Silicon) on a Mac over SSH into `local/dist/slerp-macos-arm64.zip`; on the Mac itself, `tools/macos-app.sh install` builds it and installs it in `~/Applications` (it needs Rust and Apple's Command Line Tools, not Xcode).  The app holds the viewer and a Quick Look extension, which gives Finder thumbnails of the formats macOS doesn't know itself.  It is signed ad hoc, not notarized, so a copy downloaded from the web needs its quarantine cleared before it opens:
+[`Slerp-macos-arm64.dmg`](https://github.com/eric-frost/slerp/releases/latest/download/Slerp-macos-arm64.dmg) holds `Slerp.app`, for Macs with Apple Silicon; drag it to Applications.  The app holds the viewer and a Quick Look extension that gives Finder thumbnails of the formats macOS doesn't know itself, which Finder starts using once the app has been opened.  The app is signed ad hoc but not notarized by Apple, so macOS blocks it the first time.  Then open System Settings, Privacy & Security, and click "Open Anyway" beside the message about Slerp.  Or install it from Terminal, which avoids the warning, since curl doesn't mark what it downloads as coming from the internet:
 
 ```
-xattr -dr com.apple.quarantine ~/Applications/Slerp.app
+curl -fL -o /tmp/Slerp.zip \
+  https://github.com/eric-frost/slerp/releases/latest/download/Slerp-macos-arm64.zip &&
+  rm -rf /Applications/Slerp.app && ditto -x -k /tmp/Slerp.zip /Applications &&
+  open /Applications/Slerp.app
 ```
 
-[docs/platforms.md](docs/platforms.md) has more on how Slerp fits into Explorer and Finder.
+The same command updates Slerp later: it replaces the app that is there.
+
+Intel Macs aren't supported.
+
+### Linux
+
+Each distribution gets two packages: `slerp`, the program with its thumbnailer, MIME types, menu entry and icon, and `slerp-qt-plugin`, the optional Qt image plugin (below), kept apart so that only Qt desktops pull in Qt.  The file names below are for x86_64; on arm64 they end in `arm64.deb`, `aarch64.rpm` and `aarch64.tar.gz` instead.
+
+- **Debian 12 or newer, Ubuntu 22.04 or newer:** `sudo apt install ./slerp_0.1.0-1_amd64.deb ./slerp-qt-plugin_0.1.0-1_amd64.deb`
+- **Fedora:** `sudo dnf install ./slerp-0.1.0-1.x86_64.rpm ./slerp-qt-plugin-0.1.0-1.x86_64.rpm`
+- **Arch Linux** (x86_64 only): `sudo pacman -U slerp-0.1.0-1-x86_64.pkg.tar.zst slerp-qt-plugin-0.1.0-1-x86_64.pkg.tar.zst`
+- **Other distributions:** unpack `slerp-0.1.0-linux-x86_64.tar.gz` and run `sudo ./install.sh` in it, which installs under `/usr/local` (`--uninstall` removes it again).  GNOME's file managers need `sudo ./install.sh --prefix /usr`, because their thumbnail sandbox sees only `/usr`.  The program needs the Vulkan loader (`libvulkan1` or `vulkan-loader`).
+
+The packages recommend Mesa's Vulkan drivers, whose lavapipe draws 3D thumbnails where there is no GPU driver, and suggest libheif (HEIC pictures) and Ghostscript (PostScript and EPS files without a stored preview).
 
 ### From source
 
@@ -100,6 +97,8 @@ cargo build --release
 The repository's `.cargo/config.toml` builds into `local/target/`.  Then install, as root, `local/target/release/slerp` to `/usr/local/bin` or `/usr/bin`, `data/slerp.thumbnailer` to `share/thumbnailers/`, `data/slerp.xml` to `share/mime/packages/` followed by `update-mime-database`, `data/slerp.desktop` to `share/applications/` followed by `update-desktop-database`, and `data/slerp.svg` to `share/icons/hicolor/scalable/apps/`.  GNOME's thumbnail sandbox sees only `/usr`, so its file managers need the `/usr` prefix.
 
 The viewer's heavier picture decoders are Cargo features, all on by default: `heic` (loads the system's libheif at run time), `avif` (the rav1d AV1 decoder) and `jxl` (jxl-rs).  `cargo build --release --no-default-features --features viewer,avif` keeps only the ones listed, and without `viewer` the program is a thumbnailer alone, half the size.  `--features avif-asm` adds rav1d's assembly, which decodes AV1 several times faster but needs the `nasm` assembler on x86.
+
+The release files are made by `tools/build-linux.sh` (the Linux packages and tarball), `tools/build-windows.sh` (cross-compiles the Windows programs on Linux; the installer is `packaging/windows/slerp.iss`), `tools/macos-app.sh` (the Mac app, on a Mac) and `packaging/aur/PKGBUILD`, all run by the release workflow in `.github/workflows/release.yml`; [tools/README.md](tools/README.md) describes them.
 
 ### The Qt image plugin
 
@@ -240,7 +239,7 @@ Every command takes `--dry-run`.  The choices live in `file-types.jsonc` beside 
 
 [ARCHITECTURE.md](ARCHITECTURE.md) describes the crates and their conventions.  `cargo test --workspace` runs the tests; many of them read the public test corpus, which `deno run -A tools/fetch-test-assets.ts` downloads into `local/assets/` (about 2 GB; tests skip what's missing).  `tools/kio-probe/` asks KDE for thumbnails the way Dolphin does, and `tools/README.md` describes the other tools.  After changing the format table, `slerp formats --write` rewrites the files generated from it and `cargo run --manifest-path tools/format-list/Cargo.toml` rewrites [docs/formats.md](docs/formats.md); `cargo test -p slerp-formats` fails while a generated file is out of date.  `deno run -A tools/third-party.ts` refreshes [THIRD-PARTY.md](THIRD-PARTY.md) after dependencies change, and `tools/readme-images.sh` makes the pictures above.
 
-Packaging: `tools/build-deb.sh` (Debian and Ubuntu), `packaging/aur/PKGBUILD` with `tools/source-tarball.sh` (Arch Linux), `tools/build-windows.sh` and `tools/build-macos.sh`; `tools/test-packages.sh deb|aur` installs and tests the Linux packages in fresh containers.
+Packaging: `.github/workflows/release.yml` builds and smoke-tests every release file and makes a draft release from a `v*` tag.  It runs `tools/build-linux.sh` (deb, rpm and tarball), `packaging/aur/PKGBUILD` with `tools/source-tarball.sh` (Arch Linux), `tools/build-windows.sh` with `packaging/windows/slerp.iss`, and `tools/macos-app.sh`; `tools/test-packages.sh deb|rpm|arch|aur|tar` installs and tests the Linux files in fresh containers.
 
 ## Licence
 

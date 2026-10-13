@@ -72,8 +72,9 @@ avif = ["slerp-core/avif"]
 avif-asm = ["slerp-core/avif-asm"]
 jxl = ["slerp-core/jxl"]
 
-# The Debian package, built by tools/build-deb.sh (which also builds the Qt
-# image plugin's package, slerp-qt-plugin).  The desktop files go under
+# The Debian package, built by tools/build-linux.sh (which also builds the Qt
+# image plugin's package, slerp-qt-plugin, and the rpms and tarball from
+# packaging/).  The desktop files go under
 # /usr/share, where the dpkg triggers of shared-mime-info, desktop-file-utils
 # and hicolor-icon-theme rebuild the MIME, menu and icon caches, so the
 # package needs no maintainer scripts.  The Vulkan loader, Wayland,
