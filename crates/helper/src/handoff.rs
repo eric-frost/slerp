@@ -270,9 +270,33 @@ impl ViewerListener {
         self.exe.as_ref().is_some_and(|e| e.replaced())
     }
 
-    /// The socket's descriptor, for waiting on it alongside other events.
-    pub fn fd(&self) -> std::os::fd::RawFd {
-        self.listener.as_raw_fd()
+    /// Calls `wake` from a thread of its own whenever a client is waiting to
+    /// be taken, until the returned [`ClientWatch`] is dropped: for a caller
+    /// that waits in an event loop which can't watch the socket itself
+    /// (macOS's run loop), and then calls [`ViewerListener::accept`].
+    pub fn watch(&self, wake: impl Fn() + Send + 'static) -> io::Result<ClientWatch> {
+        let listener = self.listener.try_clone()?;
+        let (stop, stopped) = UnixStream::pair()?;
+        let thread = std::thread::Builder::new().name("slerp-viewer-watch".into()).spawn(move || {
+            let fds = [listener.as_raw_fd(), stopped.as_raw_fd()];
+            loop {
+                match sys::wait_readable(fds, None) {
+                    Ok([_, true]) | Err(_) => return,
+                    Ok([true, false]) => {
+                        wake();
+                        // The owner takes the client at once; until it has,
+                        // the socket stays readable, so wait a moment (or for
+                        // the stop) before looking again.
+                        let pause = sys::wait_readable([stopped.as_raw_fd()], Some(Duration::from_millis(20)));
+                        if !matches!(pause, Ok([false])) {
+                            return;
+                        }
+                    }
+                    Ok([false, false]) => {}
+                }
+            }
+        })?;
+        Ok(ClientWatch { stop, thread: Some(thread) })
     }
 
     pub fn socket(&self) -> &Path {
@@ -283,6 +307,24 @@ impl ViewerListener {
 impl Drop for ViewerListener {
     fn drop(&mut self) {
         let _ = std::fs::remove_file(&self.socket);
+    }
+}
+
+/// The thread [`ViewerListener::watch`] started; dropping this stops it at
+/// once and waits for it.
+pub struct ClientWatch {
+    stop: UnixStream,
+    thread: Option<std::thread::JoinHandle<()>>,
+}
+
+impl Drop for ClientWatch {
+    fn drop(&mut self) {
+        // The thread sees the end of the stream; unlike a write, this can't
+        // raise SIGPIPE when the thread has already gone.
+        let _ = self.stop.shutdown(std::net::Shutdown::Both);
+        if let Some(t) = self.thread.take() {
+            let _ = t.join();
+        }
     }
 }
 
@@ -380,6 +422,29 @@ mod tests {
         drop(listener);
         assert!(!socket.exists());
         assert!(matches!(hand_to_viewer_at(&socket, &req, Duration::from_secs(2)), Err(HandoffError::NotRunning)));
+        let _ = std::fs::remove_dir_all(socket.parent().unwrap());
+    }
+
+    /// A watch wakes its owner when a client connects, the owner then takes
+    /// the request, and dropping the watch ends its thread at once.
+    #[test]
+    fn a_watch_wakes_the_owner_for_each_client() {
+        let socket = temp_socket("watch");
+        let listener = ViewerListener::bind_at(&socket).unwrap();
+        let (woke, wakes) = std::sync::mpsc::channel();
+        let watch = listener.watch(move || woke.send(()).unwrap()).unwrap();
+        assert!(wakes.recv_timeout(Duration::from_millis(100)).is_err(), "no client, no wake");
+        let path = socket.clone();
+        let req = ViewRequest { file: Some("/tmp/w.glb".into()), ..Default::default() };
+        let sent = req.clone();
+        let client = std::thread::spawn(move || hand_to_viewer_at(&path, &sent, Duration::from_secs(2)).is_ok());
+        wakes.recv_timeout(Duration::from_secs(2)).expect("woken for the client");
+        assert_eq!(listener.accept(Duration::from_millis(1)), Some(req));
+        assert!(client.join().unwrap());
+        let start = Instant::now();
+        drop(watch);
+        assert!(start.elapsed() < Duration::from_millis(100));
+        drop(listener);
         let _ = std::fs::remove_dir_all(socket.parent().unwrap());
     }
 

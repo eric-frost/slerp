@@ -111,7 +111,16 @@ pub fn wait(
         // anew rather than being pumped: winit keeps the last window's
         // `exit` until the loop is next run, and a pumped loop that still
         // has it returns at once without handling any event.
+        //
+        // The run loop can't watch the socket, so a thread does and wakes
+        // the loop when a `slerp view` command connects.  Without it (the
+        // thread couldn't start) commands are still seen at every
+        // `Waiting::POLL`, within their half-second wait.
         use winit::platform::run_on_demand::EventLoopExtRunOnDemand;
+        let proxy = event_loop.create_proxy();
+        let _watch = listener.watch(move || {
+            let _ = proxy.send_event(crate::shell::UserEvent::Wake);
+        });
         let mut waiting = Waiting { listener: &listener, stay: &stay, request: None };
         let _ = event_loop.run_app_on_demand(&mut waiting);
         waiting.request
@@ -119,9 +128,9 @@ pub fn wait(
 }
 
 /// The event loop's handler while a macOS viewer waits without a window: it
-/// looks for a file Finder sent and for a `slerp view` command on the
-/// socket every [`Waiting::POLL`], and ends the loop when one comes or the
-/// wait is over.
+/// takes a file Finder sent or a `slerp view` command whenever the loop
+/// wakes (for that event, or every [`Waiting::POLL`] to see whether the
+/// wait is over), and ends the loop when one comes or the wait is over.
 #[cfg(target_os = "macos")]
 struct Waiting<'a> {
     listener: &'a slerp_helper::ViewerListener,
@@ -131,7 +140,7 @@ struct Waiting<'a> {
 
 #[cfg(target_os = "macos")]
 impl Waiting<'_> {
-    const POLL: Duration = Duration::from_millis(50);
+    const POLL: Duration = Duration::from_millis(250);
 
     fn check(&mut self, event_loop: &winit::event_loop::ActiveEventLoop) {
         if self.request.is_some() || !(self.stay)() || self.listener.executable_replaced() {

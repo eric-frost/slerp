@@ -94,7 +94,7 @@ mod unsupported;
 pub use client::{request, request_at, spawn_detached, stop, stop_at};
 #[cfg(unix)]
 pub use handoff::{
-    HandoffError, VIEWER_PROTOCOL_VERSION, ViewRequest, ViewerListener, hand_to_viewer, hand_to_viewer_at,
+    ClientWatch, HandoffError, VIEWER_PROTOCOL_VERSION, ViewRequest, ViewerListener, hand_to_viewer, hand_to_viewer_at,
     viewer_socket_path,
 };
 #[cfg(unix)]
