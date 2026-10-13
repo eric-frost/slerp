@@ -46,6 +46,13 @@ use slerp_textures::DecodeOptions;
 use std::path::Path;
 use std::sync::Arc;
 
+/// Every decoder that runs isolated, as the crates that own them list them
+/// (see `slerp-isolate`): the program that serves them gives this to
+/// `slerp_isolate::serve_jobs`, so it can run any of them in a new copy of
+/// itself, which Windows needs for lack of fork.
+pub static ISOLATED_JOBS: &[slerp_isolate::Jobs] =
+    &[slerp_svg::JOBS, slerp_documents::JOBS, slerp_images::JOBS, slerp_jxr::JOBS, slerp_dna::JOBS];
+
 #[derive(Debug, thiserror::Error)]
 pub enum ThumbError {
     #[error("not a format Slerp reads")]
@@ -816,4 +823,18 @@ pub fn describe(asset: &Asset) -> String {
         }
     }
     s
+}
+
+#[cfg(test)]
+mod tests {
+    /// A program finds a job by its name alone, so no two may share one.
+    #[test]
+    fn isolated_jobs_have_unique_names() {
+        let mut names: Vec<&str> = super::ISOLATED_JOBS.iter().flat_map(|g| g.iter()).map(|j| j.name()).collect();
+        let n = names.len();
+        names.sort();
+        names.dedup();
+        assert_eq!(names.len(), n, "{names:?}");
+        assert!(n >= 9, "{names:?}");
+    }
 }

@@ -168,6 +168,11 @@ fn exit_quietly_on_closed_pipe() {
 }
 
 fn main() -> ExitCode {
+    // First of all: when Windows started this program to run one of the
+    // decoders that run isolated (`--isolated-job`, never typed by people),
+    // it does that and exits here.  Otherwise this marks the program as the
+    // one those decoders run in.
+    slerp_isolate::serve_jobs(slerp_core::ISOLATED_JOBS);
     let cli = Cli::parse();
     let result = match cli.command {
         Some(Command::Thumbnail { size, input, output }) => thumbnail(size, &input, &output),

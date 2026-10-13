@@ -12,11 +12,9 @@ links = "slerp_jxrlib"
 
 [dependencies]
 thiserror.workspace = true
-
-# The decode runs in a forked child process with limits, so a fault in the C
-# code costs one thumbnail instead of the helper serving every file manager.
-[target.'cfg(unix)'.dependencies]
-libc = "0.2"
+# The decode runs in a child process with limits, so a fault in the C code
+# costs one thumbnail instead of the helper serving every file manager.
+slerp-isolate = { path = "../isolate" }
 
 [build-dependencies]
 cc = { version = "1.2", features = ["parallel"] }

@@ -20,11 +20,30 @@ static RENDERER: Mutex<Option<ThumbRenderer>> = Mutex::new(None);
 /// caller's threads; only drawing takes the renderer.  Never panics: a
 /// panic anywhere becomes a failure reply.
 pub fn thumbnail(path: &Path, size: u32) -> Reply {
+    use_slerp_exe();
     let size = size.clamp(16, MAX_SIZE);
     match catch_unwind(AssertUnwindSafe(|| make(path, size))) {
         Ok(reply) => reply,
         Err(panic) => Reply::Failed(format!("panicked: {}", panic_message(&panic))),
     }
+}
+
+/// Has the decoders that run isolated run in the `slerp.exe` beside this
+/// DLL.  The DLL carries its own copy of Slerp's crates, so what
+/// `slerp.exe`'s `main` set up doesn't reach it, even inside `slerp.exe
+/// helper`; and in Explorer's isolated thumbnail process there is no
+/// `slerp.exe` at all.  Without the program the decoders run on a thread,
+/// where a crash would end this process.
+fn use_slerp_exe() {
+    static ONCE: std::sync::Once = std::sync::Once::new();
+    ONCE.call_once(|| {
+        let Ok(exe) = crate::this_dll().map(|dll| dll.with_file_name("slerp.exe")) else { return };
+        if exe.is_file() {
+            slerp_isolate::use_program(exe, slerp_core::ISOLATED_JOBS);
+        } else {
+            crate::log::log!("{} is missing, so decoders run unisolated", exe.display());
+        }
+    });
 }
 
 fn make(path: &Path, size: u32) -> Reply {

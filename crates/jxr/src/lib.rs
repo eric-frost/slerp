@@ -5,17 +5,19 @@
 //! Decoding is done by Microsoft's reference decoder, jxrlib (BSD-2-Clause,
 //! vendored in `vendor/jxrlib`), through the small shim in `src/shim.c`.
 //! jxrlib is a large body of C that trusts much of what a file says and has
-//! a long record of memory-safety bugs, and thumbnails decode whatever a
-//! user browses past, including downloads.  So on Unix the decode runs in a
-//! forked child process with a CPU limit and a memory limit and sends plain
-//! pixel data back through a pipe; a crash, a hang or a runaway allocation
-//! costs one thumbnail.  Windows has no fork; there the decode runs in the
-//! calling process, which for thumbnails is the helper rather than Explorer.
+//! a long record of memory-safety bugs (and `assert`s that abort on damaged
+//! files), and thumbnails decode whatever a user browses past, including
+//! downloads.  So the decode runs isolated ([`JOBS`], see `slerp-isolate`):
+//! in a forked child on Unix, a child `slerp.exe` on Windows, each with a
+//! time and a memory limit, sending plain pixel data back; a crash, a hang
+//! or a runaway allocation costs one thumbnail.
 //!
 //! The pixel formats jxrlib's converter handles come out as 8-bit RGBA
 //! (8-bit formats, and 16-bit and packed ones reduced to 8) or as 32-bit
 //! float RGBA (half, fixed-point and float formats, as HDR screenshots
 //! store them).  CMYK and N-channel files are refused with a message.
+
+use slerp_isolate::{Job, Limits, Pack, Unpack};
 
 /// Why a file couldn't be decoded.
 #[derive(Debug, thiserror::Error)]
@@ -228,9 +230,7 @@ pub fn sniff(head: &[u8]) -> bool {
         || head.starts_with(b"WMPHOTO")
 }
 
-/// Seconds a decode may take before it is abandoned (in the forked child,
-/// which Windows doesn't have).
-#[cfg(unix)]
+/// Time a decode may take before the decoder is stopped.
 const TIMEOUT: std::time::Duration = std::time::Duration::from_secs(30);
 
 /// Decodes a JPEG XR file in memory.  With a `min_size` the picture comes
@@ -285,11 +285,11 @@ fn text_of(bytes: &[u8]) -> String {
     String::from_utf8_lossy(&bytes[..end]).into_owned()
 }
 
-/// What the child sends: a tag byte (0 for a picture, 1 for an error
-/// message), then for a picture this header and the tightly packed rows.
+/// What the decode answers: this header, then the tightly packed rows.
 const HEADER_BYTES: usize = 4 * 8 + 4 * 2 + 40;
 
-/// Runs the decoder where it is, returning the bytes the child would send.
+/// Runs the decoder here (in the isolated process), returning the header
+/// and pixels as bytes.
 fn decode_here(bytes: &[u8], min_size: u32, max_bytes: usize) -> Result<Vec<u8>, String> {
     // SAFETY: `Out` is plain old data that the shim fills in; `pixels` is
     // set to a buffer the shim allocated, which is freed below.
@@ -359,196 +359,48 @@ fn parse_wire(wire: &[u8], max_bytes: usize) -> Result<Decoded, JxrError> {
 └─────────────────╯*/
 //region Isolation
 
-/// Decodes in a child process, which gets a CPU limit and a memory limit
-/// and is killed after [`TIMEOUT`].
-#[cfg(unix)]
+/// The work this crate runs isolated, for the program that serves it (see
+/// `slerp-isolate`).
+pub static JOBS: slerp_isolate::Jobs = &[&DECODE_JOB];
+
+/// Who decodes, in the isolation's messages ("the JPEG XR decoder crashed").
+const DECODER: &str = "the JPEG XR decoder";
+
+/// The decode: the input is the smallest size wanted, the most bytes the
+/// pixels may take, and the file.
+static DECODE_JOB: Job = Job::once("jxr.decode", DECODER, |input| {
+    let mut u = Unpack::new(input);
+    let min_size = u.u32()?;
+    let max_bytes = usize::try_from(u.u64()?).map_err(|_| "a damaged request")?;
+    decode_here(u.bytes()?, min_size, max_bytes)
+});
+
+/// Decodes isolated: the decoder may add a few times the picture to the
+/// memory it starts with, since it keeps working buffers beside the output,
+/// and is stopped after [`TIMEOUT`].
 fn isolated(bytes: &[u8], min_size: u32, max_bytes: usize) -> Result<Vec<u8>, JxrError> {
-    use std::time::Instant;
-
-    // 1. A pipe for the answer.
-    let mut fds = [0i32; 2];
-    // SAFETY: fds has room for the two descriptors pipe writes.
-    if unsafe { libc::pipe(fds.as_mut_ptr()) } != 0 {
-        return Err(JxrError::Invalid(format!("couldn't make a pipe: {}", std::io::Error::last_os_error())));
-    }
-    let (read_fd, write_fd) = (fds[0], fds[1]);
-    for fd in fds {
-        // SAFETY: fd is a descriptor this function owns.
-        unsafe { libc::fcntl(fd, libc::F_SETFD, libc::FD_CLOEXEC) };
-    }
-    // The memory the child may add to what it inherits: a few times the
-    // picture, since the decoder keeps working buffers beside the output.
-    let budget = (max_bytes as u64).saturating_mul(3).saturating_add(384 << 20);
-    let data_limit = current_data_bytes().map(|d| d.saturating_add(budget));
-
-    // SAFETY: the child only runs the decoder (C that allocates, which glibc
-    // and macOS make safe after fork), writes to the pipe and leaves with
-    // _exit, never returning into the caller's code or running its
-    // destructors, and touches no locks other threads might have held.
-    let pid = unsafe { libc::fork() };
-    if pid < 0 {
-        // SAFETY: closing descriptors this function owns.
-        unsafe {
-            libc::close(read_fd);
-            libc::close(write_fd);
-        }
-        return Err(JxrError::Invalid(format!(
-            "couldn't start a decoder process: {}",
-            std::io::Error::last_os_error()
-        )));
-    }
-    if pid == 0 {
-        // 2. The child: limits first, then the decode.
-        // SAFETY: closing the end the child doesn't use; setrlimit gets a
-        // valid struct; the descriptors duplicated onto are the child's own.
-        unsafe {
-            libc::close(read_fd);
-            // jxrlib prints complaints about metadata tags it doesn't know;
-            // they must not reach the parent's output.
-            let null = libc::open(c"/dev/null".as_ptr(), libc::O_WRONLY);
-            if null >= 0 {
-                libc::dup2(null, 1);
-                libc::dup2(null, 2);
-                libc::close(null);
-            }
-            let cpu = libc::rlimit { rlim_cur: TIMEOUT.as_secs() as _, rlim_max: TIMEOUT.as_secs() as _ };
-            libc::setrlimit(libc::RLIMIT_CPU, &cpu);
-            #[cfg(target_os = "linux")]
-            if let Some(limit) = data_limit {
-                let data = libc::rlimit { rlim_cur: limit as _, rlim_max: limit as _ };
-                libc::setrlimit(libc::RLIMIT_DATA, &data);
-            }
-        }
-        let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| decode_here(bytes, min_size, max_bytes)))
-            .unwrap_or_else(|_| Err("the decoder panicked".to_string()));
-        let (tag, body) = match result {
-            Ok(wire) => (0u8, wire),
-            Err(message) => (1u8, message.into_bytes()),
-        };
-        let ok = write_all(write_fd, &[tag]) && write_all(write_fd, &body);
-        // SAFETY: _exit ends the child without running the parent's
-        // destructors or atexit handlers.
-        unsafe { libc::_exit(if ok { 0 } else { 2 }) };
-    }
-
-    // 3. The parent reads until the child closes the pipe, it runs out of
-    //    time, or it sends more than a picture can hold.
-    // SAFETY: closing the end the parent doesn't use.
-    unsafe { libc::close(write_fd) };
-    let _ = data_limit;
-    let deadline = Instant::now() + TIMEOUT;
-    let cap = max_bytes.saturating_add(HEADER_BYTES + 1024);
-    let mut out = Vec::new();
-    let mut buf = vec![0u8; 1 << 16];
-    let failure = loop {
-        let left = deadline.saturating_duration_since(Instant::now());
-        if left.is_zero() {
-            break Some(format!("the JPEG XR decoder took longer than {} s", TIMEOUT.as_secs()));
-        }
-        let mut pfd = libc::pollfd { fd: read_fd, events: libc::POLLIN, revents: 0 };
-        let ms = left.as_millis().min(i32::MAX as u128) as i32;
-        // SAFETY: pfd is one valid pollfd.
-        let ready = unsafe { libc::poll(&mut pfd, 1, ms) };
-        if ready < 0 {
-            if std::io::Error::last_os_error().kind() == std::io::ErrorKind::Interrupted {
-                continue;
-            }
-            break Some(format!("couldn't wait for the decoder: {}", std::io::Error::last_os_error()));
-        }
-        if ready == 0 {
-            continue;
-        }
-        // SAFETY: buf is valid for writes of its length.
-        let n = unsafe { libc::read(read_fd, buf.as_mut_ptr().cast(), buf.len()) };
-        if n < 0 {
-            if std::io::Error::last_os_error().kind() == std::io::ErrorKind::Interrupted {
-                continue;
-            }
-            break Some(format!("couldn't read the decoder's answer: {}", std::io::Error::last_os_error()));
-        }
-        if n == 0 {
-            break None;
-        }
-        if out.len() + n as usize > cap {
-            break Some("the decoder's answer was too large".to_string());
-        }
-        out.extend_from_slice(&buf[..n as usize]);
+    let limits = Limits {
+        time: TIMEOUT,
+        memory: (max_bytes as u64).saturating_mul(3).saturating_add(384 << 20),
+        output: max_bytes.saturating_add(HEADER_BYTES + 1024),
     };
-    // SAFETY: closing the parent's end.
-    unsafe { libc::close(read_fd) };
-
-    // 4. Reap the child, killing it first if it is still running.
-    if failure.is_some() {
-        // SAFETY: pid is our own child, not yet reaped.
-        unsafe { libc::kill(pid, libc::SIGKILL) };
-    }
-    let mut status = 0i32;
-    // SAFETY: pid is our own child; status is a valid out pointer.
-    let reaped = loop {
-        let r = unsafe { libc::waitpid(pid, &mut status, 0) };
-        if r >= 0 || std::io::Error::last_os_error().kind() != std::io::ErrorKind::Interrupted {
-            break r;
-        }
-    };
-    if let Some(message) = failure {
-        return Err(JxrError::Invalid(message));
-    }
-    if reaped == pid && libc::WIFSIGNALED(status) {
-        return Err(JxrError::Invalid(format!(
-            "the JPEG XR decoder crashed (signal {}) on this file",
-            libc::WTERMSIG(status)
-        )));
-    }
-    match out.split_first() {
-        Some((0, body)) => Ok(body.to_vec()),
-        Some((1, message)) => Err(classify(String::from_utf8_lossy(message).into_owned())),
-        _ => Err(JxrError::Invalid("the JPEG XR decoder stopped without an answer".into())),
-    }
+    let input = Pack::new().u32(min_size).u64(max_bytes as u64).bytes(bytes).done();
+    slerp_isolate::run(&DECODE_JOB, &input, limits).map_err(classify)
 }
 
-/// Without fork the decode runs here.
-#[cfg(not(unix))]
-fn isolated(bytes: &[u8], min_size: u32, max_bytes: usize) -> Result<Vec<u8>, JxrError> {
-    std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| decode_here(bytes, min_size, max_bytes)))
-        .unwrap_or_else(|_| Err("the decoder panicked".to_string()))
-        .map_err(classify)
-}
-
-/// Sorts the shim's messages into the error kinds callers care about.
+/// Sorts the shim's messages into the error kinds callers care about.  A
+/// failure of the isolated process (it crashed, took too long) is the
+/// file's fault, so it is invalid.
 fn classify(message: String) -> JxrError {
-    if message.contains("too large") || message.contains("out of memory") {
+    if message.starts_with(DECODER) {
+        JxrError::Invalid(message)
+    } else if message.contains("too large") || message.contains("out of memory") {
         JxrError::TooLarge(message)
     } else if message.contains("not shown") || message.contains("unsupported") {
         JxrError::Unsupported(message)
     } else {
         JxrError::Invalid(message)
     }
-}
-
-/// Bytes of heap and private data the process holds now, which a limit on
-/// the child's data segment must allow for since it inherits them (Linux).
-#[cfg(unix)]
-fn current_data_bytes() -> Option<u64> {
-    let status = std::fs::read_to_string("/proc/self/status").ok()?;
-    let line = status.lines().find(|l| l.starts_with("VmData:"))?;
-    let kb: u64 = line.split_whitespace().nth(1)?.parse().ok()?;
-    Some(kb * 1024)
-}
-
-#[cfg(unix)]
-fn write_all(fd: i32, mut data: &[u8]) -> bool {
-    while !data.is_empty() {
-        // SAFETY: data is valid for reads of its length.
-        let n = unsafe { libc::write(fd, data.as_ptr().cast(), data.len()) };
-        if n < 0 {
-            if std::io::Error::last_os_error().kind() == std::io::ErrorKind::Interrupted {
-                continue;
-            }
-            return false;
-        }
-        data = &data[n as usize..];
-    }
-    true
 }
 
 //endregion

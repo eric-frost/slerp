@@ -22,6 +22,8 @@ path = "src/bin/slerpw.rs"
 # Everything else is Windows-only: on other platforms the crate is empty.
 [target.'cfg(windows)'.dependencies]
 slerp-core.workspace = true
+# Has decoders that run isolated run in the slerp.exe beside the DLL.
+slerp-isolate.workspace = true
 # The registration, shared with `slerp associate`.
 slerp-associate.workspace = true
 windows = { version = "0.62", features = [

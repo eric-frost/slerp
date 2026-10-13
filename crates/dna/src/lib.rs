@@ -16,8 +16,9 @@
 //!   pose every time it is recomputed.
 //!
 //! openriglogic's reader is C++ that trusts some of what a file says, so
-//! files are checked before it sees them and, on Unix, read in a child
-//! process (see `sandbox`).
+//! files are checked before it sees them and read in an isolated process
+//! ([`JOBS`], see `slerp-isolate`), which sends back plain data; a crash, a
+//! hang or a runaway allocation there costs one thumbnail.
 
 mod arkit;
 mod cache;
@@ -26,7 +27,6 @@ mod ffi;
 mod fit;
 mod maps;
 mod rig;
-mod sandbox;
 mod scene;
 mod wire;
 
@@ -537,11 +537,23 @@ fn read_files(path: &Path, opts: &Options) -> Result<Files, LoadError> {
     Ok(Files { main, main_path, body, body_path, neighbours, cache_key, partner_warning, first_is_head })
 }
 
+/// The work this crate runs isolated, for the program that serves it (see
+/// `slerp-isolate`): openriglogic reading a file, whose input is the path
+/// and the [`Request`].
+pub static JOBS: slerp_isolate::Jobs = &[&READ_JOB];
+
+static READ_JOB: slerp_isolate::Job = slerp_isolate::Job::once("dna.read", "the DNA reader", |input| {
+    let mut u = slerp_isolate::Unpack::new(input);
+    let path = u.path()?;
+    let request = Request::unpack(&mut u)?;
+    extract::extract(&path, &request).map(|d| wire::encode(&d))
+});
+
 /// Reads one DNA file: checks its header, then has openriglogic read it in
-/// a child process on Unix (in this one elsewhere, or when
-/// `SLERP_DNA_IN_PROCESS` is set, for profiling).  The viewer's reads
-/// (which build the rigs) are kept in the cache and come from it when the
-/// file hasn't changed; the key that names them comes back too.
+/// an isolated process (in this one when `SLERP_DNA_IN_PROCESS` is set, for
+/// profiling).  The viewer's reads (which build the rigs) are kept in the
+/// cache and come from it when the file hasn't changed; the key that names
+/// them comes back too.
 fn read(path: &Path, request: &Request, opts: &Options) -> Result<(DnaData, Option<cache::Key>), LoadError> {
     let len = check_header(path, opts.max_file_bytes)?;
     let what = format!("{:?} {} {} {}", request.lods, request.geometry, request.blend_shapes, request.probe_rig);
@@ -552,18 +564,22 @@ fn read(path: &Path, request: &Request, opts: &Options) -> Result<(DnaData, Opti
     {
         return Ok((d, key));
     }
-    if cfg!(not(unix)) || std::env::var_os("SLERP_DNA_IN_PROCESS").is_some() {
+    if std::env::var_os("SLERP_DNA_IN_PROCESS").is_some() {
         let d = extract::extract(path, request).map_err(LoadError::Invalid)?;
         if let Some(k) = key {
             cache::write(k, "data", wire::encode(&d));
         }
         return Ok((d, key));
     }
-    let max_answer = (len as usize).saturating_mul(8).saturating_add(64 << 20);
-    let (p, r) = (path.to_path_buf(), request.clone());
-    let answer =
-        sandbox::isolated(move || extract::extract(&p, &r).map(|d| wire::encode(&d)), opts.timeout, max_answer)
-            .map_err(LoadError::Invalid)?;
+    // No memory limit: the reader holds a whole MetaHuman's meshes, and
+    // what it may need was never measured.
+    let limits = slerp_isolate::Limits {
+        time: opts.timeout,
+        memory: u64::MAX,
+        output: (len as usize).saturating_mul(8).saturating_add(64 << 20),
+    };
+    let input = request.pack(slerp_isolate::Pack::new().path(path)).done();
+    let answer = slerp_isolate::run(&READ_JOB, &input, limits).map_err(LoadError::Invalid)?;
     let d = wire::decode(&answer).map_err(LoadError::Invalid)?;
     if let Some(k) = key {
         cache::write(k, "data", answer);

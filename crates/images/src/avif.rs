@@ -13,11 +13,18 @@ use crate::animation::{Animation, Blend, Dispose, MAX_CANVAS_PIXELS, Patch, Patc
 use crate::av1;
 use crate::color::{Conversion, describe_icc, primaries_name, tone_map, transfer_name};
 use crate::isobmff::{Colour, Heif, Property, Track, ratio};
-use crate::isolate;
 use crate::orient::orient;
 use crate::yuv::{Cicp, Rgba, Yuv, to_rgb};
+use slerp_isolate::{Job, Opened, Worker};
 use slerp_scene::{ColorSpace, Texture};
 use std::sync::Arc;
+
+/// The AV1 decoding, which runs isolated (see `slerp-isolate`): rav1d is
+/// Rust, but its only interface is dav1d's C one, through which a panic on
+/// a damaged file aborts the whole process.  Both take the file's bytes.
+const DECODER: &str = "the AV1 decoder";
+pub(crate) static STILL_JOB: Job = Job::once("avif.still", DECODER, still_job);
+pub(crate) static SEQUENCE_JOB: Job = Job::serving("avif.sequence", DECODER, sequence_job);
 
 /// The most pixels of a still picture opened.
 pub const MAX_PIXELS: u64 = 160 << 20;
@@ -188,23 +195,29 @@ pub fn load_still(h: &Heif, file: &[u8]) -> Result<Still, String> {
         })
         .unwrap_or(MAX_PIXELS)
         .min(MAX_PIXELS);
-    let wire = isolate::run(limits_for(pixels), || {
-        let mut budget = MAX_PIXELS;
-        let pic = item_yuv(h, file, id, 0, &mut budget)?;
-        // Transparency: a second image item (or grid) of one channel.
-        let alpha = match h.alpha_of(id) {
-            Some(a) => Some(item_yuv(h, file, a, 0, &mut budget)?),
-            None if tiles_have_alpha(h, id) => Some(grid_yuv(h, file, id, 0, &mut budget, true)?),
-            None => None,
-        };
-        Ok(encode_pair(&pic, alpha.as_ref()))
-    })?;
+    let wire = slerp_isolate::run(&STILL_JOB, file, limits_for(pixels))?;
     let (pic, alpha_pic) = decode_pair(&wire)?;
     let premultiplied = h.alpha_is_premultiplied(id);
     let props: Vec<Property> = h.properties_of(id).into_iter().cloned().collect();
     let mut tex = render(pic, alpha_pic, premultiplied, &props)?;
     tex.source.container = "AVIF".into();
     Ok(Still { texture: tex })
+}
+
+/// The child's side of [`load_still`]: the primary picture and its alpha,
+/// decoded from the file.
+fn still_job(file: &[u8]) -> Result<Vec<u8>, String> {
+    let h = Heif::parse(file)?;
+    let id = h.primary.ok_or("the file has no primary picture")?;
+    let mut budget = MAX_PIXELS;
+    let pic = item_yuv(&h, file, id, 0, &mut budget)?;
+    // Transparency: a second image item (or grid) of one channel.
+    let alpha = match h.alpha_of(id) {
+        Some(a) => Some(item_yuv(&h, file, a, 0, &mut budget)?),
+        None if tiles_have_alpha(&h, id) => Some(grid_yuv(&h, file, id, 0, &mut budget, true)?),
+        None => None,
+    };
+    Ok(encode_pair(&pic, alpha.as_ref()))
 }
 
 /// Converts a decoded picture (with its alpha) to a texture, and applies
@@ -389,8 +402,8 @@ fn crop(p: Rgba, w: usize, _h: usize, x0: usize, y0: usize, nw: usize, nh: usize
 
 /// The decoding side of an AVIF image sequence: AV1 samples are decoded in
 /// order (a decoder can't jump), so asking for an earlier frame starts again
-/// from the nearest sync sample.  It runs in a child process (see
-/// [`crate::isolate`]), since a damaged sample can make rav1d abort.
+/// from the nearest sync sample.  It runs in an isolated worker
+/// ([`SEQUENCE_JOB`]), since a damaged sample can make rav1d abort.
 struct SequenceDecoder {
     file: Arc<Vec<u8>>,
     colour: Track,
@@ -402,18 +415,6 @@ struct SequenceDecoder {
 }
 
 impl SequenceDecoder {
-    /// A decoder for the same frames that hasn't started.
-    fn fresh(&self) -> SequenceDecoder {
-        SequenceDecoder {
-            file: self.file.clone(),
-            colour: self.colour.clone(),
-            alpha: self.alpha.clone(),
-            decoder: None,
-            alpha_decoder: None,
-            next: 0,
-        }
-    }
-
     fn config_of(t: &Track) -> Vec<u8> {
         match &t.config {
             Some(Property::Av1c { obus, .. }) => obus.clone(),
@@ -482,6 +483,22 @@ impl SequenceDecoder {
     }
 }
 
+/// The worker's side of a [`SequenceSource`]: reads the file's picture
+/// track, then decodes each frame asked for.
+fn sequence_job(file: &[u8]) -> Result<Opened, String> {
+    let h = Heif::parse(file)?;
+    let (colour, alpha) = h.picture_track().ok_or("the file has no picture track")?;
+    let mut decoder = SequenceDecoder {
+        file: Arc::new(file.to_vec()),
+        colour: colour.clone(),
+        alpha: alpha.cloned(),
+        decoder: None,
+        alpha_decoder: None,
+        next: 0,
+    };
+    Ok((Box::new(move |request: &[u8]| decoder.serve(request)), Vec::new()))
+}
+
 /// A picture and its alpha as bytes, for passing between processes.
 fn encode_pair(pic: &Yuv, alpha: Option<&Yuv>) -> Vec<u8> {
     let mut out = Vec::with_capacity(pic.y.len() * 6);
@@ -502,18 +519,18 @@ fn decode_pair(bytes: &[u8]) -> Result<(Yuv, Option<Yuv>), String> {
     Ok((pic, alpha))
 }
 
-/// What `isolate` allows a decoder of pictures of `pixels` pixels: four
+/// What the isolated decoder of pictures of `pixels` pixels may use: four
 /// planes of 16-bit samples.
-fn limits_for(pixels: u64) -> isolate::Limits {
-    isolate::Limits::for_pixels(pixels.saturating_mul(8).min(usize::MAX as u64 / 2) as usize)
+fn limits_for(pixels: u64) -> slerp_isolate::Limits {
+    crate::limits_for_pixels(pixels.saturating_mul(8).min(usize::MAX as u64 / 2) as usize)
 }
 
 /// An AVIF image sequence as animation frames, decoded by a child process
 /// that keeps its decoder between frames.
 struct SequenceSource {
-    /// What a new child process starts from.
-    template: SequenceDecoder,
-    worker: Option<isolate::Worker>,
+    /// The file, which a new child process starts from.
+    file: Arc<Vec<u8>>,
+    worker: Option<Worker>,
     cicp: Cicp,
     size: (u32, u32),
 }
@@ -521,9 +538,8 @@ struct SequenceSource {
 impl PatchSource for SequenceSource {
     fn patch(&mut self, index: usize) -> Result<Patch, String> {
         if !self.worker.as_ref().is_some_and(|w| w.alive()) {
-            let mut decoder = self.template.fresh();
             let limits = limits_for(self.size.0 as u64 * self.size.1 as u64);
-            self.worker = Some(isolate::Worker::start(limits, move |req| decoder.serve(req))?);
+            self.worker = Some(Worker::start(&SEQUENCE_JOB, &self.file, limits)?.0);
         }
         let worker = self.worker.as_mut().ok_or("the decoder process isn't running")?;
         let (mut pic, alpha) = decode_pair(&worker.ask(&(index as u32).to_le_bytes())?)?;
@@ -559,8 +575,7 @@ impl PatchSource for SequenceSource {
 /// Opens an AVIF image sequence as an animation, or `None` when the file
 /// has no picture track.
 pub fn load_sequence(h: &Heif, file: Vec<u8>, info: slerp_scene::Info) -> Option<Result<Animation, String>> {
-    let (colour, alpha) = h.picture_track()?;
-    let (colour, alpha) = (colour.clone(), alpha.cloned());
+    let colour = h.picture_track()?.0.clone();
     Some((|| {
         if colour.samples.is_empty() {
             return Err("the sequence has no frames".to_string());
@@ -594,9 +609,7 @@ pub fn load_sequence(h: &Heif, file: Vec<u8>, info: slerp_scene::Info) -> Option
             },
             _ => Cicp::UNSPECIFIED,
         };
-        let template =
-            SequenceDecoder { file: Arc::new(file), colour, alpha, decoder: None, alpha_decoder: None, next: 0 };
-        let source = SequenceSource { template, worker: None, cicp, size: (w, hh) };
+        let source = SequenceSource { file: Arc::new(file), worker: None, cicp, size: (w, hh) };
         Ok(Animation { info, size: (w, hh), delays, plays, source: Box::new(source) })
     })())
 }

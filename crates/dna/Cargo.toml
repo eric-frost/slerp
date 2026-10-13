@@ -16,11 +16,9 @@ glam.workspace = true
 thiserror.workspace = true
 rayon.workspace = true
 cxx = "1.0.194"
-
-# Reading a DNA file runs in a forked child process, so a fault in the C++
-# reader costs one thumbnail instead of the helper serving every file.
-[target.'cfg(unix)'.dependencies]
-libc = "0.2"
+# Reading a DNA file runs in a child process, so a fault in the C++ reader
+# costs one thumbnail instead of the helper serving every file.
+slerp-isolate = { path = "../isolate" }
 
 [build-dependencies]
 cxx-build = "1.0.194"

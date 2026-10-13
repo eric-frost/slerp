@@ -4208,6 +4208,7 @@ dependencies = [
  "slerp-associate",
  "slerp-core",
  "slerp-helper",
+ "slerp-isolate",
  "slerp-viewer",
 ]
 
@@ -4282,6 +4283,8 @@ dependencies = [
  "slerp-gameimages",
  "slerp-gltf",
  "slerp-images",
+ "slerp-isolate",
+ "slerp-jxr",
  "slerp-lut",
  "slerp-materials",
  "slerp-max",
@@ -4327,10 +4330,10 @@ dependencies = [
  "cxx",
  "cxx-build",
  "glam",
- "libc",
  "rayon",
  "slerp-core",
  "slerp-gltf",
+ "slerp-isolate",
  "slerp-scene",
  "thiserror 2.0.21",
 ]
@@ -4422,6 +4425,7 @@ dependencies = [
  "png 0.18.1",
  "rav1d",
  "rayon",
+ "slerp-isolate",
  "slerp-openexr",
  "slerp-scene",
  "slerp-tiff",
@@ -4433,6 +4437,7 @@ name = "slerp-isolate"
 version = "0.1.0"
 dependencies = [
  "libc",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -4440,8 +4445,8 @@ name = "slerp-jxr"
 version = "0.1.0"
 dependencies = [
  "cc",
- "libc",
  "openreadout-jpegxr",
+ "slerp-isolate",
  "thiserror 2.0.21",
 ]
 
@@ -4842,6 +4847,7 @@ dependencies = [
  "png 0.18.1",
  "slerp-associate",
  "slerp-core",
+ "slerp-isolate",
  "windows",
  "windows-core",
  "windows-registry",

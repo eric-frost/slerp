@@ -26,6 +26,7 @@ slerp-retarget = { path = "crates/retarget" }
 slerp-dna = { path = "crates/dna" }
 slerp-formats = { path = "crates/formats" }
 slerp-associate = { path = "crates/associate" }
+slerp-isolate = { path = "crates/isolate" }
 glam = { version = "0.34", features = ["bytemuck"] }
 bytemuck = { version = "1", features = ["derive"] }
 thiserror = "2"
@@ -49,6 +50,7 @@ readme = "README.md"
 
 [dependencies]
 slerp-core.workspace = true
+slerp-isolate.workspace = true
 slerp-helper.workspace = true
 slerp-associate.workspace = true
 slerp-viewer = { workspace = true, optional = true }

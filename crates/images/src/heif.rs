@@ -9,11 +9,11 @@
 //! through it.  Without the library the viewer says what to install.
 //!
 //! libheif is a large C++ library that reads whatever a file says, so the
-//! decode runs in a forked child with limits (see [`crate::isolate`]) and
-//! comes back as plain pixels.
+//! decode runs isolated with limits ([`DECODE_JOB`], see `slerp-isolate`)
+//! and comes back as plain pixels.
 
-use crate::isolate::{self, Limits};
 use libloading::Library;
+use slerp_isolate::{Job, Pack, Unpack};
 use std::ffi::{CStr, c_char, c_int, c_void};
 
 /// libheif's `heif_error`: a code, a sub-code and a message, returned by
@@ -86,10 +86,18 @@ pub struct Decoded {
 pub fn decode(file: &[u8], wide: bool, max_pixels: u64) -> Result<Decoded, String> {
     // Output size is unknown until libheif reads the header, so the limits
     // allow for the biggest picture accepted.
-    let limits = Limits::for_pixels((max_pixels as usize).saturating_mul(if wide { 8 } else { 4 }));
-    let wire = isolate::run(limits, || decode_here(file, wide, max_pixels))?;
+    let limits = crate::limits_for_pixels((max_pixels as usize).saturating_mul(if wide { 8 } else { 4 }));
+    let input = Pack::new().bool(wide).u64(max_pixels).bytes(file).done();
+    let wire = slerp_isolate::run(&DECODE_JOB, &input, limits)?;
     parse_wire(&wire, max_pixels)
 }
+
+/// The isolated side of [`decode`].
+pub(crate) static DECODE_JOB: Job = Job::once("heif.decode", "libheif", |input| {
+    let mut u = Unpack::new(input);
+    let (wide, max_pixels) = (u.bool()?, u.u64()?);
+    decode_here(u.bytes()?, wide, max_pixels)
+});
 
 fn text_of(e: &HeifError) -> String {
     if e.message.is_null() {

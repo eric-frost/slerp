@@ -316,14 +316,16 @@ static SAVED: AtomicUsize = AtomicUsize::new(0);
 
 /// Whether an error message is `slerp-isolate`'s report of a child that
 /// crashed, hung or ran out of memory, rather than a reader's own refusal.
+/// Its reports name the job's worker first ("the PDF renderer crashed").
 pub fn is_isolated_fault(message: &str) -> bool {
     [
-        "it crashed",
-        "it used too much processor time",
-        "it took longer than",
-        "it stopped without an answer",
-        "its answer was too large",
-        "it failed inside",
+        " crashed",
+        " ran out of memory",
+        " used too much processor time",
+        " took longer than",
+        " stopped without an answer",
+        " sent too large an answer",
+        " failed inside",
     ]
     .iter()
     .any(|p| message.contains(p))

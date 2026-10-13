@@ -38,7 +38,7 @@ mod tests;
 pub use eps::{BinaryHeader, DRAWN, Dsc, EpsiHeader, STORED};
 pub use ghostscript::{ghostscript, ghostscript_version};
 pub use page_text::{Direction, MAX_GLYPHS, PageText};
-pub use pdf::{DrawView, PdfPages};
+pub use pdf::{DrawView, JOBS, PdfPages};
 
 use slerp_scene::textures::{ColorSpace, Texture};
 use slerp_scene::{Limits, LoadError};

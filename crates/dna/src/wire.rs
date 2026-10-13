@@ -1,5 +1,5 @@
 //! `DnaData` as bytes, for the trip from the reading process to the one
-//! that builds the scene (see `sandbox`).  Decoding checks every length
+//! that builds the scene (see `crate::JOBS`).  Decoding checks every length
 //! against the bytes left, so a garbled message is an error, not a crash
 //! or a huge allocation.
 

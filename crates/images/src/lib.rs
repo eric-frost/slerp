@@ -32,7 +32,6 @@ mod heif;
 mod icns;
 mod ico;
 mod isobmff;
-mod isolate;
 mod jp2;
 #[cfg(feature = "jxl")]
 mod jxl;
@@ -61,6 +60,28 @@ pub use orient::orient as orient_for_test;
 use slerp_scene::{Asset, ColorSpace, Info, Limits, LoadError, Texture};
 use std::path::Path;
 use std::sync::Arc;
+use std::time::Duration;
+
+/// The decoders that run isolated (see `slerp-isolate`): the AV1 decoder
+/// for AVIF and the system's libheif for HEIC, which are C or behind a C
+/// interface where a damaged file can crash or hang them.
+pub static JOBS: slerp_isolate::Jobs = &[
+    &avif::STILL_JOB,
+    &avif::SEQUENCE_JOB,
+    #[cfg(feature = "heic")]
+    &heif::DECODE_JOB,
+];
+
+/// What an isolated decoder of a picture whose pixels take `pixel_bytes`
+/// may use: 30 seconds, a few times the picture in working memory, and the
+/// picture as its answer.
+fn limits_for_pixels(pixel_bytes: usize) -> slerp_isolate::Limits {
+    slerp_isolate::Limits {
+        time: Duration::from_secs(30),
+        memory: (pixel_bytes as u64).saturating_mul(6).saturating_add(768 << 20),
+        output: pixel_bytes.saturating_add(1 << 16),
+    }
+}
 
 /// The formats this crate opens.  JPEG, PNG and WebP stills belong to the
 /// texture crate; animated PNG and WebP files are recognised here.

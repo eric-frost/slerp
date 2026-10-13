@@ -1,6 +1,6 @@
 //! Reading a DNA file with openriglogic and copying out what Slerp uses
 //! into plain Rust data, which can cross a process boundary (see
-//! `sandbox`).  Nothing here trusts the counts and indices it copies;
+//! `crate::JOBS`).  Nothing here trusts the counts and indices it copies;
 //! `scene` checks them all.
 
 use crate::ffi::bridge;
@@ -30,6 +30,26 @@ pub(crate) struct Request {
     /// Build RigLogic and evaluate it once with every control at rest and
     /// once at full strength, so a file that would crash it does so here.
     pub probe_rig: bool,
+}
+
+impl Request {
+    /// The request as fields of an isolated job's input.
+    pub fn pack(&self, mut pack: slerp_isolate::Pack) -> slerp_isolate::Pack {
+        pack = pack.u32(self.lods.len() as u32);
+        for &lod in &self.lods {
+            pack = pack.u32(lod as u32);
+        }
+        pack.bool(self.geometry).bool(self.blend_shapes).bool(self.probe_rig)
+    }
+
+    pub fn unpack(u: &mut slerp_isolate::Unpack) -> Result<Request, String> {
+        let n = u.u32()?;
+        if n > 64 {
+            return Err("a damaged request".into());
+        }
+        let lods = (0..n).map(|_| u.u32().map(|l| l as u16)).collect::<Result<Vec<_>, _>>()?;
+        Ok(Request { lods, geometry: u.bool()?, blend_shapes: u.bool()?, probe_rig: u.bool()? })
+    }
 }
 
 /// Everything Slerp uses from one DNA file, as stored (DNA units).

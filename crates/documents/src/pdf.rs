@@ -1,7 +1,9 @@
 //! PDF documents through `hayro`, always in a child process (see the crate
 //! documentation): one-off pictures for thumbnails, and [`PdfPages`], a
 //! document kept open in a worker so the viewer can draw any part of any
-//! page at any scale.
+//! page at any scale.  The child's work is the jobs in [`JOBS`], whose
+//! input is the document's path (the child reads the file itself) and
+//! what to draw.
 //!
 //! The worker speaks a small binary protocol over its pipe: a request is a
 //! [`DrawView`], answered with the picture's size and its straight-alpha
@@ -24,7 +26,7 @@ use hayro::hayro_syntax::{DecryptionError, LoadPdfError, Pdf, PdfData};
 use hayro::kurbo::{Affine, BezPath, Point, Rect};
 use hayro::vello_cpu::color::palette::css::{TRANSPARENT, WHITE};
 use hayro::vello_cpu::{Pixmap, RasterizerSettings, RenderContext, Resources, TargetInit};
-use slerp_isolate::{Limits, Worker};
+use slerp_isolate::{Job, Jobs, Limits, Opened, Pack, Session, Unpack, Worker};
 use slerp_scene::textures::Texture;
 use slerp_scene::{Image8, LoadError};
 use std::path::{Path, PathBuf};
@@ -39,8 +41,9 @@ use std::time::Duration;
 /// The file's bytes.  In the child on Unix they are mapped rather than
 /// read, so a thumbnail of a 500 MB scan touches only the cross-reference
 /// table and the first page's objects; a file cut short while mapped
-/// faults the child alone.  Windows reads the file, since there the
-/// renderer shares the caller's process.
+/// faults the child alone.  Windows reads the file: a mapped file there
+/// can't be shortened or replaced while the viewer keeps the document
+/// open, which would stop the program that made it from saving it again.
 fn file_data(path: &Path) -> Result<PdfData, String> {
     let file = std::fs::File::open(path).map_err(|e| e.to_string())?;
     #[cfg(unix)]
@@ -494,13 +497,48 @@ fn encrypted(path: &Path) -> bool {
 └─────────────────╯*/
 //region One-off work
 
+/// The work this crate runs isolated, for the program that serves it (see
+/// `slerp-isolate`).
+pub static JOBS: Jobs = &[&PAGE_THUMBNAIL_JOB, &PICTURE_JOB, &PAGE_COUNT_JOB, &PAGES_JOB];
+
+const RENDERER: &str = "the PDF renderer";
+static PAGE_THUMBNAIL_JOB: Job = Job::once("pdf.page-thumbnail", RENDERER, |input| {
+    let path = Unpack::new(input).path()?;
+    Ok(page_thumb(&open(&path)?, 0).unwrap_or_default())
+});
+static PICTURE_JOB: Job = Job::once("pdf.picture", RENDERER, picture_job);
+static PAGE_COUNT_JOB: Job = Job::once("pdf.page-count", RENDERER, |input| {
+    let path = Unpack::new(input).path()?;
+    Ok((open(&path)?.pages().len() as u64).to_le_bytes().to_vec())
+});
+static PAGES_JOB: Job = Job::serving("pdf.pages", RENDERER, pages_job);
+
+/// The format as one byte of a job's input.
+fn format_code(format: DocumentFormat) -> u8 {
+    match format {
+        DocumentFormat::Pdf => 0,
+        DocumentFormat::Illustrator => 1,
+        DocumentFormat::Eps => 2,
+        DocumentFormat::PostScript => 3,
+    }
+}
+
+fn format_of(code: u8) -> Result<DocumentFormat, String> {
+    Ok(match code {
+        0 => DocumentFormat::Pdf,
+        1 => DocumentFormat::Illustrator,
+        2 => DocumentFormat::Eps,
+        3 => DocumentFormat::PostScript,
+        _ => return Err("a damaged request".into()),
+    })
+}
+
 /// The first page's own `/Thumb` picture, read in a child process without
 /// drawing anything; `None` when the page has none Slerp takes.
 pub fn page_thumbnail(format: DocumentFormat, path: &Path) -> Result<Option<Texture>, LoadError> {
-    let owned = path.to_path_buf();
     let limits = Limits { time: crate::THUMBNAIL_TIME, memory: crate::THUMBNAIL_MEMORY, output: answer_bytes() };
-    let answer = slerp_isolate::run(limits, move || Ok(page_thumb(&open(&owned)?, 0).unwrap_or_default()))
-        .map_err(|e| LoadError::Unsupported(sentence(&e)))?;
+    let answer = slerp_isolate::run(&PAGE_THUMBNAIL_JOB, &Pack::new().path(path).done(), limits)
+        .map_err(LoadError::Unsupported)?;
     if answer.is_empty() {
         return Ok(None);
     }
@@ -525,27 +563,9 @@ pub fn picture(
     time: Duration,
     memory: u64,
 ) -> Result<Texture, LoadError> {
-    let owned = path.to_path_buf();
     let limits = Limits { time, memory, output: answer_bytes() + (1 << 20) };
-    let answer = slerp_isolate::run(limits, move || {
-        let pdf = open(&owned)?;
-        let opening = Opening::read(format, &owned, &pdf);
-        let size = *opening.sizes.get(index).ok_or_else(|| {
-            if opening.total == 0 {
-                "the document has no pages".to_string()
-            } else {
-                format!("the document has no page {}", index + 1)
-            }
-        })?;
-        let image = draw(&pdf, &DrawView::fit(index, size, fit), &WarningLog::default())?;
-        let opened = opening.encode();
-        let mut out = Vec::new();
-        out.extend((opened.len() as u64).to_le_bytes());
-        out.extend(opened);
-        out.extend(image);
-        Ok(out)
-    })
-    .map_err(|e| LoadError::Unsupported(sentence(&e)))?;
+    let input = Pack::new().u8(format_code(format)).path(path).u64(index as u64).u32(fit).done();
+    let answer = slerp_isolate::run(&PICTURE_JOB, &input, limits).map_err(LoadError::Unsupported)?;
     let bad = || LoadError::invalid("the renderer's answer was damaged");
     let n = u64::from_le_bytes(answer.get(..8).ok_or_else(bad)?.try_into().map_err(|_| bad())?) as usize;
     let opening = answer.get(8..8usize.saturating_add(n)).and_then(Opening::decode).ok_or_else(bad)?;
@@ -564,21 +584,37 @@ pub fn picture(
     Ok(t)
 }
 
-/// How many pages the document has, read in a child process.
-pub fn page_count(path: &Path) -> Result<usize, String> {
-    let owned = path.to_path_buf();
-    let limits = Limits { time: Duration::from_secs(10), memory: 1 << 30, output: 64 };
-    let answer = slerp_isolate::run(limits, move || Ok((open(&owned)?.pages().len() as u64).to_le_bytes().to_vec()))?;
-    Ok(u64::from_le_bytes(answer.get(..8).and_then(|b| b.try_into().ok()).ok_or("a damaged answer")?) as usize)
+/// The child's side of [`picture`]: the document's facts and the page
+/// drawn.
+fn picture_job(input: &[u8]) -> Result<Vec<u8>, String> {
+    let mut u = Unpack::new(input);
+    let format = format_of(u.u8()?)?;
+    let path = u.path()?;
+    let index = usize::try_from(u.u64()?).map_err(|_| "a damaged request")?;
+    let fit = u.u32()?;
+    let pdf = open(&path)?;
+    let opening = Opening::read(format, &path, &pdf);
+    let size = *opening.sizes.get(index).ok_or_else(|| {
+        if opening.total == 0 {
+            "the document has no pages".to_string()
+        } else {
+            format!("the document has no page {}", index + 1)
+        }
+    })?;
+    let image = draw(&pdf, &DrawView::fit(index, size, fit), &WarningLog::default())?;
+    let opened = opening.encode();
+    let mut out = Vec::new();
+    out.extend((opened.len() as u64).to_le_bytes());
+    out.extend(opened);
+    out.extend(image);
+    Ok(out)
 }
 
-/// A child's failure as the end of a sentence that starts "Slerp couldn't
-/// draw this document: ".
-fn sentence(why: &str) -> String {
-    match why.strip_prefix("it ") {
-        Some(rest) => format!("the PDF renderer {rest}"),
-        None => why.to_string(),
-    }
+/// How many pages the document has, read in a child process.
+pub fn page_count(path: &Path) -> Result<usize, String> {
+    let limits = Limits { time: Duration::from_secs(10), memory: 1 << 30, output: 64 };
+    let answer = slerp_isolate::run(&PAGE_COUNT_JOB, &Pack::new().path(path).done(), limits)?;
+    Ok(u64::from_le_bytes(answer.get(..8).and_then(|b| b.try_into().ok()).ok_or("a damaged answer")?) as usize)
 }
 
 //endregion
@@ -607,7 +643,7 @@ pub struct PdfPages {
 impl PdfPages {
     /// Opens the document in a new worker.
     pub fn open(format: DocumentFormat, path: &Path) -> Result<PdfPages, LoadError> {
-        let (worker, opening) = start(format, path).map_err(|e| LoadError::Unsupported(sentence(&e)))?;
+        let (worker, opening) = start(format, path).map_err(LoadError::Unsupported)?;
         let mut warnings = Vec::new();
         if opening.total == 0 {
             return Err(LoadError::Unsupported("the document has no pages".into()));
@@ -656,10 +692,10 @@ impl PdfPages {
             return Err(format!("the document has no page {}", page + 1));
         }
         if !self.worker.as_ref().is_some_and(Worker::alive) {
-            self.worker = Some(start(self.format, &self.path).map_err(|e| sentence(&e))?.0);
+            self.worker = Some(start(self.format, &self.path)?.0);
         }
         let worker = self.worker.as_mut().ok_or("no renderer")?;
-        worker.ask_within(request, crate::DRAW_TIME).map_err(|e| sentence(&e))
+        worker.ask_within(request, crate::DRAW_TIME)
     }
 
     /// Warnings the renderer gave while drawing so far, in words.
@@ -676,32 +712,37 @@ impl PdfPages {
 /// the [`Opening`], then draws views and reads pages' text until it is
 /// dropped.
 fn start(format: DocumentFormat, path: &Path) -> Result<(Worker, Opening), String> {
-    let owned = path.to_path_buf();
     let limits = Limits { time: crate::OPEN_TIME, memory: crate::VIEWER_MEMORY, output: answer_bytes() };
-    let (worker, opening) = Worker::start(
-        limits,
-        move || {
-            let pdf = open(&owned)?;
-            let opening = Opening::read(format, &owned, &pdf).encode();
-            Ok(((pdf, WarningLog::default()), opening))
-        },
-        |(pdf, log), request| {
-            if request == b"warnings" {
-                let log = log.lock().map(|l| l.clone()).unwrap_or_default();
-                let mut lines: Vec<&str> = log.iter().map(warning_text).collect();
-                lines.dedup();
-                return Ok(lines.join("\n").into_bytes());
-            }
-            if let Some(page) = request.strip_prefix(TEXT_REQUEST) {
-                let page = u64::from_le_bytes(page.try_into().map_err(|_| "a damaged request")?);
-                return read_text(pdf, usize::try_from(page).map_err(|_| "a damaged request")?, log);
-            }
-            let view = DrawView::decode(request).ok_or("a damaged request")?;
-            draw(pdf, &view, log)
-        },
-    )?;
+    let input = Pack::new().u8(format_code(format)).path(path).done();
+    let (worker, opening) = Worker::start(&PAGES_JOB, &input, limits)?;
     let opening = Opening::decode(&opening).ok_or("the renderer's answer was damaged")?;
     Ok((worker, opening))
+}
+
+/// The worker's side of [`PdfPages`]: the request is a [`DrawView`],
+/// [`TEXT_REQUEST`] and a page number, or `warnings`.
+fn pages_job(input: &[u8]) -> Result<Opened, String> {
+    let mut u = Unpack::new(input);
+    let format = format_of(u.u8()?)?;
+    let path = u.path()?;
+    let pdf = open(&path)?;
+    let opening = Opening::read(format, &path, &pdf).encode();
+    let log = WarningLog::default();
+    let session: Session = Box::new(move |request: &[u8]| {
+        if request == b"warnings" {
+            let log = log.lock().map(|l| l.clone()).unwrap_or_default();
+            let mut lines: Vec<&str> = log.iter().map(warning_text).collect();
+            lines.dedup();
+            return Ok(lines.join("\n").into_bytes());
+        }
+        if let Some(page) = request.strip_prefix(TEXT_REQUEST) {
+            let page = u64::from_le_bytes(page.try_into().map_err(|_| "a damaged request")?);
+            return read_text(&pdf, usize::try_from(page).map_err(|_| "a damaged request")?, &log);
+        }
+        let view = DrawView::decode(request).ok_or("a damaged request")?;
+        draw(&pdf, &view, &log)
+    });
+    Ok((session, opening))
 }
 
 //endregion

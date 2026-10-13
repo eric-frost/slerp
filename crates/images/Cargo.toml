@@ -23,6 +23,8 @@ jxl = ["dep:jxl"]
 
 [dependencies]
 slerp-scene.workspace = true
+# The AV1 decoder and libheif run where a crash or hang costs one picture.
+slerp-isolate = { path = "../isolate" }
 # Reads classic and BigTIFF pages in every common compression and bit depth.
 slerp-tiff = { path = "../tiff" }
 thiserror.workspace = true

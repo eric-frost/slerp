@@ -46,6 +46,9 @@ slerp-rigged = { path = "../rigged" }
 slerp-sketchup = { path = "../sketchup" }
 slerp-paint = { path = "../paint" }
 slerp-svg = { path = "../svg" }
+# JPEG XR, read through slerp-textures; named here for its isolated jobs.
+slerp-jxr = { path = "../jxr" }
+slerp-isolate = { path = "../isolate" }
 slerp-roblox = { path = "../roblox" }
 slerp-maya = { path = "../maya" }
 slerp-max = { path = "../max" }

@@ -6,8 +6,9 @@
 //! filters over huge regions and elaborate drawings that take minutes.
 //! usvg refuses the worst (nesting deeper than 1024, element-count limits,
 //! reference loops), sizes are capped here, and all parsing and drawing
-//! happens in a forked child with a time and memory limit
-//! (`slerp-isolate`), so a file that defeats them costs one picture.
+//! happens in a child process with a time and memory limit
+//! (`slerp-isolate`, through the jobs in [`JOBS`]), so a file that defeats
+//! them costs one picture.
 //!
 //! Text is shaped with the system's fonts, loaded only for files that have
 //! text, with the usual families (DejaVu, Liberation, Noto) standing in for
@@ -16,10 +17,19 @@
 //! absolute paths) and only where the caller allows neighbouring files;
 //! embedded images always load.
 
+use slerp_isolate::{Job, Jobs, Opened, Pack, Session, Unpack};
 use slerp_scene::{ColorSpace, Image8, Limits, LoadError, Texture};
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
+
+/// The work this crate runs isolated, for the program that serves it (see
+/// `slerp-isolate`).
+pub static JOBS: Jobs = &[&PICTURE_JOB, &DRAWING_JOB];
+
+const RENDERER: &str = "the SVG renderer";
+static PICTURE_JOB: Job = Job::once("svg.picture", RENDERER, picture_job);
+static DRAWING_JOB: Job = Job::serving("svg.drawing", RENDERER, drawing_job);
 
 /// The largest picture drawn, in pixels, and its longest side.
 const MAX_PIXELS: u64 = 64 << 20;
@@ -118,19 +128,35 @@ fn gunzip(data: &[u8]) -> Result<Vec<u8>, String> {
 └─────────────────╯*/
 //region Parsing
 
-/// What [`parse`] needs besides the text.
-#[derive(Clone)]
-struct Source {
-    text: Arc<Vec<u8>>,
+/// What [`parse`] needs: the text, and where linked images may come from.
+struct Source<'a> {
+    text: &'a [u8],
     dir: Option<PathBuf>,
     neighbours: bool,
+}
+
+impl Source<'_> {
+    /// The source as a job's input, the text last.
+    fn pack(&self, pack: Pack) -> Pack {
+        let pack = match &self.dir {
+            Some(d) => pack.bool(true).path(d),
+            None => pack.bool(false),
+        };
+        pack.bool(self.neighbours).bytes(self.text)
+    }
+
+    fn unpack<'a>(u: &mut Unpack<'a>) -> Result<Source<'a>, String> {
+        let dir = if u.bool()? { Some(u.path()?) } else { None };
+        let neighbours = u.bool()?;
+        Ok(Source { text: u.bytes()?, dir, neighbours })
+    }
 }
 
 /// Parses the drawing, with fonts only when it has text.
 fn parse(src: &Source) -> Result<usvg::Tree, String> {
     let mut opt =
         usvg::Options { resources_dir: src.dir.clone(), font_family: "sans-serif".into(), ..Default::default() };
-    let has_text = memchr(&src.text, b"<text") || memchr(&src.text, b":text");
+    let has_text = memchr(src.text, b"<text") || memchr(src.text, b":text");
     if has_text {
         opt.fontdb = Arc::new(system_fonts());
     }
@@ -148,7 +174,7 @@ fn parse(src: &Source) -> Result<usvg::Tree, String> {
             (usvg::ImageHrefResolver::default_string_resolver())(href, opts)
         }),
     };
-    let tree = usvg::Tree::from_data(&src.text, &opt).map_err(|e| e.to_string())?;
+    let tree = usvg::Tree::from_data(src.text, &opt).map_err(|e| e.to_string())?;
     let size = tree.size();
     if !(size.width().is_finite() && size.height().is_finite()) || size.width() <= 0.0 || size.height() <= 0.0 {
         return Err("the drawing has no size".into());
@@ -337,35 +363,33 @@ pub struct Drawing {
     /// Files beside the drawing that it links to.
     pub neighbours: Vec<PathBuf>,
     worker: Mutex<Option<slerp_isolate::Worker>>,
-    source: Source,
+    /// The worker's input, to start it again.
+    input: Vec<u8>,
 }
 
 impl Drawing {
     pub fn open(path: &Path, limits: &Limits) -> Result<Drawing, String> {
-        let text = Arc::new(read(path)?);
+        let text = read(path)?;
         let dir = path.parent().map(Path::to_path_buf);
-        let source = Source { text: text.clone(), dir: dir.clone(), neighbours: limits.neighbours };
-        let (worker, opening) = start(&source)?;
-        let (width, height, facts) = parse_facts(&opening)?;
         let neighbours = match (&dir, limits.neighbours) {
             (Some(d), true) => linked_files(&text, d),
             _ => Vec::new(),
         };
-        Ok(Drawing { width, height, facts, warnings: Vec::new(), neighbours, worker: Mutex::new(Some(worker)), source })
+        let input = Source { text: &text, dir, neighbours: limits.neighbours }.pack(Pack::new()).done();
+        drop(text);
+        let (worker, opening) = slerp_isolate::Worker::start(&DRAWING_JOB, &input, self::limits())?;
+        let (width, height, facts) = parse_facts(&opening)?;
+        Ok(Drawing { width, height, facts, warnings: Vec::new(), neighbours, worker: Mutex::new(Some(worker)), input })
     }
 
     /// Draws `region` of the drawing into `width` × `height` pixels.  A
     /// child that died (a drawing that was too slow) is started again once.
     pub fn draw(&self, region: [f64; 4], width: u32, height: u32) -> Result<Image8, String> {
-        let mut req = Vec::with_capacity(40);
-        for v in region {
-            req.extend_from_slice(&v.to_le_bytes());
-        }
-        req.extend_from_slice(&width.to_le_bytes());
-        req.extend_from_slice(&height.to_le_bytes());
+        let [x0, y0, x1, y1] = region;
+        let req = Pack::new().f64(x0).f64(y0).f64(x1).f64(y1).u32(width).u32(height).done();
         let mut guard = self.worker.lock().map_err(|_| "the drawing's worker is unusable")?;
         if !guard.as_ref().is_some_and(|w| w.alive()) {
-            *guard = Some(start(&self.source)?.0);
+            *guard = Some(slerp_isolate::Worker::start(&DRAWING_JOB, &self.input, limits())?.0);
         }
         let worker = guard.as_mut().ok_or("no worker")?;
         let px = worker.ask(&req)?;
@@ -376,24 +400,19 @@ impl Drawing {
     }
 }
 
-fn start(source: &Source) -> Result<(slerp_isolate::Worker, Vec<u8>), String> {
-    let src = source.clone();
-    slerp_isolate::Worker::start(
-        limits(),
-        move || {
-            let tree = parse(&src)?;
-            let facts = describe(&tree, &src.text);
-            Ok((tree, facts))
-        },
-        |tree: &mut usvg::Tree, req: &[u8]| {
-            if req.len() != 40 {
-                return Err("a bad request".into());
-            }
-            let f = |i: usize| f64::from_le_bytes(req[i * 8..i * 8 + 8].try_into().unwrap_or([0; 8]));
-            let u = |i: usize| u32::from_le_bytes(req[i..i + 4].try_into().unwrap_or([0; 4]));
-            draw(tree, [f(0), f(1), f(2), f(3)], u(32), u(36))
-        },
-    )
+/// The worker's side of a [`Drawing`]: parses the drawing once, answers
+/// with its facts, then draws each region asked for.
+fn drawing_job(input: &[u8]) -> Result<Opened, String> {
+    let src = Source::unpack(&mut Unpack::new(input))?;
+    let tree = parse(&src)?;
+    let facts = describe(&tree, src.text);
+    let session: Session = Box::new(move |req: &[u8]| {
+        let mut u = Unpack::new(req);
+        let region = [u.f64()?, u.f64()?, u.f64()?, u.f64()?];
+        let (w, h) = (u.u32()?, u.u32()?);
+        draw(&tree, region, w, h)
+    });
+    Ok((session, facts))
 }
 
 /// The drawing's width and height, and the facts for the inspector.
@@ -412,30 +431,11 @@ fn parse_facts(b: &[u8]) -> Result<Facts, String> {
 /// for thumbnails, else at its own size made at least 1024 pixels on its
 /// longer side (drawings are often tiny icons) and at most 4096.
 pub fn picture(path: &Path, limits: &Limits) -> Result<Texture, LoadError> {
-    let text = Arc::new(read(path).map_err(LoadError::Invalid)?);
-    let src = Source { text: text.clone(), dir: path.parent().map(Path::to_path_buf), neighbours: limits.neighbours };
-    let max = limits.max_texture_size;
-    let answer = slerp_isolate::run(limits_for_picture(), move || {
-        let tree = parse(&src)?;
-        let s = tree.size();
-        let (w, h) = (s.width() as f64, s.height() as f64);
-        let long = w.max(h);
-        let target = match max {
-            Some(m) => m as f64,
-            None => long.clamp(1024.0, 4096.0),
-        };
-        let k = target / long;
-        let (pw, ph) = (((w * k).round() as u32).max(1), ((h * k).round() as u32).max(1));
-        let px = draw(&tree, [0.0, 0.0, w, h], pw, ph)?;
-        let mut out = describe(&tree, &src.text);
-        let header = out.len() as u32;
-        out.extend_from_slice(&pw.to_le_bytes());
-        out.extend_from_slice(&ph.to_le_bytes());
-        out.extend_from_slice(&px);
-        out.extend_from_slice(&header.to_le_bytes());
-        Ok(out)
-    })
-    .map_err(LoadError::Invalid)?;
+    let text = read(path).map_err(LoadError::Invalid)?;
+    let src = Source { text: &text, dir: path.parent().map(Path::to_path_buf), neighbours: limits.neighbours };
+    let input = src.pack(Pack::new().u32(limits.max_texture_size.unwrap_or(0))).done();
+    drop(text);
+    let answer = slerp_isolate::run(&PICTURE_JOB, &input, self::limits()).map_err(LoadError::Invalid)?;
     // Facts, then width, height, pixels, then where the facts end.
     let n = answer.len();
     if n < 12 {
@@ -459,8 +459,30 @@ pub fn picture(path: &Path, limits: &Limits) -> Result<Texture, LoadError> {
     Ok(tex)
 }
 
-fn limits_for_picture() -> slerp_isolate::Limits {
-    limits()
+/// The child's side of [`picture`]: the input is the largest side wanted
+/// (0 for the drawing's own size) and the [`Source`].
+fn picture_job(input: &[u8]) -> Result<Vec<u8>, String> {
+    let mut u = Unpack::new(input);
+    let max = Some(u.u32()?).filter(|&m| m > 0);
+    let src = Source::unpack(&mut u)?;
+    let tree = parse(&src)?;
+    let s = tree.size();
+    let (w, h) = (s.width() as f64, s.height() as f64);
+    let long = w.max(h);
+    let target = match max {
+        Some(m) => m as f64,
+        None => long.clamp(1024.0, 4096.0),
+    };
+    let k = target / long;
+    let (pw, ph) = (((w * k).round() as u32).max(1), ((h * k).round() as u32).max(1));
+    let px = draw(&tree, [0.0, 0.0, w, h], pw, ph)?;
+    let mut out = describe(&tree, src.text);
+    let header = out.len() as u32;
+    out.extend_from_slice(&pw.to_le_bytes());
+    out.extend_from_slice(&ph.to_le_bytes());
+    out.extend_from_slice(&px);
+    out.extend_from_slice(&header.to_le_bytes());
+    Ok(out)
 }
 
 //endregion
