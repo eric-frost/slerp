@@ -69,6 +69,7 @@ contents:
   - src: ${SLERP_MAN}
     dst: /usr/share/man/man1/slerp.1.gz
     expand: true
+    type: doc
   - src: README.md
     dst: /usr/share/doc/slerp/README.md
     type: doc

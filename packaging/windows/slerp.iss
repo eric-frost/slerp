@@ -192,16 +192,20 @@ begin
 end;
 
 { The finished page says so when Explorer still had the old thumbnail
-  handler loaded.  The label is sized for the standard text, so it grows,
-  and the line below it moves down. }
+  handler loaded, before its last line ("Click Finish to exit Setup.").
+  The label is sized for the standard text, so it is made to grow. }
 procedure CurPageChanged(CurPageID: Integer);
+var
+  Text: String;
 begin
   if (CurPageID = wpFinished) and OldStillLoaded then
   begin
-    WizardForm.FinishedLabel.Caption := WizardForm.FinishedLabel.Caption + #13#10#13#10 +
-      'Explorer may go on using the previous version''s thumbnails until you sign out and back in.';
+    Text := WizardForm.FinishedLabel.Caption;
+    { A line can't start with #13: the preprocessor would read a directive. }
+    StringChangeEx(Text, SetupMessage(msgClickFinish), 'Explorer may go on using the previous ' +
+      'version''s thumbnails until you sign out and back in.' + #13#10#13#10 + SetupMessage(msgClickFinish), True);
+    WizardForm.FinishedLabel.Caption := Text;
     WizardForm.FinishedLabel.AdjustHeight;
-    WizardForm.ClickFinishLabel.Top := WizardForm.FinishedLabel.Top + WizardForm.FinishedLabel.Height + ScaleY(12);
   end;
 end;
 
